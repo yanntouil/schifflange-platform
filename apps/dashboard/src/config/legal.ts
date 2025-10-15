@@ -1,13 +1,13 @@
 import { T } from "@compo/utils"
 
 const legalConfig = {
-  name: "Lumiq",
-  address: "123 Some Where Street, L-8000, Luxembourg",
-  email: "legal@lumiq.lu",
-  website: "https://lumiq.lu",
-  lastUpdated: T.parseISO("2025-09-30"),
-  effectiveDate: T.parseISO("2025-09-30"),
-  privacyEmail: "privacy@lumiq.lu",
+  name: "Commune de Schifflange",
+  address: "B.P. 11, Avenue de la Libération L-3801 Schifflange",
+  email: "legal@schifflange.lu",
+  website: "https://schifflange.lu",
+  lastUpdated: T.parseISO("2026-01-01"),
+  effectiveDate: T.parseISO("2026-01-01"),
+  privacyEmail: "privacy@schifflange.lu",
 }
 
 export default legalConfig

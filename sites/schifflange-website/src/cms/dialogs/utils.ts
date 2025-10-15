@@ -2,7 +2,7 @@ import { asyncHelpers } from "@/cms/utils"
 import { service } from "@/service"
 import { makeLinkProps } from "@/utils/links"
 import { A, D, O } from "@compo/utils"
-import type { InferItemAsync } from "@contents/lumiq/ssr"
+import type { InferItemAsync } from "@contents/schifflange-website/ssr"
 
 /**
  * extractCardsProps

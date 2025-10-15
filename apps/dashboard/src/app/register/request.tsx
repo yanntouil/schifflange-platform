@@ -88,7 +88,7 @@ const dictionary = {
     "password-placeholder": "••••••••••••",
     "password-required": "You need to enter a password",
     "password-min-8": "The password must contain at least 8 characters",
-    "sign-in": "Already have an account? Sign in here",
+    "sign-in": "Already have an account? {{a:Sign in here}}",
     submit: "Create your account",
     "error-validation-failure": "Please check your entry and accept the terms of use and privacy policy before creating your account.",
   },
@@ -102,7 +102,7 @@ const dictionary = {
     "password-label": "Mot de passe",
     "password-placeholder": "••••••••••••",
     "password-min-8": "Le mot de passe doit contenir au moins 8 caractères",
-    "sign-in": "Déjà un compte ? Connectez-vous {{a:en cliquant ici}}",
+    "sign-in": "Déjà un compte ? {{a:Connectez-vous ici}}",
     submit: "Créer votre compte",
     "error-validation-failure":
       "Veuillez vérifier votre saisie et accepter les conditions d'utilisation et la politique de confidentialité avant de créer votre compte.",
@@ -118,7 +118,7 @@ const dictionary = {
     "password-placeholder": "••••••••••••",
     "password-required": "Sie müssen ein Passwort eingeben",
     "password-min-8": "Das Passwort muss mindestens 8 Zeichen enthalten",
-    "sign-in": "Haben Sie bereits ein Konto? Melden Sie sich hier an",
+    "sign-in": "Haben Sie bereits ein Konto? {{a:Melden Sie sich hier an}}",
     submit: "Ihr Konto erstellen",
     "error-validation-failure":
       "Bitte überprüfen Sie Ihre Eingaben und akzeptieren Sie die Nutzungsbedingungen und Datenschutzrichtlinie, bevor Sie Ihr Konto erstellen.",

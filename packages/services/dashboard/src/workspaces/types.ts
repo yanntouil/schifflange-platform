@@ -9,7 +9,7 @@ export * from "./templates/types"
 
 export type WorkspaceRole = "member" | "admin" | "owner"
 export type WorkspaceStatus = "active" | "deleted" | "suspended"
-export type WorkspaceType = "lumiq" | "type-a" | "type-b" | "type-c"
+export type WorkspaceType = "schifflange-website"
 export type WorkspaceInvitationStatus = "pending" | "refused" | "accepted" | "deleted"
 export type WorkspaceInvitation = {
   id: string

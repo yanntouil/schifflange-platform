@@ -1,6 +1,6 @@
-import { WorkspaceAvatar } from "@/app/dashboard/workspaces.avatar"
 import { useAuthDialog } from "@/features/auth/components/dialog/context"
 import { useLoadWorkspaces } from "@/features/workspaces"
+import { WorkspaceAvatar } from "@/features/workspaces/components/avatar"
 import { useTranslation } from "@compo/localize"
 import { Icon, Ui } from "@compo/ui"
 import { Check, Settings, UserPlus } from "lucide-react"

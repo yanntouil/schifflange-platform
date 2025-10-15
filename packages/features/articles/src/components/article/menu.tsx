@@ -60,7 +60,7 @@ const ArticleMenu: React.FC = () => {
       </Ui.DropdownMenu.Item>
       {isPublished && (
         <Ui.DropdownMenu.Item asChild>
-          <a href={makeUrl(swr.article)} target='_blank' rel='noopener noreferrer nofollow'>
+          <a href={makeUrl(swr.article.slug)} target='_blank' rel='noopener noreferrer nofollow'>
             <ExternalLink aria-hidden />
             {_("menu.link")}
           </a>

@@ -2,14 +2,14 @@ import { Dashboard } from "@compo/dashboard"
 import { useTranslation } from "@compo/localize"
 import { useContextualLanguage } from "@compo/translations"
 import { Ui } from "@compo/ui"
-import { A, cx, D, G, placeholder } from "@compo/utils"
+import { A, cx, D, G, match, placeholder } from "@compo/utils"
 import { type Api, placeholder as servicePlaceholder } from "@services/dashboard"
 import { ChevronsUpDown, Link2 } from "lucide-react"
 import React from "react"
 import { Link } from "wouter"
 import { useSlugsService } from "../service.context"
 import { useSWRSlugs } from "../swr"
-import { getSlugResource, isSlugArticle, isSlugPage, isSlugProject, isSlugProjectStep } from "../utils"
+import { getSlugResource } from "../utils"
 import { EditSlugDialog } from "./dialog"
 import { ResourceIcon } from "./icons"
 import { SitemapFilters } from "./sitemap.filters"
@@ -148,17 +148,16 @@ const Slug: React.FC<{
 }> = ({ slug, editSlug }) => {
   const { _ } = useTranslation(dictionary)
   const { translate } = useContextualLanguage()
-  const { routeToPage, routeToArticle, routeToProject, routeToProjectStep, getImageUrl } = useSlugsService()
+  const { routesTo, getImageUrl } = useSlugsService()
   const ressource = getSlugResource(slug)
   const seoTranslated = translate(ressource.seo, servicePlaceholder.seo)
 
   const ressourcePath = React.useMemo(() => {
-    if (isSlugPage(slug)) return routeToPage(slug.page.id)
-    if (isSlugArticle(slug)) return routeToArticle(slug.article.id)
-    if (isSlugProject(slug)) return routeToProject(slug.project.id)
-    if (isSlugProjectStep(slug)) return routeToProjectStep(slug.projectStep.projectId, slug.projectStep.id)
-    return ""
-  }, [slug])
+    return match(slug)
+      .with({ model: "page" }, ({ page }) => routesTo.pages.byId(page.id))
+      .with({ model: "article" }, ({ article }) => routesTo.articles.byId(article.id))
+      .exhaustive()
+  }, [slug, routesTo.pages.byId, routesTo.articles.byId])
 
   const image = seoTranslated?.image
     ? {
@@ -203,10 +202,6 @@ const dictionary = {
     "type-page-tooltip": "Page statique du site",
     "type-article": "Article",
     "type-article-tooltip": "Article de blog ou actualité",
-    "type-project": "Projet",
-    "type-project-tooltip": "Projet",
-    "type-project-step": "Étape du projet",
-    "type-project-step-tooltip": "Étape du projet",
     "title-placeholder": "Sans titre",
     "description-placeholder": "Sans description",
     "edit-slug": "Modifier l'URL",
@@ -233,10 +228,6 @@ const dictionary = {
     "type-page-tooltip": "Statische Website-Seite",
     "type-article": "Artikel",
     "type-article-tooltip": "Blog-Beitrag oder Nachrichtenartikel",
-    "type-project": "Projekt",
-    "type-project-tooltip": "Projekt",
-    "type-project-step": "Projekt-Schritt",
-    "type-project-step-tooltip": "Projekt-Schritt",
     "title-placeholder": "Ohne Titel",
     "description-placeholder": "Keine Beschreibung",
     "edit-slug": "URL bearbeiten",
@@ -263,10 +254,6 @@ const dictionary = {
     "type-page-tooltip": "Static website page",
     "type-article": "Article",
     "type-article-tooltip": "Blog post or news article",
-    "type-project": "Projet",
-    "type-project-tooltip": "Project",
-    "type-project-step": "Project step",
-    "type-project-step-tooltip": "Project step",
     "title-placeholder": "Untitled",
     "description-placeholder": "No description",
     "edit-slug": "Edit URL",

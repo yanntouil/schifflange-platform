@@ -3,6 +3,7 @@ import { Ui } from "@compo/ui"
 import { match } from "@compo/utils"
 import { Check, X } from "lucide-react"
 import React from "react"
+import { useTitle } from "react-use"
 import { Link } from "wouter"
 import dashboardRouteTo from "../../dashboard"
 import signInRouteTo from "../../sign-in"
@@ -12,6 +13,7 @@ import signInRouteTo from "../../sign-in"
  */
 const Page: React.FC<{ status: "loading" | "token-valid" | "token-expired" | "token-invalid" }> = ({ status }) => {
   const { _ } = useTranslation(dictionary)
+  useTitle(_("page-title"))
 
   return (
     <Ui.Card.Root className="w-full max-w-md">
@@ -78,6 +80,7 @@ export default Page
  */
 const dictionary = {
   en: {
+    "page-title": "Schifflange Dashboard - Register validation",
     "loading-title": "Verifying Your Email",
     "loading-description": "Please wait while we activate your account...",
     "success-title": "Welcome Aboard!",
@@ -90,6 +93,7 @@ const dictionary = {
     "go-to-dashboard": "Continue to Dashboard",
   },
   fr: {
+    "page-title": "Schifflange Dashboard - Validation de l'inscription",
     "loading-title": "Vérification de votre email",
     "loading-description": "Veuillez patienter pendant l'activation de votre compte...",
     "success-title": "Bienvenue !",
@@ -102,6 +106,7 @@ const dictionary = {
     "go-to-dashboard": "Continuer vers le tableau de bord",
   },
   de: {
+    "page-title": "Schifflange Dashboard - Registrierung-Verifizierung",
     "loading-title": "E-Mail-Verifizierung",
     "loading-description": "Bitte warten Sie, während wir Ihr Konto aktivieren...",
     "success-title": "Willkommen!",

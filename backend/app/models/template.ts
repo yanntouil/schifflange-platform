@@ -9,7 +9,15 @@ import {
   sortTemplatesByValidator,
   updateTemplateValidator,
 } from '#validators/templates'
-import { afterCreate, beforeCreate, beforeDelete, belongsTo, column, hasMany, scope } from '@adonisjs/lucid/orm'
+import {
+  afterCreate,
+  beforeCreate,
+  beforeDelete,
+  belongsTo,
+  column,
+  hasMany,
+  scope,
+} from '@adonisjs/lucid/orm'
 import type { BelongsTo, ExtractModelRelations, HasMany } from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
 import { DateTime } from 'luxon'
@@ -160,6 +168,6 @@ export default class Template extends ExtendedModel {
 /**
  * constants and types related to templates
  */
-export const templateTypes = ['page', 'article', 'project'] as const
+export const templateTypes = ['page', 'article'] as const
 export type TemplateType = (typeof templateTypes)[number]
 export const templateDefaultType = templateTypes[0]

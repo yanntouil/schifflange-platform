@@ -7,7 +7,7 @@
   // Map des entrypoints CSS (v4) -> dossiers où ils s’appliquent
   "tailwindCSS.experimental.configFile": {
     "apps/dashboard/src/styles/index.css": ["apps/dashboard/**", "packages/**"],
-    "sites/lumiq/src/app/globals.css": ["sites/lumiq/**"]
+    "sites/schifflange-website/src/app/globals.css": ["sites/schifflange-website/**"]
   },
 
   // Optionnel : meilleures suggestions dans les strings (JSX, etc.)

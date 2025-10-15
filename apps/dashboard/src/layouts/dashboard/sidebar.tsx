@@ -1,8 +1,8 @@
 import { AuthSidebarButton } from "@/features/auth"
 import { Ui } from "@compo/ui"
 import React from "react"
+import { SidebarBottom } from "./sidebar.bottom"
 import { SidebarHeader } from "./sidebar.header"
-import { SidebarThemeSwitch } from "./sidebar.theme-switch"
 
 /**
  * Dashboard Sidebar
@@ -13,14 +13,7 @@ export const Sidebar: React.FC = () => {
     <Ui.Sidebar.Root variant="inset" collapsible="icon">
       <SidebarHeader />
       <Ui.Sidebar.Content>
-        <div className="flex flex-col">{/* <SidebarDashboard /> */}</div>
-        <Ui.Sidebar.Group className="mt-auto">
-          <Ui.Sidebar.GroupContent>
-            <Ui.Sidebar.Menu>
-              <SidebarThemeSwitch />
-            </Ui.Sidebar.Menu>
-          </Ui.Sidebar.GroupContent>
-        </Ui.Sidebar.Group>
+        <SidebarBottom />
       </Ui.Sidebar.Content>
       <Ui.Sidebar.Footer>
         <Ui.Sidebar.Menu>

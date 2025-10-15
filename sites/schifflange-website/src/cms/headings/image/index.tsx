@@ -1,7 +1,7 @@
 import { asyncHelpers } from "@/cms/utils"
 import { service } from "@/service"
 import { match } from "@compo/utils"
-import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/lumiq/ssr"
+import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/schifflange-website/ssr"
 import { Template1 } from "./template-1"
 import { Template2 } from "./template-2"
 

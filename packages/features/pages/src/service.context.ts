@@ -9,9 +9,13 @@ export type PagesServiceContextType = {
   service: Api.PagesService
   serviceKey: string
   isAdmin: boolean
-  routeToPages: () => string
-  routeToPage: (pageId: string) => string
-  makeUrl: (page: Api.PageWithRelations, code?: string) => string
+  routesTo: {
+    pages: {
+      list: () => string
+      byId: (pageId: string) => string
+    }
+  }
+  makeUrl: (slug: Api.Slug, code?: string) => string
 }
 
 /**

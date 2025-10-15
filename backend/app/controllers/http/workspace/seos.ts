@@ -3,8 +3,6 @@ import Article from '#models/article'
 import Language from '#models/language'
 import { preloadFiles } from '#models/media-file'
 import Page from '#models/page'
-import Project from '#models/project'
-import ProjectStep from '#models/project-step'
 import Seo, { preloadSeo } from '#models/seo'
 import SeoTranslation from '#models/seo-translation'
 import { withProfile } from '#models/user'
@@ -71,19 +69,6 @@ const getModelResource = async (request: HttpContext['request'], workspace: Work
   if (G.isNotNullable(request.param('articleId')))
     return await Article.query()
       .where('id', request.param('articleId'))
-      .andWhere('workspaceId', workspace.id)
-      .preload('seo', preloadSeo)
-      .first()
-  if (G.isNotNullable(request.param('projectId')) && G.isNotNullable(request.param('stepId')))
-    return await ProjectStep.query()
-      .where('id', request.param('stepId'))
-      .andWhere('projectId', request.param('projectId'))
-      .andWhere('workspaceId', workspace.id)
-      .preload('seo', preloadSeo)
-      .first()
-  if (G.isNotNullable(request.param('projectId')))
-    return await Project.query()
-      .where('id', request.param('projectId'))
       .andWhere('workspaceId', workspace.id)
       .preload('seo', preloadSeo)
       .first()

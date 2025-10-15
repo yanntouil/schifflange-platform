@@ -1,6 +1,6 @@
 import { useTranslation } from "@compo/localize"
+import { isSlugArticle, isSlugPage } from "@compo/slugs"
 import { Ui } from "@compo/ui"
-import { G } from "@compo/utils"
 import { type Api } from "@services/dashboard"
 import {
   Ellipsis,
@@ -26,9 +26,8 @@ export const ForwardsMenu: React.FC<{ forward: Api.Forward }> = ({ forward }) =>
   const ctx = useForwards()
   const isContextMenu = Ui.useIsContextMenu()
   const isSelected = ctx.isSelected(forward)
-  const { routeToArticle, routeToPage, makeUrl } = useForwardsService()
-  const page = forward.slug?.page?.id
-  const article = forward.slug?.article?.id
+  const { routesTo, makeUrl } = useForwardsService()
+  const { slug } = forward
   const url = makeUrl(forward.slug)
   return (
     <>
@@ -45,18 +44,18 @@ export const ForwardsMenu: React.FC<{ forward: Api.Forward }> = ({ forward }) =>
           </Ui.Menu.Item>
         ))}
 
-      {G.isNotNullable(page) && (
+      {isSlugPage(slug) && (
         <Ui.Menu.Item asChild>
-          <Link href={routeToPage(page)}>
+          <Link href={routesTo.pages.byId(slug.page.id)}>
             <FileInput aria-hidden />
             {_("view-page")}
           </Link>
         </Ui.Menu.Item>
       )}
 
-      {G.isNotNullable(article) && (
+      {isSlugArticle(slug) && (
         <Ui.Menu.Item asChild>
-          <Link href={routeToArticle(article)}>
+          <Link href={routesTo.articles.byId(slug.article.id)}>
             <FileInput aria-hidden />
             {_("view-article")}
           </Link>

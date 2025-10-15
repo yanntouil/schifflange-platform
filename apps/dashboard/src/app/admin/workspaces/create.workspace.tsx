@@ -1,3 +1,4 @@
+import { workspaceTypeDefault } from "@/features/workspaces/utils"
 import { Api, service } from "@/services"
 import { extractFormFilePayload, Form, makeFormFileValue, useForm, validator } from "@compo/form"
 import { useTranslation } from "@compo/localize"
@@ -15,7 +16,7 @@ export const Workspace: React.FC<{ onCreate: (workspace: Api.Admin.Workspace) =>
   const { _ } = useTranslation(dictionary)
   const initialValues = {
     name: "",
-    type: "lumiq" as const,
+    type: workspaceTypeDefault,
     status: "active" as const,
     themeId: "",
     image: makeFormFileValue(),

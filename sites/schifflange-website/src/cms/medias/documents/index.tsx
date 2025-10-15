@@ -1,6 +1,6 @@
 import { asyncHelpers } from "@/cms/utils"
 import { match } from "@compo/utils"
-import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/lumiq/ssr"
+import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/schifflange-website/ssr"
 import { Template1 } from "./template-1"
 
 /**

@@ -1,5 +1,6 @@
 import { Selectable } from "@compo/hooks"
 import { useTranslation } from "@compo/localize"
+import { isSlugPage } from "@compo/slugs"
 import { Ui } from "@compo/ui"
 import { match } from "@compo/utils"
 import { type Api } from "@services/dashboard"
@@ -13,12 +14,12 @@ import { SWRPages } from "./swr"
  */
 export const useDisplayPage = () => {
   const [, navigate] = useLocation()
-  const { routeToPage } = usePagesService()
+  const { routesTo } = usePagesService()
   const displayPage = React.useCallback(
     (page: Api.PageWithRelations) => {
-      navigate(routeToPage(page.id))
+      navigate(routesTo.pages.byId(page.id))
     },
-    [navigate, routeToPage]
+    [navigate, routesTo.pages.byId]
   )
   return displayPage
 }
@@ -31,13 +32,13 @@ export const useDisplayPage = () => {
 export const useCreatePage = () => {
   const { _ } = useTranslation(dictionary)
   const [, navigate] = useLocation()
-  const { service, routeToPage } = usePagesService()
+  const { service, routesTo } = usePagesService()
   const [createPage, createPageProps] = Ui.useConfirm<void>({
     onAsyncConfirm: async (page) =>
       match(await service.create())
         .with({ ok: false }, () => true)
         .otherwise(({ data }) => {
-          navigate(routeToPage(data.page.id))
+          navigate(routesTo.pages.byId(data.page.id))
           return false
         }),
     t: _.prefixed("confirm.create"),
@@ -101,7 +102,7 @@ export const useEditPage = (swr: SWRPages) => {
 export const useEditSlug = (swr: SWRPages) => {
   const [editSlug, editSlugProps] = Ui.useQuickDialog<Api.Slug, Api.Slug & Api.WithModel>({
     mutate: async (slug) => {
-      if (slug.page) {
+      if (isSlugPage(slug)) {
         swr.update({ id: slug.page.id, slug })
       }
     },

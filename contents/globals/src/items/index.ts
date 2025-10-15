@@ -28,24 +28,17 @@ import { flattenClientItems, type ExtractItemType } from "./utils"
 import contentsBreadcrumbs from "./contents/breadcrumbs"
 import contentsNavigate from "./contents/navigate"
 import contentsRichText from "./contents/rich-text"
-import featuresActivities from "./features/activities"
+
 import featuresCards from "./features/cards"
 import featuresContacts from "./features/contacts"
 import featuresFaq from "./features/faq"
-import featuresProcess from "./features/process"
 import featuresVideos from "./features/videos"
 import headingsImage from "./headings/image"
 import headingsImages from "./headings/images"
 import headingsSimple from "./headings/simple"
 import headingsVideo from "./headings/video"
-import interactivesSubmitIdea from "./interactives/submit-idea"
 import mediasDocuments from "./medias/documents"
 import mediasImages from "./medias/images"
-import projectsFooter from "./projects/footer"
-import projectsLatest from "./projects/latest"
-import projectsProcess from "./projects/process"
-import projectsRelated from "./projects/related"
-import projectsSearch from "./projects/search"
 
 /* ============================================
  * 1) ✅ PUBLIC EXPORTS — Client item registry
@@ -64,11 +57,9 @@ export const items = {
     richText: contentsRichText,
   },
   features: {
-    activities: featuresActivities,
     cards: featuresCards,
     contacts: featuresContacts,
     faq: featuresFaq,
-    process: featuresProcess,
     videos: featuresVideos,
   },
   headings: {
@@ -78,18 +69,11 @@ export const items = {
     video: headingsVideo,
   },
   interactives: {
-    submitIdea: interactivesSubmitIdea,
+    //
   },
   medias: {
     images: mediasImages,
     documents: mediasDocuments,
-  },
-  projects: {
-    search: projectsSearch,
-    process: projectsProcess,
-    related: projectsRelated,
-    latest: projectsLatest,
-    footer: projectsFooter,
   },
 }
 

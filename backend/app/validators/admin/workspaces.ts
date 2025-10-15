@@ -6,6 +6,7 @@ export const createWorkspaceValidator = vine.compile(
   vine.object({
     name: vine.string().trim().maxLength(255),
     themeId: vine.string().uuid().exists({ table: 'workspace_themes', column: 'id' }).optional(),
+    type: vine.enum(workspaceTypes).optional(),
     status: vine.enum(workspaceStatuses).optional(),
     config: vine.record(vine.record(vine.any().nullable())).optional(),
     image: vine

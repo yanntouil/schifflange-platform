@@ -24,16 +24,7 @@ interface SitemapCondensedProps {
 export const SitemapCondensed: React.FC<SitemapCondensedProps> = () => {
   const { _ } = useTranslation(dictionary)
   const swr = useSWRSlugs()
-  const { routeToArticle, routeToPage, routeToProject, routeToProjectStep } = useSlugsService()
-  const routeTo = (slug: Api.Slug & Api.WithModel) =>
-    match(slug)
-      .with({ model: "page" }, ({ page }) => routeToPage(page.id))
-      .with({ model: "article" }, ({ article }) => routeToArticle(article.id))
-      .with({ model: "project" }, ({ project }) => routeToProject(project.id))
-      .with({ model: "project-step" }, ({ projectStep }) => routeToProjectStep(projectStep.projectId, projectStep.id))
-      .exhaustive()
-
-  const { filtered, filterable, matchable, sortable, groupedSlugs, reset } = useSitemapFiltered(swr)
+  const { filtered, filterable, matchable, sortable, reset } = useSitemapFiltered(swr)
 
   if (swr.isLoading) {
     return (
@@ -86,7 +77,7 @@ export const SitemapCondensed: React.FC<SitemapCondensedProps> = () => {
       >
         <div className='flex flex-col divide-y'>
           {filtered.map((slug) => (
-            <CompactSlug key={slug.id} slug={slug} routeTo={routeTo} />
+            <CompactSlug key={slug.id} slug={slug} />
           ))}
         </div>
       </Dashboard.Empty>
@@ -97,17 +88,19 @@ export const SitemapCondensed: React.FC<SitemapCondensedProps> = () => {
 /**
  * CompactSlug - Version compacte pour le dashboard
  */
-const CompactSlug: React.FC<{
-  slug: Api.Slug & Api.WithModel
-  routeTo: (slug: Api.Slug & Api.WithModel) => string
-}> = ({ slug, routeTo }) => {
+const CompactSlug: React.FC<{ slug: Api.Slug & Api.WithModel }> = ({ slug }) => {
   const { _ } = useTranslation(dictionary)
   const { translate } = useContextualLanguage()
   const { getImageUrl } = useSlugsService()
   const ressource = getSlugResource(slug)
   const seoTranslated = translate(ressource.seo, servicePlaceholder.seo)
-
-  const ressourcePath = React.useMemo(() => routeTo(slug), [slug, routeTo])
+  const { routesTo } = useSlugsService()
+  const ressourcePath = React.useMemo(() => {
+    return match(slug)
+      .with({ model: "page" }, (slug) => routesTo.pages.byId(slug.page.id))
+      .with({ model: "article" }, (slug) => routesTo.articles.byId(slug.article.id))
+      .exhaustive()
+  }, [slug, routesTo.pages.byId, routesTo.articles.byId])
 
   const image = seoTranslated?.image
     ? {
@@ -156,10 +149,6 @@ const dictionary = {
     "type-page-tooltip": "Page statique du site",
     "type-article": "Article",
     "type-article-tooltip": "Article de blog ou actualité",
-    "type-project": "Projet",
-    "type-project-tooltip": "Projet",
-    "type-project-step": "Étape du projet",
-    "type-project-step-tooltip": "Étape du projet",
     "title-placeholder": "Sans titre",
     "description-placeholder": "Sans description",
     sort: {
@@ -186,10 +175,6 @@ const dictionary = {
     "type-page-tooltip": "Statische Website-Seite",
     "type-article": "Artikel",
     "type-article-tooltip": "Blog-Beitrag oder Nachrichtenartikel",
-    "type-project": "Projekt",
-    "type-project-tooltip": "Projekt",
-    "type-project-step": "Projekt-Schritt",
-    "type-project-step-tooltip": "Projekt-Schritt",
     "title-placeholder": "Ohne Titel",
     "description-placeholder": "Keine Beschreibung",
     sort: {
@@ -216,10 +201,6 @@ const dictionary = {
     "type-page-tooltip": "Static website page",
     "type-article": "Article",
     "type-article-tooltip": "Blog post or news article",
-    "type-project": "Project",
-    "type-project-tooltip": "Project",
-    "type-project-step": "Project step",
-    "type-project-step-tooltip": "Project step",
     "title-placeholder": "Untitled",
     "description-placeholder": "No description",
     sort: {

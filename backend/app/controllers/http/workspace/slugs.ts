@@ -1,11 +1,10 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import Forward from '#models/forward'
-import ProjectStep from '#models/project-step'
 import { preloadSeo } from '#models/seo'
 import Slug from '#models/slug'
 import { updateSlugValidator } from '#validators/slugs'
 import type { HttpContext } from '@adonisjs/core/http'
-import { A, G } from '@mobily/ts-belt'
+import { G } from '@mobily/ts-belt'
 import { DateTime } from 'luxon'
 
 /**
@@ -27,8 +26,6 @@ export default class SlugsController {
       .where('workspaceId', workspace.id)
       .preload('page', (query) => query.preload('seo', preloadSeo))
       .preload('article', (query) => query.preload('seo', preloadSeo))
-      .preload('project', (query) => query.preload('seo', preloadSeo))
-      .preload('projectStep', (query) => query.preload('seo', preloadSeo))
     response.ok({ slugs })
   }
 
@@ -51,15 +48,8 @@ export default class SlugsController {
       .andWhere('id', request.param('slugId'))
       .preload('page', (query) => query.preload('seo', preloadSeo))
       .preload('article', (query) => query.preload('seo', preloadSeo))
-      .preload('project', (query) => query.preload('seo', preloadSeo))
-      .preload('projectStep', (query) => query.preload('seo', preloadSeo))
       .first()
     if (G.isNullable(slug)) throw E_RESOURCE_NOT_FOUND
-
-    // project step slug is automatically inferred from project slug and is not directly updatable
-    if (G.isNotNullable(slug.projectStep)) {
-      response.ok({ slug })
-    }
 
     const payload = await request.validateUsing(updateSlugValidator)
 
@@ -80,25 +70,11 @@ export default class SlugsController {
         await forward.merge({ updatedAt: DateTime.now() }).save()
       }
       slug.path = payload.path
-
-      // update each project steps slugs in case of project slug is updated
-      if (G.isNotNullable(slug.project)) {
-        // update project steps slugs
-        const steps = await ProjectStep.query()
-          .where('workspaceId', workspace.id)
-          .andWhere('projectId', slug.project.id)
-          .preload('slug')
-        await Promise.all(
-          A.map(steps, async (step) =>
-            step.slug.merge({ path: `${slug.path}/${step.type}` }).save()
-          )
-        )
-      }
     }
 
     if (slug.$isDirty) {
       await slug.save()
-      await (slug.page || slug.article || slug.project)
+      await (slug.page || slug.article)
         ?.merge({ updatedAt: DateTime.now(), updatedById: user.id })
         .save()
     }

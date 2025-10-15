@@ -10,13 +10,13 @@
     "packages/shared/*"
   ],
   "scripts": {
-    "dev": "concurrently --names \"backend,next,dashboard\" --c gray,red,purple \"npm run dev --prefix ./outside/backend\" \"npm run dev --workspace=@sites/lumiq\" \"npm run dev --workspace=dashboard\"",
-    "dev:dashboard": "npm run dev --workspace=dashsboard",
-    "dev:backend": "npm run dev --workspace=backend",
-    "dev:lumiq": "npm run dev --workspace=lumiq",
+    "dev": "concurrently --names \"backend,next,dashboard\" --c gray,red,purple \"npm run dev --prefix ./backend\" \"npm run dev --workspace=@sites/schifflange-website\" \"npm run dev --workspace=schifflange-dashboard\"",
+    "dev:dashboard": "cd apps/dashboard && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:schifflangeWebsite": "cd sites/schifflange-website && npm run dev",
     "build:dashboard": "bash ./build-dashboard.sh",
     "build:backend": "bash ./build-backend.sh",
-    "build:lumiq": "bash ./build-lumiq.sh"
+    "build:schifflangeWebsite": "bash ./build-schifflange-website.sh"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",

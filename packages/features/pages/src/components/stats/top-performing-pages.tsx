@@ -13,7 +13,7 @@ import { usePagesService } from "../../service.context"
  */
 export const TopPerformingPages: React.FC<React.ComponentProps<"div">> = ({ ...props }) => {
   const { _ } = useTranslation(dictionary)
-  const { routeToPage } = usePagesService()
+  const { routesTo } = usePagesService()
   const { translate } = useLanguage()
   const { swr } = usePages()
   const { pages } = swr
@@ -31,7 +31,7 @@ export const TopPerformingPages: React.FC<React.ComponentProps<"div">> = ({ ...p
         <ul className='flex flex-col gap-2'>
           {A.map(A.take(sortedPages, 5), ({ id, seo, tracking }) => (
             <li className='flex items-center justify-between gap-8 text-sm' key={id}>
-              <Link to={routeToPage(id)} className={variants.link()}>
+              <Link to={routesTo.pages.byId(id)} className={variants.link()}>
                 <span className='line-clamp-1 tracking-tight'>
                   {placeholder(translate(seo, servicePlaceholder.seo).title, _("placeholder"))}
                 </span>

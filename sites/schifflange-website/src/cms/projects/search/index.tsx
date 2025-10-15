@@ -1,5 +1,5 @@
 import { service } from "@/service"
-import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/lumiq/ssr"
+import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/schifflange-website/ssr"
 import { type Api } from "@services/site"
 import { parseAsArrayOf, parseAsString } from "nuqs/server"
 import { TemplateDefault } from "./default"

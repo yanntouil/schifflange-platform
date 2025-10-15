@@ -13,13 +13,13 @@ import { useSlugsService } from "../service.context"
 export const SitemapMenu: React.FC<{ slug: Api.Slug & Api.WithModel; edit: () => void }> = ({ slug, edit }) => {
   const { _ } = useTranslation(dictionary)
 
-  const { routeToArticle, routeToPage, routeToProject, routeToProjectStep, makeUrl } = useSlugsService()
-  const route = match(slug)
-    .with({ model: "page" }, ({ page }) => routeToPage(page.id))
-    .with({ model: "article" }, ({ article }) => routeToArticle(article.id))
-    .with({ model: "project" }, ({ project }) => routeToProject(project.id))
-    .with({ model: "project-step" }, ({ projectStep }) => routeToProjectStep(projectStep.projectId, projectStep.id))
-    .exhaustive()
+  const { routesTo, makeUrl } = useSlugsService()
+  const route = React.useMemo(() => {
+    return match(slug)
+      .with({ model: "page" }, ({ page }) => routesTo.pages.byId(page.id))
+      .with({ model: "article" }, ({ article }) => routesTo.articles.byId(article.id))
+      .exhaustive()
+  }, [slug, routesTo.pages.byId, routesTo.articles.byId])
   const url = makeUrl(slug)
   return (
     <>
@@ -52,10 +52,6 @@ const dictionary = {
     "view-page": "View page",
     "open-article": "Open article",
     "view-article": "View article",
-    "open-project": "Open project",
-    "view-project": "View project",
-    "open-project-step": "Open project step",
-    "view-project-step": "View project step",
     edit: "Edit slug",
   },
   de: {
@@ -63,10 +59,6 @@ const dictionary = {
     "view-page": "Seite anzeigen",
     "open-article": "Artikel öffnen",
     "view-article": "Artikel anzeigen",
-    "open-project": "Projekt öffnen",
-    "view-project": "Projekt anzeigen",
-    "open-project-step": "Schritt öffnen",
-    "view-project-step": "Schritt anzeigen",
     edit: "Slug bearbeiten",
   },
   fr: {
@@ -74,10 +66,6 @@ const dictionary = {
     "view-page": "Voir la page sur le site",
     "open-article": "Accéder à l'article",
     "view-article": "Voir l'article sur le site",
-    "open-project": "Accéder au projet",
-    "view-project": "Voir le projet sur le site",
-    "open-project-step": "Accéder au projet",
-    "view-project-step": "Voir le projet sur le site",
     edit: "Modifier le slug",
   },
 }

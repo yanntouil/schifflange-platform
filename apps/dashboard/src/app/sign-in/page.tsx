@@ -6,6 +6,7 @@ import { Interpolate, useTranslation } from "@compo/localize"
 import { Ui, variants } from "@compo/ui"
 import { match } from "@compo/utils"
 import React from "react"
+import { useTitle } from "react-use"
 import { Link, useLocation } from "wouter"
 import dashboardRouteTo, { dashboardRoutesByType } from "../dashboard"
 import forgotPasswordRouteTo from "../forgot-password"
@@ -16,7 +17,7 @@ import registerRouteTo from "../register"
  */
 const Page: React.FC = () => {
   const { _ } = useTranslation(dictionary)
-
+  useTitle(_("page-title"))
   const [, navigate] = useLocation()
   const { isEmail, min } = validator
   const form = useForm({
@@ -107,6 +108,7 @@ export default Page
  */
 const dictionary = {
   en: {
+    "page-title": "Schifflange Dashboard - Sign In",
     title: "Login to your account",
     description: "Enter your email below to login to your account",
     "email-label": "Email",
@@ -124,6 +126,7 @@ const dictionary = {
     "error-validation-failure": "Your email or password is invalid, please try again",
   },
   fr: {
+    "page-title": "Schifflange Dashboard - Connexion",
     title: "Connexion à votre compte",
     description: "Entrez votre email ci-dessous pour vous connecter à votre compte",
     "email-label": "Email",
@@ -142,6 +145,7 @@ const dictionary = {
     "error-validation-failure": "Votre email ou mot de passe est invalide, veuillez réessayer",
   },
   de: {
+    "page-title": "Schifflange Dashboard - Anmeldung",
     title: "Bei Ihrem Konto anmelden",
     description: "Geben Sie Ihre E-Mail-Adresse unten ein, um sich bei Ihrem Konto anzumelden",
     "email-label": "E-Mail",

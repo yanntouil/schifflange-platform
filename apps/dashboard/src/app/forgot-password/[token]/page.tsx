@@ -6,6 +6,7 @@ import { Ui } from "@compo/ui"
 import { D, match } from "@compo/utils"
 import { Check, X } from "lucide-react"
 import React from "react"
+import { useTitle } from "react-use"
 import { Link, useLocation } from "wouter"
 import dashboardRouteTo from "../../dashboard"
 import signInRouteTo from "../../sign-in"
@@ -21,6 +22,7 @@ type PageProps = {
  */
 const Page: React.FC<PageProps> = ({ status, tokenType }) => {
   const { _ } = useTranslation(dictionary)
+  useTitle(_("page-title"))
   const isAuthenticated = useAuthStore(D.prop("isAuthenticated"))
   const isPasswordReset = tokenType?.includes("password-reset") ?? false
 
@@ -136,6 +138,7 @@ const PasswordResetForm: React.FC = () => {
  */
 const dictionary = {
   en: {
+    "page-title": "Schifflange Dashboard - Reset Password",
     "loading-title": "Processing Your Reset Link",
     "loading-description": "Please wait while we verify your password reset request...",
     "success-title": "Success!",
@@ -154,6 +157,7 @@ const dictionary = {
     "password-update-failed": "Failed to update password. Please try again.",
   },
   fr: {
+    "page-title": "Schifflange Dashboard - Réinitialisation de mot de passe Token",
     "loading-title": "Traitement de votre lien de réinitialisation",
     "loading-description": "Veuillez patienter pendant la vérification de votre demande de réinitialisation...",
     "success-title": "Succès !",
@@ -172,6 +176,7 @@ const dictionary = {
     "password-update-failed": "Échec de la mise à jour du mot de passe. Veuillez réessayer.",
   },
   de: {
+    "page-title": "Schifflange Dashboard - Passwort-Reset",
     "loading-title": "Ihr Reset-Link wird verarbeitet",
     "loading-description": "Bitte warten Sie, während wir Ihre Passwort-Reset-Anfrage verifizieren...",
     "success-title": "Erfolg!",

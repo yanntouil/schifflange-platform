@@ -67,13 +67,13 @@ export const useToggleState = (swr: SWRSafeArticle) => {
 export const useConfirmDelete = (swr: SWRSafeArticle) => {
   const { _ } = useTranslation(dictionary)
   const [, navigate] = useLocation()
-  const { service, routeToArticles } = useArticlesService()
+  const { service, routesTo } = useArticlesService()
   const [confirmDeleteArticle, confirmDeleteArticleProps] = Ui.useConfirm<void>({
     onAsyncConfirm: async () =>
       match(await service.id(swr.articleId).delete())
         .with({ ok: false }, () => true)
         .otherwise(() => {
-          navigate(routeToArticles())
+          navigate(routesTo.articles.list())
           return false
         }),
     t: _.prefixed("confirm.delete"),

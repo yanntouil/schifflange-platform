@@ -23,17 +23,13 @@ export const SitemapFilters: React.FC<ReturnType<typeof useSitemapFilters>[0]> =
   const tooltip = hasActiveFilter ? _("tooltip", { selectedState }) : _("tooltip-all", { selectedState })
 
   // manage models
-  const models = ["page", "article", "project", "project-step"]
+  const models = ["page", "article"]
   const hasActiveFilterModel = models.some((model) => isActive(model))
   const selectedModel = isActive("page")
     ? _("model-short-page")
     : isActive("article")
       ? _("model-short-article")
-      : isActive("project")
-        ? _("model-short-project")
-        : isActive("project-step")
-          ? _("model-short-project-step")
-          : _("model-short-all")
+      : _("model-short-all")
 
   return (
     <Ui.DropdownMenu.Root>
@@ -104,13 +100,9 @@ const dictionary = {
     "model-all": "Tous les types",
     "model-page": "Seulement les pages",
     "model-article": "Seulement les articles",
-    "model-project": "Seulement les projets",
-    "model-project-step": "Seulement les étapes du projet",
     "model-short-all": "Tous les types",
     "model-short-page": "Pages",
     "model-short-article": "Articles",
-    "model-short-project": "Projets",
-    "model-short-project-step": "Étapes du projet",
 
     "reset-filters": "Réinitialiser les filtres",
   },
@@ -130,13 +122,9 @@ const dictionary = {
     "model-all": "Alle Typen",
     "model-page": "Nur Seiten",
     "model-article": "Nur Artikel",
-    "model-project": "Nur Projekte",
-    "model-project-step": "Nur Projektschritte",
     "model-short-all": "Alle Typen",
     "model-short-page": "Seiten",
     "model-short-article": "Artikel",
-    "model-short-project": "Projekte",
-    "model-short-project-step": "Projektschritte",
 
     "reset-filters": "Filter zurücksetzen",
   },
@@ -156,13 +144,9 @@ const dictionary = {
     "model-all": "All types",
     "model-page": "Only pages",
     "model-article": "Only articles",
-    "model-project": "Only projects",
-    "model-project-step": "Only project steps",
     "model-short-all": "Tous les types",
     "model-short-page": "Pages",
     "model-short-article": "Articles",
-    "model-short-project": "Projects",
-    "model-short-project-step": "Project steps",
 
     "reset-filters": "Reset filters",
   },

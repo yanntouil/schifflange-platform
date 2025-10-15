@@ -200,6 +200,7 @@ export default class WorkspacesController {
 
     // manage type
     if (G.isNotNullable(type) && workspace.type !== type) {
+      console.log('type', type)
       workspace.type = type
       changes.type = 'updated'
     }

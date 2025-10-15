@@ -3,13 +3,11 @@ import ExtendedModel from '#models/extended/extended-model'
 import Forward from '#models/forward'
 import Language from '#models/language'
 import Page from '#models/page'
-import Project from '#models/project'
 import { preloadSeo } from '#models/seo'
 import { beforeCreate, beforeDelete, column, hasMany, hasOne } from '@adonisjs/lucid/orm'
 import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import type { ExtractModelRelations, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
-import ProjectStep from './project-step.js'
 
 /**
  * Model for Slug (router)
@@ -33,7 +31,7 @@ export default class Slug extends ExtendedModel {
   declare path: string
 
   @column()
-  declare model: 'page' | 'article' | 'project' | 'project-step'
+  declare model: 'page' | 'article'
 
   @column({ serializeAs: null })
   declare workspaceId: string | null
@@ -45,10 +43,6 @@ export default class Slug extends ExtendedModel {
   declare page: HasOne<typeof Page>
   @hasOne(() => Article, { foreignKey: 'slugId' })
   declare article: HasOne<typeof Article>
-  @hasOne(() => Project, { foreignKey: 'slugId' })
-  declare project: HasOne<typeof Project>
-  @hasOne(() => ProjectStep, { foreignKey: 'slugId' })
-  declare projectStep: HasOne<typeof ProjectStep>
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
    * HOOKS
@@ -74,8 +68,6 @@ export default class Slug extends ExtendedModel {
       ...D.deleteKeys(this.serialize(), ['slug']),
       page: this.page?.publicSerialize(language),
       article: this.article?.publicSerialize(language),
-      project: this.project?.publicSerialize(language),
-      projectStep: this.projectStep?.publicSerialize(language),
     }
   }
 
@@ -103,6 +95,4 @@ export const preloadSlug = (query: ModelQueryBuilderContract<typeof Slug>) => {
   query
     .preload('page', (query) => query.preload('seo', preloadSeo))
     .preload('article', (query) => query.preload('seo', preloadSeo))
-    .preload('project', (query) => query.preload('seo', preloadSeo))
-    .preload('projectStep', (query) => query.preload('seo', preloadSeo))
 }

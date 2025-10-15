@@ -9,8 +9,14 @@ export type ForwardsServiceContextType = {
   serviceKey: string
   isAdmin: boolean
   makeUrl: (slug: Api.Slug) => string
-  routeToPage: (pageId: string) => string
-  routeToArticle: (articleId: string) => string
+  routesTo: {
+    pages: {
+      byId: (pageId: string) => string
+    }
+    articles: {
+      byId: (articleId: string) => string
+    }
+  }
   makePath: Api.Service["makePath"]
   getImageUrl: Api.Service["getImageUrl"]
 }

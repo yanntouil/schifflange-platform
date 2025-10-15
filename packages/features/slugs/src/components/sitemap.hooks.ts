@@ -20,8 +20,6 @@ export const useSitemapFilters = (ctxPrefix: string) =>
       all: () => true,
       page: (slug) => slug.model === "page",
       article: (slug) => slug.model === "article",
-      project: (slug) => slug.model === "project",
-      "project-step": (slug) => slug.model === "project-step",
     },
     {
       all: true,

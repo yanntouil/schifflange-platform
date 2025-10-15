@@ -9,12 +9,6 @@ import Language from '#models/language'
 import { preloadFiles } from '#models/media-file'
 import Menu from '#models/menu'
 import MenuItem from '#models/menu-item'
-import Project, {
-  isAvailableProject,
-  preloadCategory as preloadProjectCategory,
-} from '#models/project'
-import ProjectCategory from '#models/project-category'
-import ProjectTag, { preloadProjectTag } from '#models/project-tag'
 import { preloadPublicPublication } from '#models/publication'
 import { preloadPublicSeo } from '#models/seo'
 import Slug, { preloadSlug } from '#models/slug'
@@ -22,9 +16,9 @@ import { withProfile } from '#models/user'
 // import Workspace from '#models/workspace'
 import { makePath } from '#services/drive'
 import { filterArticlesByValidator, sortArticlesByValidator } from '#validators/articles'
-import { filterProjectsByValidator, sortProjectsByValidator } from '#validators/projects'
 import type { HttpContext } from '@adonisjs/core/http'
 import { A, D, G, O, pipe } from '@mobily/ts-belt'
+import { match } from 'ts-pattern'
 
 export default class SitesController {
   /**
@@ -45,7 +39,7 @@ export default class SitesController {
   /**
    * slugs
    * Provides all available paths for Next.js ISR (Incremental Static Regeneration)
-   * Collects all slugs from published resources (pages, articles, projects) and forwards
+   * Collects all slugs from published resources (pages, articles) and forwards
    * Returns localized paths for Next.js static pre-generation
    * @middleware siteWorkspace
    * @get sites/:workspaceId/slugs
@@ -55,13 +49,7 @@ export default class SitesController {
     const languages = siteWorkspace.languages
 
     // Get all slugs from workspace with their associated resources
-    const slugs = await siteWorkspace
-      .related('slugs')
-      .query()
-      .preload('page')
-      .preload('article')
-      .preload('project')
-      .preload('projectStep')
+    const slugs = await siteWorkspace.related('slugs').query().preload('page').preload('article')
 
     // Filter only available resources (published and within publication dates)
     const availableSlugsPaths = await Promise.all(
@@ -101,7 +89,7 @@ export default class SitesController {
 
   /**
    * pages
-   * Get a page, article, or project by slug or return a forward/redirect
+   * Get a page, article by slug or return a forward/redirect
    * Validates locale against workspace supported languages
    * @middleware siteWorkspace({validateLocale: true})
    * @get sites/:workspaceId/pages/:locale/*
@@ -118,8 +106,6 @@ export default class SitesController {
       .where('path', path)
       .preload('page')
       .preload('article')
-      .preload('project')
-      .preload('projectStep')
       .first()
 
     // Check for forwards within workspace
@@ -135,7 +121,7 @@ export default class SitesController {
       return response.ok({ path, locale: siteLanguage.code, redirect: forward.slug.path })
     }
 
-    // Prepare page, article or project data for public display
+    // Prepare page or article data for public display
     return matchResource(slug, siteLanguage, path, response)
   }
 
@@ -172,7 +158,7 @@ export default class SitesController {
   /**
    * sitemap
    * Generate sitemap of all available resources for a workspace in specified locale
-   * Returns all published pages, articles, and projects with their SEO data
+   * Returns all published pages, articles with their SEO data
    * @middleware siteWorkspace({validateLocale: true})
    * @get sites/:workspaceId/sitemap/:locale
    * @success 200 { locale: string, sitemap: SerializedSlug[] }
@@ -184,8 +170,6 @@ export default class SitesController {
       .query()
       .preload('page', (query) => query.preload('seo', preloadPublicSeo))
       .preload('article', (query) => query.preload('seo', preloadPublicSeo))
-      .preload('project', (query) => query.preload('seo', preloadPublicSeo))
-      .preload('projectStep', (query) => query.preload('seo', preloadPublicSeo))
 
     // Filter only available resources and serialize for sitemap
     const sitemap = await Promise.all(
@@ -318,187 +302,11 @@ export default class SitesController {
   }
 
   /**
-   * projects
-   * Get all available projects for a workspace with filtering, sorting, and search
-   * Returns projects with their categories in specified locale
-   * @middleware siteWorkspace({validateLocale: true})
-   * @get sites/:workspaceId/projects/:locale
-   * @success 200 { locale: string, projects: Project[], categories: ProjectCategory[] }
-   */
-  async projects({ request, siteWorkspace, siteLanguage, response }: HttpContext) {
-    const filterBy = await request.filterBy(filterProjectsByValidator)
-    const search = await request.search()
-    const sortBy = await request.sortBy(sortProjectsByValidator)
-    const limit = await request.limit()
-
-    // Get projects from workspace with all filters applied
-    const projects = await Project.query()
-      .where('workspaceId', siteWorkspace.id)
-      .withScopes((scope) => scope.filterBy(filterBy))
-      .withScopes((scope) => scope.sortBy(sortBy))
-      .withScopes((scope) => scope.limit(limit))
-      .withScopes((scope) => scope.search(search, siteLanguage))
-      .withScopes((scope) => scope.isPublished())
-      .preload('category', preloadProjectCategory)
-      .preload('tag', preloadProjectTag)
-      .preload('seo', preloadPublicSeo)
-      .preload('content', preloadPublicContent)
-      .preload('publication', preloadPublicPublication)
-      .preload('slug')
-      .preload('createdBy', withProfile)
-
-    return response.ok({
-      locale: siteLanguage.code,
-      projects: A.map(projects, (project) => project.publicSerialize(siteLanguage)),
-    })
-  }
-
-  /**
-   * projectsCategories
-   * Get all categories for a workspace
-   * Returns projects with their categories in specified locale
-   * @middleware siteWorkspace({validateLocale: true})
-   * @get sites/:workspaceId/projects-categories/:locale
-   * @success 200 { locale: string, categories: ProjectCategory[] }
-   */
-  async projectsCategories({ siteWorkspace, siteLanguage, response }: HttpContext) {
-    // Get project categories from workspace
-    const categories = await ProjectCategory.query()
-      .where('workspaceId', siteWorkspace.id)
-      .preload('translations')
-
-    return response.ok({
-      locale: siteLanguage.code,
-      categories: A.map(categories, (category) => category.publicSerialize(siteLanguage)),
-    })
-  }
-
-  /**
-   * projectsTags
-   * Get all tags for a workspace
-   * Returns projects with their tags in specified locale
-   * @middleware siteWorkspace({validateLocale: true})
-   * @get sites/:workspaceId/projects-tags/:locale
-   * @success 200 { locale: string, tags: ProjectTag[] }
-   */
-  async projectsTags({ siteWorkspace, siteLanguage, response }: HttpContext) {
-    // Get project categories from workspace
-    const tags = await ProjectTag.query()
-      .where('workspaceId', siteWorkspace.id)
-      .preload('translations')
-
-    return response.ok({
-      locale: siteLanguage.code,
-      tags: A.map(tags, (tag) => tag.publicSerialize(siteLanguage)),
-    })
-  }
-
-  /**
-   * projectsYears
-   * Get all years available for a workspace
-   * Returns projects with their years in specified locale
-   * @middleware siteWorkspace({validateLocale: true})
-   * @get sites/:workspaceId/projects-years/:locale
-   * @success 200 { locale: string, years: string[] }
-   */
-  async projectsYears({ siteWorkspace, siteLanguage, response }: HttpContext) {
-    // Get project years from workspace
-    const projects = await Project.query()
-      .where('workspaceId', siteWorkspace.id)
-      .preload('publication')
-
-    const unsortedYears = A.reduce(projects, [] as string[], (acc, project) => {
-      const year = project.publication?.publishedAt?.year.toString()
-      if (G.isNotNullable(year) && year.length === 4 && !A.includes(acc, year)) {
-        return A.append(acc, year)
-      }
-      return acc
-    })
-    const years = A.sortBy(unsortedYears, (year) => year)
-
-    return response.ok({
-      locale: siteLanguage.code,
-      years,
-    })
-  }
-
-  /**
-   * projectsByPage
-   * Get paginated projects for a workspace with filtering, sorting, and search
-   * Returns projects with pagination metadata and categories
-   * @middleware siteWorkspace({validateLocale: true})
-   * @get sites/:workspaceId/projects-by-page/:locale
-   * @success 200 { locale: string, projects: Project[], categories: ProjectCategory[], metadata: PaginationMeta, filterBy: object, sortBy: object }
-   */
-  async projectsByPage({ request, siteWorkspace, siteLanguage, response }: HttpContext) {
-    const filterBy = await request.filterBy(filterProjectsByValidator)
-    const sortBy = await request.sortBy(sortProjectsByValidator)
-    const search = await request.search()
-    const pagination = await request.pagination()
-
-    // Get paginated projects from workspace with all filters applied
-    const paginated = await Project.query()
-      .where('workspaceId', siteWorkspace.id)
-      .withScopes((scope) => scope.filterBy(filterBy))
-      .withScopes((scope) => scope.sortBy(sortBy))
-      .withScopes((scope) => scope.search(search, siteLanguage))
-      .withScopes((scope) => scope.isPublished())
-      .preload('category', preloadProjectCategory)
-      .preload('tag', preloadProjectTag)
-      .preload('seo', preloadPublicSeo)
-      .preload('content', preloadPublicContent)
-      .preload('publication', preloadPublicPublication)
-      .preload('slug')
-      .preload('createdBy', withProfile)
-      .paginate(...pagination)
-
-    return response.ok({
-      locale: siteLanguage.code,
-      projects: A.map(paginated.all(), (project) => project.publicSerialize(siteLanguage)),
-      metadata: paginated.getMeta(),
-      filterBy,
-      sortBy,
-    })
-  }
-
-  /**
-   * projectsLatest
-   * Get the latest published project for a workspace with optional filtering
-   * Returns the most recent project based on creation date
-   * @middleware siteWorkspace({validateLocale: true})
-   * @get sites/:workspaceId/projects-latest/:locale
-   * @success 200 { locale: string, project: Project | null }
-   */
-  async projectsLatest({ request, siteWorkspace, siteLanguage, response }: HttpContext) {
-    const filterBy = await request.filterBy(filterProjectsByValidator)
-
-    // Get the latest published project from workspace
-    const project = await Project.query()
-      .where('workspaceId', siteWorkspace.id)
-      .withScopes((scope) => scope.filterBy(filterBy))
-      .withScopes((scope) => scope.sortBy({ field: 'createdAt', direction: 'desc' }))
-      .withScopes((scope) => scope.isPublished())
-      .preload('category', preloadProjectCategory)
-      .preload('seo', preloadPublicSeo)
-      .preload('content', preloadPublicContent)
-      .preload('publication', preloadPublicPublication)
-      .preload('slug')
-      .preload('createdBy', withProfile)
-      .first()
-
-    return response.ok({
-      locale: siteLanguage.code,
-      project: project?.publicSerialize(siteLanguage) ?? null,
-    })
-  }
-
-  /**
    * previewItem
-   * Get the latest published project for a workspace with optional filtering
-   * Returns the content item or null if not found
+   * Returns the content item published or not available for preview or null if not found
    * @middleware siteWorkspace({validateLocale: true})
-   * @get sites/:workspaceId/projects-latest/:locale
-   * @success 200 { locale: string, project: Project | null }
+   * @get sites/:workspaceId/preview/:locale/item/:id
+   * @success 200 ContentItem | null
    */
   async previewItem({ request, siteLanguage, response }: HttpContext) {
     const item = await ContentItem.query()
@@ -567,19 +375,10 @@ type SerializedMenuItem = Record<string, unknown> & {
  * check if a resource is available
  */
 const hasAvailableResource = async (slug: Slug): Promise<boolean> => {
-  if (slug.model === 'article') {
-    return isAvailableArticle(slug.article)
-  }
-  if (slug.model === 'page') {
-    return slug.page?.state === 'published'
-  }
-  if (slug.model === 'project') {
-    return await isAvailableProject(slug.project)
-  }
-  if (slug.model === 'project-step') {
-    return slug.projectStep?.state === 'published'
-  }
-  return false
+  return match(slug.model)
+    .with('article', () => isAvailableArticle(slug.article))
+    .with('page', () => slug.page?.state === 'published')
+    .exhaustive()
 }
 
 const matchResource = async (
@@ -588,19 +387,11 @@ const matchResource = async (
   path: string,
   response: HttpContext['response']
 ) => {
-  if (slug.model === 'page') {
-    return preparePage(slug, language, path, response)
-  }
-  if (slug.model === 'article') {
-    return prepareArticle(slug, language, path, response)
-  }
-  if (slug.model === 'project') {
-    return prepareProject(slug, language, path, response)
-  }
-  if (slug.model === 'project-step') {
-    return prepareProjectStep(slug, language, path, response)
-  }
-  return response.notFound(makeNotFoundProps(language.code, path))
+  return match(slug.model)
+    .with('article', () => prepareArticle(slug, language, path, response))
+    .with('page', () => preparePage(slug, language, path, response))
+    .exhaustive()
+  // return response.notFound(makeNotFoundProps(language.code, path))
 }
 
 /**
@@ -658,69 +449,6 @@ const prepareArticle = async (
     path,
     model: 'article',
     article: article.publicSerialize(language),
-  })
-}
-
-/**
- * prepare project
- * load project data for public display
- */
-const prepareProject = async (
-  slug: Slug,
-  language: Language,
-  path: string,
-  response: HttpContext['response']
-) => {
-  const project = slug.project
-  if (
-    G.isNullable(project) ||
-    project.state !== 'published' ||
-    !(await isAvailableProject(project))
-  ) {
-    return response.notFound(makeNotFoundProps(language.code, path))
-  }
-
-  // Load additional data for public display
-  await project.load('seo', preloadPublicSeo)
-  await project.load('content', preloadPublicContent)
-  await project.load('slug')
-  await project.load('createdBy', withProfile)
-  await project.load('category', preloadProjectCategory)
-  await project.load('publication')
-
-  return response.ok({
-    locale: language.code,
-    path,
-    model: 'project',
-    project: project.publicSerialize(language),
-  })
-}
-
-/**
- * prepare project step
- * load project step data for public display
- */
-const prepareProjectStep = async (
-  slug: Slug,
-  language: Language,
-  path: string,
-  response: HttpContext['response']
-) => {
-  const projectStep = slug.projectStep
-  if (G.isNullable(projectStep) || projectStep.state !== 'published') {
-    return response.notFound(makeNotFoundProps(language.code, path))
-  }
-
-  // Load additional data for public display
-  await projectStep.load('seo', preloadPublicSeo)
-  await projectStep.load('content', preloadPublicContent)
-  await projectStep.load('slug')
-
-  return response.ok({
-    locale: language.code,
-    path,
-    model: 'project-step',
-    projectStep: projectStep.publicSerialize(language),
   })
 }
 

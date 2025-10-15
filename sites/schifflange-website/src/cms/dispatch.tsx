@@ -1,13 +1,13 @@
-import { Container } from '@/components/container'
-import { Wrapper } from '@/components/wrapper'
-import type { LocalizeLanguage } from '@/lib/localize'
-import { Api } from '@/service'
-import { getServerTranslation } from '@/utils/localize'
-import { D, G } from '@compo/utils'
-import type { AvailableItemTypes, InferItemAsync, RenderAsyncProps } from '@contents/lumiq/ssr'
-import React from 'react'
-import items from '.'
-import { env } from '../env'
+import { Container } from "@/components/container"
+import { Wrapper } from "@/components/wrapper"
+import type { LocalizeLanguage } from "@/lib/localize"
+import { Api } from "@/service"
+import { getServerTranslation } from "@/utils/localize"
+import { D, G } from "@compo/utils"
+import type { AvailableItemTypes, InferItemAsync, RenderAsyncProps } from "@contents/schifflange-website/ssr"
+import React from "react"
+import items from "."
+import { env } from "../env"
 
 const debug = false
 
@@ -27,7 +27,7 @@ export default async function Dispatch({ item, locale, path, searchParams }: Pro
 
   if (G.isNullable(Component)) return <MissingComponent type={validItem.type} locale={locale} />
 
-  const template = 'template' in item.props ? (item.props.template as string) : 'default'
+  const template = "template" in item.props ? (item.props.template as string) : "default"
   if (debug) console.log(`Build ${item.type} ${template}`)
 
   const props: RenderAsyncProps<typeof validItem.type> = {
@@ -63,7 +63,7 @@ const ComponentDebug = ({
   return React.createElement(
     type,
     {
-      [template]: '',
+      [template]: "",
     },
     debug
       ? [
@@ -88,10 +88,8 @@ const MissingComponent = ({ type, locale }: { type: string | undefined; locale: 
     <Wrapper className='py-12 sm:py-16'>
       <Container>
         <div className='text-center'>
-          <h1 className='text-2xl font-bold'>{_('title')}</h1>
-          <p className='text-sm text-neutral-500'>
-            {_('description', { type: type ?? _('unknown') })}
-          </p>
+          <h1 className='text-2xl font-bold'>{_("title")}</h1>
+          <p className='text-sm text-neutral-500'>{_("description", { type: type ?? _("unknown") })}</p>
         </div>
       </Container>
     </Wrapper>
@@ -103,19 +101,19 @@ const MissingComponent = ({ type, locale }: { type: string | undefined; locale: 
  */
 const dictionary = {
   fr: {
-    title: 'Le composant est manquant.',
+    title: "Le composant est manquant.",
     description: "Le composant pour {{type}} n'existe pas.",
-    unknown: 'le type inconnue',
+    unknown: "le type inconnue",
   },
   en: {
-    title: 'The component is missing.',
-    description: 'The component for {{type}} does not exist.',
-    unknown: 'unknown type',
+    title: "The component is missing.",
+    description: "The component for {{type}} does not exist.",
+    unknown: "unknown type",
   },
   de: {
-    title: 'Der Komponente fehlt.',
-    description: 'Der Komponente für {{type}} existiert nicht.',
-    unknown: 'unbekannte Typ',
+    title: "Der Komponente fehlt.",
+    description: "Der Komponente für {{type}} existiert nicht.",
+    unknown: "unbekannte Typ",
   },
 }
 

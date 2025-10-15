@@ -6,11 +6,8 @@ import { D } from "@compo/utils"
 import React from "react"
 import { Redirect, Route, Switch } from "wouter"
 import dashboardRouteTo from "."
-import { DashboardLumiqRoute } from "./lumiq"
 import Page from "./page"
-import { DashboardTypeARoute } from "./type-a"
-import { DashboardTypeBRoute } from "./type-b"
-import { DashboardTypeCRoute } from "./type-c"
+import { DashboardSchifflangeWebsiteRoute } from "./schifflange-website"
 
 export const DashboardRoute: React.FC = () => {
   const me = useAuthStore(D.prop("me"))
@@ -26,17 +23,8 @@ export const DashboardRoute: React.FC = () => {
   return (
     <AuthAppProvider>
       <Switch>
-        <Route path="/lumiq*" nest>
-          <DashboardLumiqRoute />
-        </Route>
-        <Route path="/type-a*" nest>
-          <DashboardTypeARoute />
-        </Route>
-        <Route path="/type-b*" nest>
-          <DashboardTypeBRoute />
-        </Route>
-        <Route path="/type-c*" nest>
-          <DashboardTypeCRoute />
+        <Route path="/schifflange-website*" nest>
+          <DashboardSchifflangeWebsiteRoute />
         </Route>
         <Route path="/">
           <Layout>

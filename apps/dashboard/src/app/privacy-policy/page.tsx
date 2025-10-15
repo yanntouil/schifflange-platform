@@ -1,8 +1,8 @@
 import legalConfig from "@/config/legal"
-import { Dashboard } from "@compo/dashboard"
 import { useTranslation } from "@compo/localize"
 import { Ui } from "@compo/ui"
 import React from "react"
+import { useTitle } from "react-use"
 import { Link } from "wouter"
 import routeToRegister from "../register"
 
@@ -11,7 +11,7 @@ import routeToRegister from "../register"
  */
 const Page: React.FC = () => {
   const { _, format } = useTranslation(dictionary)
-  Dashboard.usePage([], _("title"))
+  useTitle(_("page-title"))
 
   return (
     <div className="container mx-auto max-w-4xl px-4 py-8">
@@ -190,6 +190,7 @@ export default Page
  */
 const dictionary = {
   en: {
+    "page-title": "Schifflange Dashboard - Privacy Policy",
     title: "Privacy Policy",
     "last-updated": "Last Updated",
     "effective-date": "Effective Date",
@@ -273,6 +274,7 @@ const dictionary = {
     "footer-rights": "All rights reserved.",
   },
   fr: {
+    "page-title": "Schifflange Dashboard - Politique de confidentialité",
     title: "Politique de confidentialité",
     "last-updated": "Dernière mise à jour",
     "effective-date": "Date d'entrée en vigueur",
@@ -357,6 +359,7 @@ const dictionary = {
     "footer-rights": "Tous droits réservés.",
   },
   de: {
+    "page-title": "Schifflange Dashboard - Datenschutzerklärung",
     title: "Datenschutzerklärung",
     "last-updated": "Zuletzt aktualisiert",
     "effective-date": "Gültig ab",

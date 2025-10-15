@@ -7,7 +7,7 @@ import { Plus } from "lucide-react"
 import React from "react"
 import { useLocation } from "wouter"
 import { dashboardRoutesByType } from "."
-import { WorkspaceAvatar } from "./workspaces.avatar"
+import { WorkspaceAvatar } from "../../features/workspaces/components/avatar"
 
 const { signInToWorkspace, acceptInvitation, refuseInvitation } = workspaceStore.actions
 type Invitation = Api.WorkspaceInvitation & { workspace: Api.Workspace }

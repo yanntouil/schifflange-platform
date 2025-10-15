@@ -1,4 +1,4 @@
-import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/lumiq/ssr"
+import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/schifflange-website/ssr"
 import { TemplateDefault } from "./default"
 
 /**

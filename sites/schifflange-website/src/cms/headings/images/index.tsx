@@ -1,7 +1,7 @@
 import { asyncHelpers } from "@/cms/utils"
 import { fileToSlide } from "@/components/lightbox"
 import { A, match } from "@compo/utils"
-import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/lumiq/ssr"
+import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/schifflange-website/ssr"
 import { Template1 } from "./template-1"
 
 /**

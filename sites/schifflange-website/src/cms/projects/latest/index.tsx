@@ -1,6 +1,6 @@
 import { service } from "@/service"
 import { makeLinkProps } from "@/utils/links"
-import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/lumiq/ssr"
+import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/schifflange-website/ssr"
 import { Api } from "@services/site"
 import { TemplateDefault } from "./default"
 

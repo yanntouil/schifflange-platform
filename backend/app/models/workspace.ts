@@ -6,9 +6,6 @@ import Language from '#models/language'
 import MediaFile from '#models/media-file'
 import MediaFolder from '#models/media-folder'
 import Page from '#models/page'
-import Project from '#models/project'
-import ProjectCategory from '#models/project-category'
-import ProjectTag from '#models/project-tag'
 import User from '#models/user'
 import WorkspaceProfile from '#models/workspace-profile'
 import WorkspaceTheme from '#models/workspace-theme'
@@ -146,15 +143,6 @@ export default class Workspace extends ExtendedModel {
 
   @hasMany(() => ArticleCategory)
   declare articleCategories: HasMany<typeof ArticleCategory>
-
-  @hasMany(() => Project)
-  declare projects: HasMany<typeof Project>
-
-  @hasMany(() => ProjectCategory)
-  declare projectCategories: HasMany<typeof ProjectCategory>
-
-  @hasMany(() => ProjectTag)
-  declare projectTags: HasMany<typeof ProjectTag>
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
    * HOOKS
@@ -314,20 +302,10 @@ export default class Workspace extends ExtendedModel {
     )
     // cleanup hasMany complex relations (need to delete)
     await Promise.all(
-      A.map(
-        [
-          'articleCategories',
-          'articles',
-          'pages',
-          'projectCategories',
-          'projects',
-          'templates',
-        ] as const,
-        async (related) => {
-          const children = await this.getOrLoadRelation(related)
-          await Promise.all(children.map((child) => child.delete()))
-        }
-      )
+      A.map(['articleCategories', 'articles', 'pages', 'templates'] as const, async (related) => {
+        const children = await this.getOrLoadRelation(related)
+        await Promise.all(children.map((child) => child.delete()))
+      })
     )
     // cleanup medias
     await Promise.all(
@@ -367,7 +345,7 @@ export const workspaceStatuses = ['active', 'deleted', 'suspended'] as const
 export const workspaceDefaultStatus = workspaceStatuses[0]
 export type WorkspaceStatus = (typeof workspaceStatuses)[number]
 
-export const workspaceTypes = ['lumiq', 'type-a', 'type-b', 'type-c'] as const
+export const workspaceTypes = ['schifflange-website'] as const
 export const workspaceDefaultType = workspaceTypes[0]
 export type WorkspaceType = (typeof workspaceTypes)[number]
 

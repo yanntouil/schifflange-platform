@@ -10,14 +10,14 @@ import { normString } from "@compo/hooks"
 import { useTranslation } from "@compo/localize"
 import { useLanguage } from "@compo/translations"
 import { Ui, variants } from "@compo/ui"
-import { A, cx, cxm, D, O, pipe, placeholder } from "@compo/utils"
+import { A, cx, cxm, D, match, O, pipe, placeholder } from "@compo/utils"
 import { type Api, placeholder as servicePlaceholder } from "@services/dashboard"
-import { ChevronsUpDown, ImageOff, LayoutPanelTop, Newspaper, Presentation } from "lucide-react"
+import { ChevronsUpDown, ImageOff, LayoutPanelTop, Newspaper } from "lucide-react"
 import { matchSorter } from "match-sorter"
 import React from "react"
 import { useSlugsService } from "../service.context"
 import { useSWRSlugs } from "../swr"
-import { getSlugSeo, isSlugArticle, isSlugPage, isSlugProject, isSlugProjectStep } from "../utils"
+import { getSlugSeo, isSlugArticle, isSlugPage } from "../utils"
 
 /**
  * FormSlug
@@ -113,9 +113,10 @@ const Field: React.FC<FieldProps> = ({ disabled, classNames, ...props }) => {
                   )}
                   onClick={() => toggleFilter(model)}
                 >
-                  {model === "pages" && <LayoutPanelTop aria-label={_(`model-${model}`)} />}
-                  {model === "articles" && <Newspaper aria-label={_(`model-${model}`)} />}
-                  {model === "projects" && <Presentation aria-label={_(`model-${model}`)} />}
+                  {match(model)
+                    .with("pages", () => <LayoutPanelTop aria-label={_(`model-${model}`)} />)
+                    .with("articles", () => <Newspaper aria-label={_(`model-${model}`)} />)
+                    .exhaustive()}
                 </span>
               </Ui.Tooltip.Quick>
             ))}
@@ -135,7 +136,7 @@ const Field: React.FC<FieldProps> = ({ disabled, classNames, ...props }) => {
                 A.isNotEmpty([...slugs]) && isActiveFilter(model) ? (
                   <Ui.Command.Group key={model} heading={_(`model-${model}`)}>
                     {A.map([...slugs], (slug) => (
-                      <Option key={slug.id} slug={slug} onSelect={onSelect} steps={"steps" in slug ? slug.steps : []} />
+                      <Option key={slug.id} slug={slug} onSelect={onSelect} />
                     ))}
                   </Ui.Command.Group>
                 ) : (
@@ -187,9 +188,8 @@ const FieldValue: React.FC<{
 
 const Option: React.FC<{
   slug: Api.Slug & Api.WithModel
-  steps: (Api.Slug & Api.WithProjectStep)[]
   onSelect: (slug: Api.Slug & Api.WithModel) => void
-}> = ({ slug, steps, onSelect }) => {
+}> = ({ slug, onSelect }) => {
   const { _ } = useTranslation(dictionary)
   const { getImageUrl } = useSlugsService()
   const {
@@ -233,23 +233,6 @@ const Option: React.FC<{
       </div>
     </Ui.Command.Item>
   )
-  if (A.isNotEmpty(steps)) {
-    return (
-      <>
-        {option}
-        <Ui.Command.Group
-          heading={_("model-project-steps", {
-            project: placeholder(translate(getSlugSeo(slug), servicePlaceholder.seo).title, _(`title-ph`)),
-          })}
-          className='p-2 m-2 border'
-        >
-          {A.map(steps, (step) => (
-            <Option key={step.id} slug={step} onSelect={() => onSelect(step)} steps={[]} />
-          ))}
-        </Ui.Command.Group>
-      </>
-    )
-  }
   return option
 }
 
@@ -279,19 +262,9 @@ const useSlugByModel = (slugs: (Api.Slug & Api.WithModel)[], searchQuery: string
     const filteredSlugs = searchQuery ? matchSorter(sortedSlugs, normString(searchQuery), { keys }) : sortedSlugs
     const pages = A.filter(filteredSlugs, isSlugPage)
     const articles = A.filter(filteredSlugs, isSlugArticle)
-    const projectSteps = A.filter(slugs, isSlugProjectStep)
-    const projects = A.filterMap(filteredSlugs, (slug) => {
-      if (!isSlugProject(slug)) return O.None
-      const steps = A.sortBy(
-        A.filter(projectSteps, ({ projectStep }) => projectStep.projectId === slug.project.id),
-        ({ projectStep }) => projectStep.type
-      )
-      return O.Some(D.set(slug, "steps", steps))
-    })
     return {
       pages,
       articles,
-      projects,
     }
   }, [slugs, translate, searchQuery, keys])
   return slugsByModel
@@ -306,8 +279,6 @@ const dictionary = {
     "description-ph": "Aucune description pour cette ressource",
     "model-pages": "Pages",
     "model-articles": "Articles",
-    "model-projects": "Projets",
-    "model-project-steps": "Étapes du projet {{project}}",
     search: "Rechercher",
     "no-results-found": "Aucun résultat trouvé",
   },
@@ -316,8 +287,6 @@ const dictionary = {
     "description-ph": "Keine Beschreibung für diese Ressource",
     "model-pages": "Seiten",
     "model-articles": "Artikel",
-    "model-projects": "Projekte",
-    "model-project-steps": "Projekt-Schritte",
     search: "Suchen",
     "no-results-found": "Keine Ergebnisse gefunden",
   },
@@ -326,8 +295,6 @@ const dictionary = {
     "description-ph": "No description for this resource",
     "model-pages": "Pages",
     "model-articles": "Articles",
-    "model-projects": "Projects",
-    "model-project-steps": "Project Steps",
     search: "Search",
     "no-results-found": "No results found",
   },

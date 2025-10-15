@@ -72,7 +72,7 @@ const PageMenu: React.FC = () => {
       </Ui.DropdownMenu.Item>
       {!isLocked && isPublished && (
         <Ui.DropdownMenu.Item asChild>
-          <a href={makeUrl(swr.page)} target='_blank' rel='noopener noreferrer nofollow'>
+          <a href={makeUrl(swr.page.slug)} target='_blank' rel='noopener noreferrer nofollow'>
             <ExternalLink aria-hidden />
             {_("menu.link")}
           </a>

@@ -13,12 +13,12 @@ import { SWRArticles } from "./swr"
  */
 export const useDisplay = () => {
   const [, navigate] = useLocation()
-  const { routeToArticle } = useArticlesService()
+  const { routesTo } = useArticlesService()
   const displayArticle = React.useCallback(
     (article: Api.ArticleWithRelations) => {
-      navigate(routeToArticle(article.id))
+      navigate(routesTo.articles.byId(article.id))
     },
-    [navigate, routeToArticle]
+    [navigate, routesTo.articles.byId]
   )
   return displayArticle
 }
@@ -31,13 +31,13 @@ export const useDisplay = () => {
 export const useCreateArticle = () => {
   const { _ } = useTranslation(dictionary)
   const [, navigate] = useLocation()
-  const { service, routeToArticle } = useArticlesService()
+  const { service, routesTo } = useArticlesService()
   const [createArticle, createArticleProps] = Ui.useConfirm<void>({
     onAsyncConfirm: async () =>
       match(await service.create({}))
         .with({ ok: false }, () => true)
         .otherwise(({ data }) => {
-          navigate(routeToArticle(data.article.id))
+          navigate(routesTo.articles.byId(data.article.id))
           return false
         }),
     t: _.prefixed("confirm.create"),

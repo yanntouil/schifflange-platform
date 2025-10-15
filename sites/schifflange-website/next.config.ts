@@ -1,11 +1,11 @@
-import type { NextConfig } from 'next'
+import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
-      use: ['@svgr/webpack'],
+      use: ["@svgr/webpack"],
     })
     return config
   },
@@ -20,28 +20,28 @@ const nextConfig: NextConfig = {
   },
   turbopack: {
     resolveAlias: {
-      canvas: './empty-module.ts',
+      canvas: "./empty-module.ts",
     },
   },
   transpilePackages: [],
   images: {
     remotePatterns: [
       {
-        protocol: 'http',
-        hostname: '127.0.0.1',
-        port: '3140', // Port de ton API backend
-        pathname: '/storage/**',
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "3140", // Port de ton API backend
+        pathname: "/storage/**",
       },
       {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '3140',
-        pathname: '/storage/**',
+        protocol: "http",
+        hostname: "localhost",
+        port: "3140",
+        pathname: "/storage/**",
       },
       // for production
       {
-        protocol: 'https',
-        hostname: 'lumiq.api.101.lu',
+        protocol: "https",
+        hostname: "schifflange.api.101.lu",
       },
     ],
   },

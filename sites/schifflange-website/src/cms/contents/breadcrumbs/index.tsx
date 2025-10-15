@@ -1,6 +1,6 @@
 import { makeLinkProps } from "@/utils/links"
 import { A, D, O } from "@compo/utils"
-import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/lumiq/ssr"
+import type { InferItemAsync, RenderAsyncProps, TemplateAsyncProps } from "@contents/schifflange-website/ssr"
 import { TemplateDefault } from "./default"
 
 /**

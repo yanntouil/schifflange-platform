@@ -65,13 +65,13 @@ export const useToggleLock = (swr: SWRSafePage) => {
 export const useConfirmDeletePage = (swr: SWRSafePage) => {
   const { _ } = useTranslation(dictionary)
   const [, navigate] = useLocation()
-  const { service, routeToPages } = usePagesService()
+  const { service, routesTo } = usePagesService()
   const [confirmDeletePage, confirmDeletePageProps] = Ui.useConfirm<void>({
     onAsyncConfirm: async () =>
       match(await service.id(swr.pageId).delete())
         .with({ ok: false }, () => true)
         .otherwise(() => {
-          navigate(routeToPages())
+          navigate(routesTo.pages.list())
           return false
         }),
     t: _.prefixed("confirm.delete"),

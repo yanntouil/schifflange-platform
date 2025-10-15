@@ -55,10 +55,6 @@ const Controller = {
     pages: () => import('#controllers/http/workspace/pages'),
     articles: () => import('#controllers/http/workspace/articles'),
     articleCategories: () => import('#controllers/http/workspace/article-categories'),
-    projectCategories: () => import('#controllers/http/workspace/project-categories'),
-    projectTags: () => import('#controllers/http/workspace/project-tags'),
-    projects: () => import('#controllers/http/workspace/projects'),
-    projectSteps: () => import('#controllers/http/workspace/project-steps'),
     menus: () => import('#controllers/http/workspace/menus'),
     forwards: () => import('#controllers/http/workspace/forwards'),
     slugs: () => import('#controllers/http/workspace/slugs'),
@@ -496,81 +492,6 @@ router
   .where('publicationId', router.matchers.uuid())
 
 /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
- * -- WORKSPACES PROJECTS --
- */
-router
-  .group(() => {
-    const { seos, contents, publications, projects, projectCategories, projectTags, projectSteps } =
-      Controller.workspace
-    // categories
-    router.get('/projects/categories', [projectCategories, 'all'])
-    router.post('/projects/categories', [projectCategories, 'create'])
-    router.get('/projects/categories/:categoryId', [projectCategories, 'read'])
-    router.put('/projects/categories/:categoryId', [projectCategories, 'update'])
-    router.delete('/projects/categories/:categoryId', [projectCategories, 'delete'])
-    // tags
-    router.get('/projects/tags', [projectTags, 'all'])
-    router.post('/projects/tags', [projectTags, 'create'])
-    router.get('/projects/tags/:tagId', [projectTags, 'read'])
-    router.put('/projects/tags/:tagId', [projectTags, 'update'])
-    router.delete('/projects/tags/:tagId', [projectTags, 'delete'])
-    // projects
-    router.get('/projects', [projects, 'all'])
-    router.post('/projects', [projects, 'create'])
-    router.get('/projects/:projectId', [projects, 'read'])
-    router.put('/projects/:projectId', [projects, 'update'])
-    router.delete('/projects/:projectId', [projects, 'delete'])
-    // projects seo
-    router.put('/projects/:projectId/seo', [seos, 'update'])
-    // projects publication
-    router.put('/projects/:projectId/publication', [publications, 'update'])
-    // projects content
-    router.put('/projects/:projectId/content', [contents, 'update'])
-    router.post('/projects/:projectId/content/items', [contents, 'createItem'])
-    router.put('/projects/:projectId/content/items/:itemId', [contents, 'updateItem'])
-    router.delete('/projects/:projectId/content/items/:itemId', [contents, 'deleteItem'])
-    router.put('/projects/:projectId/content/items', [contents, 'reorderItems'])
-    router
-      .post('/projects/:projectId/content/items/from-template/:fromTemplateId', [
-        contents,
-        'appendFromTemplate',
-      ])
-      .where('fromTemplateId', router.matchers.uuid())
-    // steps
-    router.post('/projects/:projectId/steps', [projectSteps, 'create'])
-    router.get('/projects/:projectId/steps/:stepId', [projectSteps, 'read'])
-    router.put('/projects/:projectId/steps/:stepId', [projectSteps, 'update'])
-    router.delete('/projects/:projectId/steps/:stepId', [projectSteps, 'delete'])
-    // steps seo
-    router.put('/projects/:projectId/steps/:stepId/seo', [seos, 'update'])
-    // steps publication
-    router.put('/projects/:projectId/steps/:stepId/publication', [publications, 'update'])
-    // steps content
-    router.put('/projects/:projectId/steps/:stepId/content', [contents, 'update'])
-    router.post('/projects/:projectId/steps/:stepId/content/items', [contents, 'createItem'])
-    router.put('/projects/:projectId/steps/:stepId/content/items/:itemId', [contents, 'updateItem'])
-    router.delete('/projects/:projectId/steps/:stepId/content/items/:itemId', [
-      contents,
-      'deleteItem',
-    ])
-    router.put('/projects/:projectId/steps/:stepId/content/items', [contents, 'reorderItems'])
-    router
-      .post('/projects/:projectId/steps/:stepId/content/items/from-template/:fromTemplateId', [
-        contents,
-        'appendFromTemplate',
-      ])
-      .where('fromTemplateId', router.matchers.uuid())
-  })
-  .middleware(middleware.auth())
-  .middleware(middleware.workspace({ as: 'member' }))
-  .prefix('/api/workspaces/:workspaceId')
-  .where('workspaceId', router.matchers.uuid())
-  .where('projectId', router.matchers.uuid())
-  .where('categoryId', router.matchers.uuid())
-  .where('contentId', router.matchers.uuid())
-  .where('publicationId', router.matchers.uuid())
-
-/** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
  * -- WORKSPACES MENUS --
  */
 router
@@ -724,14 +645,6 @@ router
         router.get('/articles/:locale', [sites, 'articles'])
         router.get('/articles-by-page/:locale', [sites, 'articlesByPage'])
         router.get('/articles-latest/:locale', [sites, 'articlesLatest'])
-        // projects
-        router.get('/projects/:locale', [sites, 'projects'])
-        router.get('/projects-by-page/:locale', [sites, 'projectsByPage'])
-        router.get('/projects-latest/:locale', [sites, 'projectsLatest'])
-        // projects metadata
-        router.get('/projects-categories/:locale', [sites, 'projectsCategories'])
-        router.get('/projects-tags/:locale', [sites, 'projectsTags'])
-        router.get('/projects-years/:locale', [sites, 'projectsYears'])
       })
       .middleware(middleware.siteWorkspace({ validateLocale: true }))
   })

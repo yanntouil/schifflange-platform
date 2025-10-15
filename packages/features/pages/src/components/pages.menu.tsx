@@ -49,7 +49,7 @@ export const PagesMenu: React.FC<{ page: Api.PageWithRelations }> = ({ page }) =
         {_("view")}
       </Ui.Menu.Item>
       <Ui.Menu.Item asChild>
-        <a href={makeUrl(page)} target='_blank' rel='noopener noreferrer nofollow'>
+        <a href={makeUrl(page.slug)} target='_blank' rel='noopener noreferrer nofollow'>
           <SquareArrowOutUpRight aria-hidden />
           {_("link")}
         </a>

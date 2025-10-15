@@ -47,7 +47,7 @@ export const ArticlesMenu: React.FC<{ article: Api.ArticleWithRelations }> = ({ 
         {_("view")}
       </Ui.Menu.Item>
       <Ui.Menu.Item asChild>
-        <a href={makeUrl(article)} target='_blank' rel='noopener noreferrer nofollow'>
+        <a href={makeUrl(article.slug)} target='_blank' rel='noopener noreferrer nofollow'>
           <SquareArrowOutUpRight aria-hidden />
           {_("link")}
         </a>

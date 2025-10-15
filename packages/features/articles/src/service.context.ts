@@ -9,10 +9,13 @@ export type ArticlesServiceContextType = {
   service: Api.ArticlesService
   serviceKey: string
   isAdmin: boolean
-  routeToCategories: () => string
-  routeToArticles: () => string
-  routeToArticle: (articleId: string) => string
-  makeUrl: (article: Api.ArticleWithRelations, code?: string) => string
+  routesTo: {
+    articles: {
+      list: () => string
+      byId: (articleId: string) => string
+    }
+  }
+  makeUrl: (slug: Api.Slug, code?: string) => string
 }
 
 /**

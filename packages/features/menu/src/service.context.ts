@@ -9,10 +9,18 @@ export type MenusServiceContextType = {
   serviceKey: string
   isAdmin: boolean
   makeUrl: (path: string, code?: string) => string
-  routeToPage: (pageId: string) => string
-  routeToArticle: (articleId: string) => string
-  routeToMenus: () => string
-  routeToMenusId: (articleId: string) => string
+  routesTo: {
+    pages: {
+      byId: (pageId: string) => string
+    }
+    articles: {
+      byId: (articleId: string) => string
+    }
+    menus: {
+      list: () => string
+      byId: (menuId: string) => string
+    }
+  }
   makePath: Api.MakePath
   getImageUrl: Api.GetImageUrl
 }

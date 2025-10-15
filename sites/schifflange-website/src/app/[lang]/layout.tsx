@@ -5,8 +5,8 @@ import type { Metadata, Viewport } from "next"
  * generateMetadata
  */
 export const metadata: Metadata = {
-  title: "LumiQ",
-  description: "LumiQ",
+  title: "Commune de Schifflange",
+  description: "Site officiel de la commune de Schifflange",
   // icons: [
   //   {
   //     rel: "icon",

@@ -13,7 +13,7 @@ import { useArticlesService } from "../../service.context"
  */
 export const TopPerformingArticles: React.FC<React.ComponentProps<"div">> = ({ ...props }) => {
   const { _ } = useTranslation(dictionary)
-  const { routeToArticle } = useArticlesService()
+  const { routesTo } = useArticlesService()
   const { translate } = useLanguage()
   const { swr } = useArticles()
   const { articles } = swr
@@ -34,7 +34,7 @@ export const TopPerformingArticles: React.FC<React.ComponentProps<"div">> = ({ .
         <ul className='flex flex-col gap-2'>
           {A.map(A.take(sortedArticles, 5), ({ id, seo, tracking }) => (
             <li className='flex items-center justify-between gap-8 text-sm' key={id}>
-              <Link to={routeToArticle(id)} className={variants.link()}>
+              <Link to={routesTo.articles.byId(id)} className={variants.link()}>
                 <span className='line-clamp-1 tracking-tight'>
                   {placeholder(translate(seo, servicePlaceholder.seo).title, _("placeholder"))}
                 </span>

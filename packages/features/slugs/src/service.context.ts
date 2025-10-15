@@ -9,10 +9,14 @@ export type SlugsServiceContextType = {
   serviceKey: string
   isAdmin: boolean
   makeUrl: (page: Api.Slug) => string
-  routeToPage: (pageId: string) => string
-  routeToArticle: (articleId: string) => string
-  routeToProject: (projectId: string) => string
-  routeToProjectStep: (projectId: string, projectStepId: string) => string
+  routesTo: {
+    pages: {
+      byId: (pageId: string) => string
+    }
+    articles: {
+      byId: (articleId: string) => string
+    }
+  }
   makePath: Api.Service["makePath"]
   getImageUrl: Api.Service["getImageUrl"]
 }

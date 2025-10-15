@@ -1,4 +1,5 @@
 import { useTranslation } from "@compo/localize"
+import { isSlugArticle, isSlugPage } from "@compo/slugs"
 import { Ui } from "@compo/ui"
 import { F, G, match } from "@compo/utils"
 import { Api } from "@services/dashboard"
@@ -12,11 +13,11 @@ import { SWRSafeMenu } from "./swr"
  */
 export const useDisplayResource = () => {
   const [, navigate] = useLocation()
-  const { routeToArticle, routeToPage } = useMenusService()
+  const { routesTo } = useMenusService()
   const displayResource = (item: Api.MenuItemWithRelations) => {
     if (G.isNotNullable(item.slug)) {
-      if (G.isNotNullable(item.slug.page)) navigate(routeToPage(item.slug.page.id))
-      if (G.isNotNullable(item.slug.article)) navigate(routeToArticle(item.slug.article.id))
+      if (isSlugPage(item.slug)) navigate(routesTo.pages.byId(item.slug.page.id))
+      if (isSlugArticle(item.slug)) navigate(routesTo.articles.byId(item.slug.article.id))
     }
   }
   return displayResource
@@ -121,13 +122,13 @@ export const useConfirmDeleteMenu = (swr: SWRSafeMenu) => {
   const { _ } = useTranslation(dictionary)
   const { service } = useMenusService()
   const [, navigate] = useLocation()
-  const { routeToMenus } = useMenusService()
+  const { routesTo } = useMenusService()
   const [confirmDeleteMenu, confirmDeleteMenuProps] = Ui.useConfirm<void>({
     onAsyncConfirm: async () =>
       match(await service.id(swr.menu.id).delete())
         .with({ ok: false }, () => true)
         .with({ ok: true }, ({ data }) => {
-          navigate(routeToMenus())
+          navigate(routesTo.menus.list())
           return false
         })
         .otherwise(() => false),

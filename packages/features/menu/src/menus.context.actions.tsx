@@ -13,9 +13,9 @@ import { SWRMenus } from "./swr"
  */
 export const useDisplayMenu = () => {
   const [, navigate] = useLocation()
-  const { routeToMenusId } = useMenusService()
+  const { routesTo } = useMenusService()
   const displayMenu = (menu: Api.Menu & Api.WithMenuItems) => {
-    navigate(routeToMenusId(menu.id))
+    navigate(routesTo.menus.byId(menu.id))
   }
   return displayMenu
 }

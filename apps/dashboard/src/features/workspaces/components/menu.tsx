@@ -1,7 +1,7 @@
 import { dashboardRoutesByType } from "@/app/dashboard"
-import { WorkspaceAvatar } from "@/app/dashboard/workspaces.avatar"
 import { useAuthDialog } from "@/features/auth/components/dialog/context"
 import { useLoadWorkspaces, workspaceStore } from "@/features/workspaces"
+import { WorkspaceAvatar } from "@/features/workspaces/components/avatar"
 import { useTranslation } from "@compo/localize"
 import { Ui } from "@compo/ui"
 import { match } from "@compo/utils"
