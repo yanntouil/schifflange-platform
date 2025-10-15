@@ -1,0 +1,205 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@source "../../../../../";
+
+@plugin 'tailwind-scrollbar' {
+  nocompatible: true;
+}
+
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.145 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.145 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(63.7% 0.237 25.331);
+  --destructive-foreground: oklch(0.145 0 0);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
+  --ring: oklch(0.439 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(0.269 0 0);
+  --sidebar-ring: oklch(0.439 0 0);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  :root {
+    --input-lg-height: calc(var(--spacing) * 10);
+    --input-default-height: calc(var(--spacing) * 9);
+    --input-sm-height: calc(var(--spacing) * 8);
+    --input-xs-height: calc(var(--spacing) * 7);
+    --input-xxs-height: calc(var(--spacing) * 6);
+    --input-lg-padding: calc(var(--spacing) * 3);
+    --input-default-padding: calc(var(--spacing) * 3);
+    --input-sm-padding: calc(var(--spacing) * 2);
+    --input-xs-padding: calc(var(--spacing) * 2);
+    --input-xxs-padding: calc(var(--spacing) * 1.5);
+  }
+
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
+  /* Lumiq custom variables */
+  :root {
+    --lumiq-li-bullet: url('data:image/svg+xml,<svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 13.1282C14 12.6046 13.4975 12.1206 12.6465 11.7286C12.0514 11.4545 11.7594 10.7428 11.997 10.1322C12.3561 9.20931 12.3835 8.475 11.9986 8.09014C11.6215 7.71303 10.9055 7.73324 10.0053 8.07463C9.39184 8.30725 8.67985 8.01219 8.41235 7.41316C8.01595 6.52545 7.52239 6 6.98685 6C6.46509 6 5.98129 6.50025 5.5893 7.34744C5.31548 7.93923 4.60896 8.23053 3.99954 7.9986C3.09547 7.65454 2.37765 7.63267 2.00141 8.01127C1.60946 8.40321 1.64676 9.16087 2.02767 10.113C2.27273 10.7255 1.97743 11.4442 1.37682 11.7172C0.51156 12.1105 0 12.5995 0 13.1282C0 13.6567 0.512032 14.1449 1.37771 14.5388C1.96658 14.8067 2.25836 15.504 2.04243 16.1138C1.743 16.9596 1.73929 17.6303 2.1 17.9887C2.46611 18.3548 3.15488 18.3453 4.02306 18.0295C4.63036 17.8086 5.32776 18.0972 5.60243 18.6821C5.99162 19.511 6.46948 20 6.98357 20C7.51459 20 8.00361 19.4843 8.39898 18.6126C8.66712 18.0214 9.36837 17.73 9.97832 17.9522C10.8452 18.2679 11.5324 18.2775 11.9 17.9099C12.2512 17.5586 12.2577 16.9124 11.9799 16.0955C11.7732 15.4874 12.0628 14.7976 12.6461 14.5287C13.4972 14.1363 14 13.6515 14 13.1282Z" fill="%2335374F"/></svg>');
+    --lumiq-li-bullet-finch: url('data:image/svg+xml,<svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 13.1282C14 12.6046 13.4975 12.1206 12.6465 11.7286C12.0514 11.4545 11.7594 10.7428 11.997 10.1322C12.3561 9.20931 12.3835 8.475 11.9986 8.09014C11.6215 7.71303 10.9055 7.73324 10.0053 8.07463C9.39184 8.30725 8.67985 8.01219 8.41235 7.41316C8.01595 6.52545 7.52239 6 6.98685 6C6.46509 6 5.98129 6.50025 5.5893 7.34744C5.31548 7.93923 4.60896 8.23053 3.99954 7.9986C3.09547 7.65454 2.37765 7.63267 2.00141 8.01127C1.60946 8.40321 1.64676 9.16087 2.02767 10.113C2.27273 10.7255 1.97743 11.4442 1.37682 11.7172C0.51156 12.1105 0 12.5995 0 13.1282C0 13.6567 0.512032 14.1449 1.37771 14.5388C1.96658 14.8067 2.25836 15.504 2.04243 16.1138C1.743 16.9596 1.73929 17.6303 2.1 17.9887C2.46611 18.3548 3.15488 18.3453 4.02306 18.0295C4.63036 17.8086 5.32776 18.0972 5.60243 18.6821C5.99162 19.511 6.46948 20 6.98357 20C7.51459 20 8.00361 19.4843 8.39898 18.6126C8.66712 18.0214 9.36837 17.73 9.97832 17.9522C10.8452 18.2679 11.5324 18.2775 11.9 17.9099C12.2512 17.5586 12.2577 16.9124 11.9799 16.0955C11.7732 15.4874 12.0628 14.7976 12.6461 14.5287C13.4972 14.1363 14 13.6515 14 13.1282Z" fill="%23626A4F"/></svg>');
+    --lumiq-li-bullet-moss: url('data:image/svg+xml,<svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 13.1282C14 12.6046 13.4975 12.1206 12.6465 11.7286C12.0514 11.4545 11.7594 10.7428 11.997 10.1322C12.3561 9.20931 12.3835 8.475 11.9986 8.09014C11.6215 7.71303 10.9055 7.73324 10.0053 8.07463C9.39184 8.30725 8.67985 8.01219 8.41235 7.41316C8.01595 6.52545 7.52239 6 6.98685 6C6.46509 6 5.98129 6.50025 5.5893 7.34744C5.31548 7.93923 4.60896 8.23053 3.99954 7.9986C3.09547 7.65454 2.37765 7.63267 2.00141 8.01127C1.60946 8.40321 1.64676 9.16087 2.02767 10.113C2.27273 10.7255 1.97743 11.4442 1.37682 11.7172C0.51156 12.1105 0 12.5995 0 13.1282C0 13.6567 0.512032 14.1449 1.37771 14.5388C1.96658 14.8067 2.25836 15.504 2.04243 16.1138C1.743 16.9596 1.73929 17.6303 2.1 17.9887C2.46611 18.3548 3.15488 18.3453 4.02306 18.0295C4.63036 17.8086 5.32776 18.0972 5.60243 18.6821C5.99162 19.511 6.46948 20 6.98357 20C7.51459 20 8.00361 19.4843 8.39898 18.6126C8.66712 18.0214 9.36837 17.73 9.97832 17.9522C10.8452 18.2679 11.5324 18.2775 11.9 17.9099C12.2512 17.5586 12.2577 16.9124 11.9799 16.0955C11.7732 15.4874 12.0628 14.7976 12.6461 14.5287C13.4972 14.1363 14 13.6515 14 13.1282Z" fill="%23BBDAB0"/></svg>');
+    --lumiq-li-bullet-glacier: url('data:image/svg+xml,<svg width="14" height="20" viewBox="0 0 14 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 13.1282C14 12.6046 13.4975 12.1206 12.6465 11.7286C12.0514 11.4545 11.7594 10.7428 11.997 10.1322C12.3561 9.20931 12.3835 8.475 11.9986 8.09014C11.6215 7.71303 10.9055 7.73324 10.0053 8.07463C9.39184 8.30725 8.67985 8.01219 8.41235 7.41316C8.01595 6.52545 7.52239 6 6.98685 6C6.46509 6 5.98129 6.50025 5.5893 7.34744C5.31548 7.93923 4.60896 8.23053 3.99954 7.9986C3.09547 7.65454 2.37765 7.63267 2.00141 8.01127C1.60946 8.40321 1.64676 9.16087 2.02767 10.113C2.27273 10.7255 1.97743 11.4442 1.37682 11.7172C0.51156 12.1105 0 12.5995 0 13.1282C0 13.6567 0.512032 14.1449 1.37771 14.5388C1.96658 14.8067 2.25836 15.504 2.04243 16.1138C1.743 16.9596 1.73929 17.6303 2.1 17.9887C2.46611 18.3548 3.15488 18.3453 4.02306 18.0295C4.63036 17.8086 5.32776 18.0972 5.60243 18.6821C5.99162 19.511 6.46948 20 6.98357 20C7.51459 20 8.00361 19.4843 8.39898 18.6126C8.66712 18.0214 9.36837 17.73 9.97832 17.9522C10.8452 18.2679 11.5324 18.2775 11.9 17.9099C12.2512 17.5586 12.2577 16.9124 11.9799 16.0955C11.7732 15.4874 12.0628 14.7976 12.6461 14.5287C13.4972 14.1363 14 13.6515 14 13.1282Z" fill="%2398C5D5"/></svg>');
+    --lumiq-li-arrow-bullet: url('data:image/svg+xml,<svg width="12" height="14" viewBox="0 0 12 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0.75 7H11.25M11.25 7L6 1.75M11.25 7L6 12.25" stroke="%23626A4F" stroke-width="1.25" stroke-linecap="square" stroke-linejoin="round"/></svg>');
+  }
+}
+
+/**
+ * Scrollbar
+ */
+/* @layer base { */
+.scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: rgba(107, 114, 128, 0.3) transparent;
+  /* gray-500/30 */
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.scrollbar-w-1::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+/* Track */
+.scrollbar-track-transparent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Thumb */
+.scrollbar-thumb-gray-500\/30::-webkit-scrollbar-thumb {
+  background-color: rgba(107, 114, 128, 0.3);
+  /* gray-500/30 */
+  border-radius: 9999px;
+}
+
+.scrollbar-thumb-gray-600\/40::-webkit-scrollbar-thumb {
+  background-color: rgba(75, 85, 99, 0.4);
+  /* gray-600/40 */
+  border-radius: 9999px;
+}
+
+.scrollbar-thumb-transparent::-webkit-scrollbar-thumb {
+  background-color: transparent;
+}
+
+/* } */

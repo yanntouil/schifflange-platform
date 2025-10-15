@@ -1,0 +1,33 @@
+{
+  "name": "schifflange-platform",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "sites/*",
+    "contents/*",
+    "packages/features/*",
+    "packages/services/*",
+    "packages/shared/*"
+  ],
+  "scripts": {
+    "dev": "concurrently --names \"backend,next,dashboard\" --c gray,red,purple \"npm run dev --prefix ./outside/backend\" \"npm run dev --workspace=@sites/lumiq\" \"npm run dev --workspace=dashboard\"",
+    "dev:dashboard": "npm run dev --workspace=dashsboard",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:lumiq": "npm run dev --workspace=lumiq",
+    "build:dashboard": "bash ./build-dashboard.sh",
+    "build:backend": "bash ./build-backend.sh",
+    "build:lumiq": "bash ./build-lumiq.sh"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.12"
+  },
+  "dependencies": {
+    "core-js": "^3.45.0"
+  },
+  "overrides": {
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}

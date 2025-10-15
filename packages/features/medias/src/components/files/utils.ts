@@ -1,0 +1,6 @@
+export const imageExtensions = new Set(["jpg", "jpeg", "png", "gif", "bmp", "svg", "webp"])
+export const videoExtensions = new Set(["mp4", "mov", "wmv", "flv", "avi", "mkv", "webm"])
+export const pdfExtensions = new Set(["pdf"])
+export const isImage = (extension: string): boolean => imageExtensions.has(extension.toLowerCase())
+export const isVideo = (extension: string): boolean => videoExtensions.has(extension.toLowerCase())
+export const isPdf = (extension: string): boolean => pdfExtensions.has(extension.toLowerCase())

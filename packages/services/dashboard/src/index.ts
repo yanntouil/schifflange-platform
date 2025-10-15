@@ -1,0 +1,7 @@
+export type { StoreApi } from "zustand"
+export { useDashboardService } from "./context"
+export { DashboardServiceProvider } from "./context.provider"
+export type * as Payload from "./payload"
+export * from "./placeholder"
+export * from "./service"
+export type * as Api from "./types"

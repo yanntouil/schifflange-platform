@@ -1,0 +1,17 @@
+{
+  // Associe les CSS au mode Tailwind (utile en v4)
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
+
+  // Map des entrypoints CSS (v4) -> dossiers où ils s’appliquent
+  "tailwindCSS.experimental.configFile": {
+    "apps/dashboard/src/styles/index.css": ["apps/dashboard/**", "packages/**"],
+    "sites/lumiq/src/app/globals.css": ["sites/lumiq/**"]
+  },
+
+  // Optionnel : meilleures suggestions dans les strings (JSX, etc.)
+  "editor.quickSuggestions": {
+    "strings": "on"
+  }
+}

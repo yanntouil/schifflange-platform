@@ -1,0 +1,5 @@
+export * as Admin from "./admin/payload"
+export * as Auth from "./auth/payload"
+export * as Contents from "./contents/payload"
+export * as Seos from "./seos/payload"
+export * as Workspaces from "./workspaces/payload"

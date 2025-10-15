@@ -1,0 +1,36 @@
+{
+  "name": "@compo/utils",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "sideEffects": false,
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsc --watch"
+  },
+  "dependencies": {
+    "@marko19907/string-to-color": "^1.0.0",
+    "@mobily/ts-belt": "^3.13.1",
+    "clsx": "^2.1.1",
+    "date-fns": "^4.1.0",
+    "date-fns-tz": "^3.2.0",
+    "evolve-ts": "^2.2.0",
+    "tailwind-merge": "^3.3.1",
+    "ts-essentials": "^10.0.4",
+    "ts-pattern": "^5.7.1",
+    "uuid": "^11.1.0",
+    "zod": "^3.25.20",
+    "zustand": "^4.4.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

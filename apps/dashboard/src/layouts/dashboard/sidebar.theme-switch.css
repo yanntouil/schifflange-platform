@@ -1,0 +1,25 @@
+@keyframes theme-wave {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(0);
+  }
+}
+
+.theme-wave {
+  --wave-size: 200vmax;
+  position: fixed;
+  left: var(--wave-x);
+  top: var(--wave-y);
+  width: var(--wave-size);
+  height: var(--wave-size);
+  border-radius: var(--wave-size);
+  background-color: var(--wave-color);
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: difference;
+  transform: translate(-50%, -50%) scale(0);
+  animation: theme-wave 0.8s ease-in forwards;
+}
