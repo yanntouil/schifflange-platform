@@ -1,10 +1,13 @@
 import folders from '#config/folders'
 import { E_UNLOADED_RELATION } from '#exceptions/models'
 import Article from '#models/article'
+import Contact from '#models/contact'
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
 import MediaFile from '#models/media-file'
 import MediaFolder from '#models/media-folder'
+import Organisation from '#models/organisation'
+import OrganisationCategory from '#models/organisation-category'
 import Page from '#models/page'
 import User from '#models/user'
 import WorkspaceProfile from '#models/workspace-profile'
@@ -143,6 +146,15 @@ export default class Workspace extends ExtendedModel {
 
   @hasMany(() => ArticleCategory)
   declare articleCategories: HasMany<typeof ArticleCategory>
+
+  @hasMany(() => Organisation)
+  declare organisations: HasMany<typeof Organisation>
+
+  @hasMany(() => OrganisationCategory)
+  declare organisationCategories: HasMany<typeof OrganisationCategory>
+
+  @hasMany(() => Contact)
+  declare contacts: HasMany<typeof Contact>
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
    * HOOKS
@@ -302,10 +314,21 @@ export default class Workspace extends ExtendedModel {
     )
     // cleanup hasMany complex relations (need to delete)
     await Promise.all(
-      A.map(['articleCategories', 'articles', 'pages', 'templates'] as const, async (related) => {
-        const children = await this.getOrLoadRelation(related)
-        await Promise.all(children.map((child) => child.delete()))
-      })
+      A.map(
+        [
+          'articleCategories',
+          'articles',
+          'pages',
+          'templates',
+          'organisationCategories',
+          'organisations',
+          'contacts',
+        ] as const,
+        async (related) => {
+          const children = await this.getOrLoadRelation(related)
+          await Promise.all(children.map((child) => child.delete()))
+        }
+      )
     )
     // cleanup medias
     await Promise.all(

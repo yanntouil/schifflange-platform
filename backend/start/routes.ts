@@ -47,6 +47,10 @@ const Controller = {
   sites: () => import('#controllers/http/sites'),
   workspace: {
     workspaces: () => import('#controllers/http/workspace/workspaces'),
+    contacts: () => import('#controllers/http/workspace/contacts'),
+    contactOrganisations: () => import('#controllers/http/workspace/contact-organisations'),
+    organisations: () => import('#controllers/http/workspace/organisations'),
+    organisationCategories: () => import('#controllers/http/workspace/organisation-categories'),
     medias: () => import('#controllers/http/workspace/medias'),
     seos: () => import('#controllers/http/workspace/seos'),
     contents: () => import('#controllers/http/workspace/contents'),
@@ -490,6 +494,62 @@ router
   .where('categoryId', router.matchers.uuid())
   .where('contentId', router.matchers.uuid())
   .where('publicationId', router.matchers.uuid())
+
+/** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
+ * -- WORKSPACES CONTACTS & ORGANISATIONS --
+ */
+router
+  .group(() => {
+    const { contacts, contactOrganisations, organisations, organisationCategories } =
+      Controller.workspace
+
+    // organisation categories
+    router.get('/organisations/categories', [organisationCategories, 'all'])
+    router.post('/organisations/categories', [organisationCategories, 'create'])
+    router.get('/organisations/categories/:categoryId', [organisationCategories, 'read'])
+    router.put('/organisations/categories/:categoryId', [organisationCategories, 'update'])
+    router.delete('/organisations/categories/:categoryId', [organisationCategories, 'delete'])
+
+    // organisations
+    router.get('/organisations', [organisations, 'all'])
+    router.get('/organisations/root', [organisations, 'rootIndex'])
+    router.post('/organisations', [organisations, 'create'])
+    router.get('/organisations/:organisationId', [organisations, 'read'])
+    router.put('/organisations/:organisationId', [organisations, 'update'])
+    router.delete('/organisations/:organisationId', [organisations, 'delete'])
+    router.post('/organisations/:organisationId/organisations', [organisations, 'create'])
+
+    // contacts
+    router.get('/contacts', [contacts, 'all'])
+    router.post('/contacts', [contacts, 'create'])
+    router.get('/contacts/:contactId', [contacts, 'read'])
+    router.put('/contacts/:contactId', [contacts, 'update'])
+    router.delete('/contacts/:contactId', [contacts, 'delete'])
+
+    // contact organisations (relationships)
+    router.get('/contacts/:contactId/organisations', [contactOrganisations, 'all'])
+    router.post('/contacts/:contactId/organisations', [contactOrganisations, 'create'])
+    router.get('/contacts/:contactId/organisations/:contactOrganisationId', [
+      contactOrganisations,
+      'read',
+    ])
+    router.put('/contacts/:contactId/organisations/:contactOrganisationId', [
+      contactOrganisations,
+      'update',
+    ])
+    router.delete('/contacts/:contactId/organisations/:contactOrganisationId', [
+      contactOrganisations,
+      'delete',
+    ])
+  })
+  .middleware(middleware.auth())
+  .middleware(middleware.workspace({ as: 'member' }))
+  .prefix('/api/workspaces/:workspaceId')
+  .where('workspaceId', router.matchers.uuid())
+  .where('categoryId', router.matchers.uuid())
+  .where('organisationId', router.matchers.uuid())
+  .where('contactId', router.matchers.uuid())
+  .where('contactOrganisationId', router.matchers.uuid())
 
 /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
  * -- WORKSPACES MENUS --

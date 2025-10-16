@@ -16,6 +16,7 @@ import {
   WorkspaceOwnerErrors,
 } from "../types"
 import { articles } from "./articles"
+import { contacts } from "./contacts"
 import { forwards } from "./forwards"
 import { medias } from "./medias"
 import { menus } from "./menus"
@@ -28,7 +29,6 @@ import {
   UpdateMember,
   UpdateWorkspace,
 } from "./payload"
-import { projects } from "./projects"
 import { slugs } from "./slugs"
 import { templates } from "./templates"
 import {
@@ -58,7 +58,7 @@ export const workspaces = (api: CreateApi, secure: Secure) => ({
     menus: menus(api, secure, wid),
     pages: pages(api, secure, wid),
     articles: articles(api, secure, wid),
-    projects: projects(api, secure, wid),
+    contacts: contacts(api, secure, wid),
 
     // workspace routes
     read: secure(() =>

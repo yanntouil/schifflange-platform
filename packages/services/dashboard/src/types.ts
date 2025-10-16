@@ -50,6 +50,7 @@ export type SingleImage = SingleFile & {
 export type ExtraField = {
   name: string
   value: string
+  type?: "phone" | "email" | "url" | "text" | "number" | "boolean" | "date" | "time" | "datetime" | "textarea"
 }
 export type Address = {
   street: string
