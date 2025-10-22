@@ -1,6 +1,7 @@
 import React from "react"
 import { Route, Switch } from "wouter"
 import { RouteArticles } from "./articles"
+import { RouteDirectory } from "./directory"
 import Layout from "./layout"
 import { RouteMedias } from "./medias"
 import Page from "./page"
@@ -19,6 +20,9 @@ export const DashboardSchifflangeWebsiteRoute: React.FC = () => {
         <Switch>
           <Route path="/">
             <Page />
+          </Route>
+          <Route path="/directory*" nest>
+            <RouteDirectory />
           </Route>
           <Route path="/medias*" nest>
             <RouteMedias />

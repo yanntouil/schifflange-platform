@@ -1,9 +1,12 @@
 import { isWorkspaceAdmin, useWorkspace, workspaceStore } from "@/features/workspaces"
+import { useSwrAllOrganisations } from "@compo/directory"
 import { Form, useForm, useFormDirty } from "@compo/form"
 import { useSWRLanguages } from "@compo/languages"
 import { Interpolate, useTranslation } from "@compo/localize"
+import { useLanguage } from "@compo/translations"
 import { Ui } from "@compo/ui"
-import { A, D, match } from "@compo/utils"
+import { A, D, match, placeholder } from "@compo/utils"
+import { placeholder as servicePlaceholder } from "@services/dashboard"
 import React from "react"
 
 const { updateCurrentWorkspace } = workspaceStore.actions
@@ -15,6 +18,8 @@ export const Config: React.FC = () => {
   const { _ } = useTranslation(dictionary)
   const { workspace, service } = useWorkspace()
   const { languages } = useSWRLanguages()
+  const { translate } = useLanguage()
+  const { organisations } = useSwrAllOrganisations()
   const isAdmin = isWorkspaceAdmin(workspace)
   const initialValues = {
     config: workspace.config,
@@ -72,6 +77,11 @@ export const Config: React.FC = () => {
     value: language.id,
   }))
 
+  const organisationsOptions = A.map(organisations, (organisation) => ({
+    label: placeholder(translate(organisation, servicePlaceholder.organisation).name, _("organisation-placeholder")),
+    value: organisation.id,
+  }))
+
   const [isDirty] = useFormDirty(form, initialValues)
 
   return (
@@ -113,20 +123,6 @@ export const Config: React.FC = () => {
             </Form.Fields>
             <p className="text-xs text-gray-600 dark:text-gray-400">{_("articles-example")}</p>
           </div>
-
-          {/* Projects */}
-          <div className="space-y-3">
-            <Form.Fields names={["config", "projects"]}>
-              <Form.Input
-                label={_("projects-slug-prefix-label")}
-                name="slugPrefix"
-                placeholder={_("projects-slug-prefix-placeholder")}
-                maxLength={255}
-                labelAside={<Form.Info title={_("projects-slug-prefix-label")} content={_("projects-slug-prefix-info")} />}
-              />
-            </Form.Fields>
-            <p className="text-xs text-gray-600 dark:text-gray-400">{_("projects-example")}</p>
-          </div>
         </div>
 
         {/* Note explicative pour les URLs */}
@@ -161,6 +157,23 @@ export const Config: React.FC = () => {
             <p>{_("site-url-usage-description")}</p>
           </div>
         </Form.Alert>
+
+        <div className="space-y-4 border-t pt-6">
+          <Form.Fields names={["config", "organisation"]}>
+            <Form.Switch
+              label={_("organisation-display-label")}
+              name="display"
+              labelAside={<Form.Info title={_("organisation-display-label")} content={_("organisation-display-info")} />}
+            />
+            <Form.Select
+              label={_("organisation-id-label")}
+              name="organisationId"
+              options={organisationsOptions}
+              placeholder={_("organisation-id-placeholder")}
+              labelAside={<Form.Info title={_("organisation-id-label")} content={_("organisation-id-info")} />}
+            />
+          </Form.Fields>
+        </div>
       </div>
 
       {/* Actions */}
@@ -204,11 +217,6 @@ const dictionary = {
     "articles-slug-prefix-info":
       "This prefix will be used when creating new articles to generate their initial URL. Existing articles keep their current URLs.",
     "articles-example": "Example: With 'blog' prefix → /blog/my-new-article-title",
-    "projects-slug-prefix-label": "Projects URL prefix",
-    "projects-slug-prefix-placeholder": "portfolio",
-    "projects-slug-prefix-info":
-      "This prefix will be used when creating new projects to generate their initial URL. Existing projects keep their current URLs.",
-    "projects-example": "Example: With 'portfolio' prefix → /portfolio/my-new-project-name",
 
     // URL structure explanation
     "url-structure-title": "How URL structure works",
@@ -226,6 +234,14 @@ const dictionary = {
     "site-url-usage-title": "How the site URL is used",
     "site-url-usage-description":
       "This URL will be used to create absolute links in email notifications, RSS feeds, sitemaps, and social media sharing.",
+
+    // Organisation options
+    "organisation-display-label": "Add organisation to directory menu",
+    "organisation-display-info": "Enable to add a direct link to the selected organisation in the directory menu",
+    "organisation-id-label": "Organisation",
+    "organisation-id-placeholder": "Select an organisation",
+    "organisation-id-info": "Select the organisation to add as a shortcut in the directory menu",
+    "organisation-placeholder": "No organisation selected",
 
     // Actions and feedback
     "save-button": "Save configuration",
@@ -255,11 +271,6 @@ const dictionary = {
     "articles-slug-prefix-info":
       "Ce préfixe sera utilisé lors de la création d'un nouvel article pour générer son URL initiale. Les articles existants conservent leur URL actuelle.",
     "articles-example": "Exemple : Avec le préfixe 'blog' → /blog/titre-de-mon-nouvel-article",
-    "projects-slug-prefix-label": "Préfixe URL des projets",
-    "projects-slug-prefix-placeholder": "portfolio",
-    "projects-slug-prefix-info":
-      "Ce préfixe sera utilisé lors de la création d'un nouveau projet pour générer son URL initiale. Les projets existants conservent leur URL actuelle.",
-    "projects-example": "Exemple : Avec le préfixe 'portfolio' → /portfolio/nom-de-mon-nouveau-projet",
 
     // URL structure explanation
     "url-structure-title": "Comment fonctionne la structure des URLs",
@@ -277,6 +288,14 @@ const dictionary = {
     "site-url-usage-title": "Comment l'URL du site est utilisée",
     "site-url-usage-description":
       "Cette URL sera utilisée pour créer des liens absolus dans les notifications par email, flux RSS, sitemaps et partages sur les réseaux sociaux.",
+
+    // Organisation options
+    "organisation-display-label": "Ajouter l'organisation au menu du répertoire",
+    "organisation-display-info": "Activer pour ajouter un lien direct vers l'organisation sélectionnée dans le menu du répertoire",
+    "organisation-id-label": "Organisation",
+    "organisation-id-placeholder": "Sélectionner une organisation",
+    "organisation-id-info": "Sélectionner l'organisation à ajouter comme raccourci dans le menu du répertoire",
+    "organisation-placeholder": "Aucune organisation sélectionnée",
 
     // Actions and feedback
     "save-button": "Enregistrer la configuration",
@@ -306,11 +325,6 @@ const dictionary = {
     "articles-slug-prefix-info":
       "Dieses Präfix wird beim Erstellen neuer Artikel verwendet, um deren anfängliche URL zu generieren. Bestehende Artikel behalten ihre aktuelle URL.",
     "articles-example": "Beispiel: Mit 'blog' Präfix → /blog/mein-neuer-artikel-titel",
-    "projects-slug-prefix-label": "Projekte URL-Präfix",
-    "projects-slug-prefix-placeholder": "portfolio",
-    "projects-slug-prefix-info":
-      "Dieses Präfix wird beim Erstellen neuer Projekte verwendet, um deren anfängliche URL zu generieren. Bestehende Projekte behalten ihre aktuelle URL.",
-    "projects-example": "Beispiel: Mit 'portfolio' Präfix → /portfolio/mein-neues-projekt-name",
 
     // URL structure explanation
     "url-structure-title": "Wie die URL-Struktur funktioniert",
@@ -329,6 +343,14 @@ const dictionary = {
     "site-url-usage-title": "Wie die Website-URL verwendet wird",
     "site-url-usage-description":
       "Diese URL wird verwendet, um absolute Links in E-Mail-Benachrichtigungen, RSS-Feeds, Sitemaps und Social-Media-Freigaben zu erstellen.",
+
+    // Organisation options
+    "organisation-display-label": "Organisation zum Verzeichnismenü hinzufügen",
+    "organisation-display-info": "Aktivieren, um einen direkten Link zur ausgewählten Organisation im Verzeichnismenü hinzuzufügen",
+    "organisation-id-label": "Organisation",
+    "organisation-id-placeholder": "Organisation auswählen",
+    "organisation-id-info": "Wählen Sie die Organisation aus, die als Verknüpfung im Verzeichnismenü hinzugefügt werden soll",
+    "organisation-placeholder": "Keine Organisation ausgewählt",
 
     // Actions and feedback
     "save-button": "Konfiguration speichern",

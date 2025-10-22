@@ -1,13 +1,15 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
+import { preloadContact } from '#models/contact'
 import ContactOrganisation from '#models/contact-organisation'
+import { preloadOrganisation } from '#models/organisation'
 import { withProfile } from '#models/user'
 import {
   createContactOrganisationValidator,
-  updateContactOrganisationTranslationsValidator,
   updateContactOrganisationValidator,
 } from '#validators/contact-organisations'
 import type { HttpContext } from '@adonisjs/core/http'
-import { A, G } from '@mobily/ts-belt'
+import { A, D, G } from '@mobily/ts-belt'
+import type { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
 
 /**
@@ -147,6 +149,7 @@ export default class ContactOrganisationsController {
    */
   async update({ workspace, auth, request, response }: HttpContext) {
     const user = auth.user!
+    // /api/workspaces/79863107-6434-48d5-8cfa-648ec40e6d78/contacts/196b188d-3f79-4c7a-9f19-82ca6eec0a39/organisations/5769bdfe-79d6-47fb-b888-9dafbba271e6
     const contact = await workspace
       .related('contacts')
       .query()
@@ -185,8 +188,8 @@ export default class ContactOrganisationsController {
     await contactOrganisation.load((query) =>
       query
         .preload('translations')
-        .preload('organisation', (query) => query.preload('translations'))
-        .preload('contact', (query) => query.preload('translations'))
+        .preload('organisation', preloadOrganisation)
+        .preload('contact', preloadContact)
         .preload('updatedBy', withProfile)
     )
 
@@ -226,18 +229,19 @@ export default class ContactOrganisationsController {
  * Update contact organisation translations
  */
 async function updateContactOrganisationTranslations(
-  contactOrganisation: ContactOrganisation,
-  translations?: Record<string, { role?: string; roleDescription?: string }>
+  item: ContactOrganisation,
+  payloadTranslations?: Infer<typeof createContactOrganisationValidator>['translations']
 ) {
-  if (!translations) return
-  const contactOrganisationTranslations =
-    await contactOrganisation.getOrLoadRelation('translations')
+  if (!payloadTranslations) return
+  const Language = (await import('#models/language')).default
+  const languages = await Language.query()
+  const itemTranslations = await item.getOrLoadRelation('translations')
   await Promise.all(
-    A.map(contactOrganisationTranslations, async (translation) => {
-      const payload = await updateContactOrganisationTranslationsValidator.validate(
-        translations[translation.languageId] ?? {}
-      )
-      await translation.merge(payload).save()
+    A.map(languages, async ({ id }) => {
+      const existingTranslation = A.find(itemTranslations, (t) => t.languageId === id)
+      const payload = D.get(payloadTranslations, id) ?? {}
+      if (G.isNotNullable(existingTranslation)) return existingTranslation.merge(payload).save()
+      return item.related('translations').create({ languageId: id, ...payload })
     })
   )
 }

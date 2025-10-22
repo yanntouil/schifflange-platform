@@ -5,7 +5,15 @@ import { A, G, cxm, pipe } from "@compo/utils"
 import { ImageOff, MoreHorizontal, X } from "lucide-react"
 import React from "react"
 import selectFiles from "select-files-capture"
-import { FormGroup, FormGroupProps, FormSimpleFileType, extractGroupProps, extractInputProps, useFieldContext } from "."
+import {
+  FormGroup,
+  FormGroupClassNames,
+  FormGroupProps,
+  FormSimpleFileType,
+  extractGroupProps,
+  extractInputProps,
+  useFieldContext,
+} from "."
 import { config } from "../config"
 
 /**
@@ -18,10 +26,15 @@ const defaultFit = "object-cover"
 /**
  * FormImage
  */
-export type FormImageProps = ImageInputProps & FormGroupProps
+export type FormImageProps = ImageInputProps &
+  Omit<FormGroupProps, "classNames"> & {
+    classNames?: FormGroupClassNames<{
+      input?: string
+    }>
+  }
 export const FormImage: React.FC<FormImageProps> = ({ ...props }) => (
   <FormGroup {...extractGroupProps(props)}>
-    <ImageInput {...extractInputProps<FormGroupProps>(props)} />
+    <ImageInput {...extractInputProps<FormGroupProps>(props)} className={props.classNames?.input} />
   </FormGroup>
 )
 

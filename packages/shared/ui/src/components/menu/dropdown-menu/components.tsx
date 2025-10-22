@@ -151,21 +151,28 @@ DropdownMenuItem.displayName = DropdownMenuPrimitive.Item.displayName
 /**
  * DropdownMenuCheckboxItem
  */
-export type DropdownMenuCheckboxItemProps = React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.CheckboxItem>
+export type DropdownMenuCheckboxItemProps = React.ComponentPropsWithoutRef<
+  typeof DropdownMenuPrimitive.CheckboxItem
+> & {
+  side?: "left" | "right"
+}
 const DropdownMenuCheckboxItem = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.CheckboxItem>,
   DropdownMenuCheckboxItemProps
->(({ className, children, checked, ...props }, ref) => (
+>(({ className, children, checked, side = "left", ...props }, ref) => (
   <DropdownMenuPrimitive.CheckboxItem
     ref={ref}
     className={cxm(
-      "relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      "relative flex cursor-default select-none items-center rounded-sm py-1.5 text-sm outline-none transition-colors data-[disabled]:pointer-events-none data-[disabled]:opacity-50 focus:bg-accent focus:text-accent-foreground",
+      side === "left" ? "pl-8 pr-2" : "pr-8 pl-2",
       className
     )}
     checked={checked}
     {...props}
   >
-    <span className='absolute left-2 flex h-3.5 w-3.5 items-center justify-center'>
+    <span
+      className={cxm("absolute flex h-3.5 w-3.5 items-center justify-center", side === "left" ? "left-2" : "right-2")}
+    >
       <DropdownMenuPrimitive.ItemIndicator>
         <Check className='!size-4 shrink-0' />
       </DropdownMenuPrimitive.ItemIndicator>

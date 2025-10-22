@@ -49,6 +49,6 @@ export const sortOrganisationCategoriesByValidator = vine.compile(
 
 export const filterOrganisationCategoriesByValidator = vine.compile(
   vine.object({
-    //
+    types: vine.array(vine.enum(organisationTypes)).optional(),
   })
 )

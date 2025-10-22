@@ -1,5 +1,6 @@
 import { Selectable } from "@compo/hooks"
 import { useTranslation } from "@compo/localize"
+import { isSlugArticle } from "@compo/slugs"
 import { Ui } from "@compo/ui"
 import { match } from "@compo/utils"
 import { type Api } from "@services/dashboard"
@@ -81,7 +82,7 @@ export const useEdit = (swr: SWRArticles) => {
 export const useEditSlug = (swr: SWRArticles) => {
   const [editSlug, editSlugProps] = Ui.useQuickDialog<Api.Slug, Api.Slug & Api.WithModel>({
     mutate: async (slug) => {
-      if (slug.article) {
+      if (isSlugArticle(slug)) {
         swr.update({ id: slug.article.id, slug })
       }
     },

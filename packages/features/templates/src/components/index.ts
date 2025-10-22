@@ -1,4 +1,5 @@
 export * from "./dialogs"
+export * from "./dialogs/create"
 export * from "./template.header"
 export * from "./template.menu"
 export * from "./templates"

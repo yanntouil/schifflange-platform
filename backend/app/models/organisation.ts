@@ -1,6 +1,9 @@
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
-import OrganisationCategory from '#models/organisation-category'
+import OrganisationCategory, {
+  preloadOrganisationCategory,
+  preloadPublicOrganisationCategory,
+} from '#models/organisation-category'
 import OrganisationTranslation from '#models/organisation-translation'
 import User, { withProfile } from '#models/user'
 import { type ExtraField } from '#models/user-profile'
@@ -16,6 +19,7 @@ import {
   beforeDelete,
   belongsTo,
   column,
+  computed,
   hasMany,
   manyToMany,
   scope,
@@ -25,12 +29,14 @@ import type {
   BelongsTo,
   ExtractModelRelations,
   HasMany,
+  HasManyQueryBuilderContract,
   ManyToMany,
   PreloaderContract,
 } from '@adonisjs/lucid/types/relations'
 import { A, D, G, O } from '@mobily/ts-belt'
 import { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
+import ContactOrganisation from './contact-organisation.js'
 
 /**
  * Model for Organisation (CMS)
@@ -77,6 +83,9 @@ export default class Organisation extends ExtendedModel {
     pivotTable: 'organisations_categories',
   })
   declare categories: ManyToMany<typeof OrganisationCategory>
+
+  @hasMany(() => ContactOrganisation)
+  declare contactOrganisations: HasMany<typeof ContactOrganisation>
 
   @column(columnJSON<SingleImage>(FileService.emptyImage, FileService.serializeImage))
   declare logoImage: SingleImage
@@ -139,6 +148,14 @@ export default class Organisation extends ExtendedModel {
   @beforeDelete()
   public static async beforeDeleteHook(ressource: Model) {
     await ressource.cleanup()
+  }
+
+  /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
+   * COMPUTED
+   */
+  @computed()
+  public get contactCount() {
+    return this.$extras?.contactCount ?? 0
   }
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
@@ -332,16 +349,26 @@ type OrganisationTree = {
 /**
  * preloaders
  */
-export const preloadOrganisation = (query: PreloaderContract<Organisation>) =>
+export const preloadOrganisation = (query: HasManyQueryBuilderContract<typeof Organisation, any>) =>
   query
+    .preload('categories', preloadOrganisationCategory)
     .preload('translations')
-    .preload('parentOrganisation')
-    .preload('categories', (query) => query.preload('translations'))
+    .preload('parentOrganisation', preloadOrganisation)
     .preload('createdBy', withProfile)
     .preload('updatedBy', withProfile)
-
+export const withChildOrganisations = [
+  'childOrganisations',
+  (query: HasManyQueryBuilderContract<typeof Organisation, any>) =>
+    query
+      .withCount('contactOrganisations', (query) => query.as('contactCount'))
+      .preload('categories', preloadOrganisationCategory)
+      .preload('translations')
+      .preload('parentOrganisation', preloadOrganisation)
+      .preload('createdBy', withProfile)
+      .preload('updatedBy', withProfile),
+] as const
 export const preloadPublicOrganisation = (query: PreloaderContract<Organisation>) =>
   query
     .preload('translations')
-    .preload('parentOrganisation')
-    .preload('categories', (query) => query.preload('translations'))
+    .preload('parentOrganisation', (query) => query.preload('translations'))
+    .preload('categories', preloadPublicOrganisationCategory)

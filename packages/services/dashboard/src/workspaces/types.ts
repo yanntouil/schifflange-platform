@@ -1,9 +1,9 @@
 import type { Language, SingleImage, User } from "../types"
 export * from "./articles/types"
+// export * from "./directory/types"
 export * from "./forwards/types"
 export * from "./medias/types"
 export * from "./pages/types"
-export * from "./projects/types"
 export * from "./slugs/types"
 export * from "./templates/types"
 
@@ -46,8 +46,9 @@ export type WorkspaceConfig = {
   articles: {
     slugPrefix: string
   }
-  projects: {
-    slugPrefix: string
+  organisation: {
+    display: boolean
+    organisationId: string
   }
 }
 export type Workspace = {

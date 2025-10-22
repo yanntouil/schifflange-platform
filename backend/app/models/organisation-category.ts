@@ -19,12 +19,14 @@ import {
   column,
   computed,
   hasMany,
+  manyToMany,
   scope,
 } from '@adonisjs/lucid/orm'
 import type {
   BelongsTo,
   ExtractModelRelations,
   HasMany,
+  ManyToMany,
   PreloaderContract,
 } from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
@@ -65,8 +67,14 @@ export default class OrganisationCategory extends ExtendedModel {
   })
   declare translations: HasMany<typeof OrganisationCategoryTranslation>
 
-  @hasMany(() => Organisation, { foreignKey: 'categoryId' })
-  declare organisations: HasMany<typeof Organisation>
+  @manyToMany(() => Organisation, {
+    localKey: 'id',
+    pivotForeignKey: 'category_id',
+    relatedKey: 'id',
+    pivotRelatedForeignKey: 'organisation_id',
+    pivotTable: 'organisations_categories',
+  })
+  declare organisations: ManyToMany<typeof Organisation>
 
   @column()
   declare createdById: string | null
@@ -124,7 +132,10 @@ export default class OrganisationCategory extends ExtendedModel {
   public static filterBy = scope(
     (query, filterBy: Infer<typeof filterOrganisationCategoriesByValidator>) => {
       if (D.isEmpty(filterBy)) return query
-      // const {  } = filterBy
+      const { types } = filterBy
+      if (G.isNotNullable(types) && A.isNotEmpty(types)) {
+        query.andWhereIn('type', types)
+      }
     }
   )
 

@@ -2,7 +2,6 @@ import { Dashboard } from "@compo/dashboard"
 import { useTranslation } from "@compo/localize"
 import { Ui } from "@compo/ui"
 import { type Api } from "@services/dashboard"
-import { Plus } from "lucide-react"
 import React from "react"
 import { useFiltered } from "../hooks"
 import { useTemplates } from "../templates.context"
@@ -32,10 +31,6 @@ export const Templates: React.FC = () => {
         <Dashboard.Toolbar.Search {...matchable} placeholder={_("search")} />
         <Dashboard.Toolbar.Aside>
           <Dashboard.Toolbar.SortFromHook {...sortable} t={_.prefixed("sort")} />
-          <Dashboard.Toolbar.Button onClick={() => createTemplate()}>
-            <Plus aria-hidden />
-            <span>{_("create")}</span>
-          </Dashboard.Toolbar.Button>
           {/* <Filters {...filterable} /> */}
           <Dashboard.Toolbar.View view={view} setView={viewProps.setView} />
         </Dashboard.Toolbar.Aside>

@@ -1,16 +1,18 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
-import Organisation from '#models/organisation'
+import { preloadOrganisationContact } from '#models/contact-organisation'
+import Organisation, { preloadOrganisation, withChildOrganisations } from '#models/organisation'
+import { preloadOrganisationCategory } from '#models/organisation-category'
 import { withProfile } from '#models/user'
 import { validationFailure } from '#start/vine'
 import {
   createOrganisationValidator,
   filterOrganisationsByValidator,
   sortOrganisationsByValidator,
-  updateOrganisationTranslationsValidator,
   updateOrganisationValidator,
 } from '#validators/organisations'
 import type { HttpContext } from '@adonisjs/core/http'
 import { A, G } from '@mobily/ts-belt'
+import type { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
 
 /**
@@ -36,8 +38,9 @@ export default class OrganisationsController {
       .withScopes((scope) => scope.filterBy(filterBy))
       .withScopes((scope) => scope.sortBy(sortBy))
       .withScopes((scope) => scope.limit(limit))
+      .withCount('contactOrganisations', (query) => query.as('contactCount'))
       .preload('translations')
-      .preload('categories', (query) => query.preload('translations'))
+      .preload('categories', preloadOrganisationCategory)
       .preload('createdBy', withProfile)
       .preload('updatedBy', withProfile)
     return response.ok({ organisations: A.map(organisations, (org) => org.serialize()) })
@@ -64,7 +67,7 @@ export default class OrganisationsController {
       .withScopes((scope) => scope.sortBy(sortBy))
       .withScopes((scope) => scope.limit(limit))
       .preload('translations')
-      .preload('categories', (query) => query.preload('translations'))
+      .preload('categories', preloadOrganisationCategory)
       .preload('createdBy', withProfile)
       .preload('updatedBy', withProfile)
     return response.ok({ organisations: A.map(organisations, (org) => org.serialize()) })
@@ -138,7 +141,10 @@ export default class OrganisationsController {
     await organisation.load((query) =>
       query
         .preload('translations')
-        .preload('categories', (query) => query.preload('translations'))
+        .preload('categories', preloadOrganisationCategory)
+        .preload('parentOrganisation', preloadOrganisation)
+        .preload(...withChildOrganisations)
+        .preload('contactOrganisations', preloadOrganisationContact)
         .preload('createdBy', withProfile)
         .preload('updatedBy', withProfile)
     )
@@ -159,10 +165,12 @@ export default class OrganisationsController {
       .related('organisations')
       .query()
       .where('id', request.param('organisationId'))
+      .withCount('contactOrganisations', (query) => query.as('contactCount'))
       .preload('translations')
-      .preload('categories', (query) => query.preload('translations'))
-      .preload('parentOrganisation', (query) => query.preload('translations'))
-      .preload('childOrganisations', (query) => query.preload('translations'))
+      .preload('categories', preloadOrganisationCategory)
+      .preload('parentOrganisation', preloadOrganisation)
+      .preload(...withChildOrganisations)
+      .preload('contactOrganisations', preloadOrganisationContact)
       .preload('createdBy', withProfile)
       .preload('updatedBy', withProfile)
       .first()
@@ -187,8 +195,9 @@ export default class OrganisationsController {
       .related('organisations')
       .query()
       .where('id', request.param('organisationId'))
+      .withCount('contactOrganisations', (query) => query.as('contactCount'))
       .preload('translations')
-      .preload('categories', (query) => query.preload('translations'))
+      .preload('categories', preloadOrganisationCategory)
       .preload('createdBy', withProfile)
       .first()
     if (G.isNullable(organisation)) throw E_RESOURCE_NOT_FOUND
@@ -246,7 +255,11 @@ export default class OrganisationsController {
     await organisation.load((query) =>
       query
         .preload('translations')
-        .preload('categories', (query) => query.preload('translations'))
+        .preload('categories', preloadOrganisationCategory)
+        .preload('parentOrganisation', preloadOrganisation)
+        .preload(...withChildOrganisations)
+        .preload('contactOrganisations', preloadOrganisationContact)
+        .preload('createdBy', withProfile)
         .preload('updatedBy', withProfile)
     )
 
@@ -280,17 +293,19 @@ export default class OrganisationsController {
  * Update organisation translations
  */
 async function updateOrganisationTranslations(
-  organisation: Organisation,
-  translations?: Record<string, { name?: string; description?: string; shortDescription?: string }>
+  item: Organisation,
+  payloadTranslations?: Infer<typeof createOrganisationValidator>['translations']
 ) {
-  if (!translations) return
-  const organisationTranslations = await organisation.getOrLoadRelation('translations')
+  if (!payloadTranslations) return
+  const Language = (await import('#models/language')).default
+  const languages = await Language.query()
+  const itemTranslations = await item.getOrLoadRelation('translations')
   await Promise.all(
-    A.map(organisationTranslations, async (translation) => {
-      const payload = await updateOrganisationTranslationsValidator.validate(
-        translations[translation.languageId] ?? {}
-      )
-      await translation.merge(payload).save()
+    A.map(languages, async ({ id }) => {
+      const existingTranslation = A.find(itemTranslations, (t) => t.languageId === id)
+      const payload = G.isNotNullable(payloadTranslations[id]) ? payloadTranslations[id] : {}
+      if (G.isNotNullable(existingTranslation)) return existingTranslation.merge(payload).save()
+      return item.related('translations').create({ languageId: id, ...payload })
     })
   )
 }

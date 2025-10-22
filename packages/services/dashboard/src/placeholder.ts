@@ -5,7 +5,7 @@ import {
   contactPlaceholder,
   organisationCategoryPlaceholder,
   organisationPlaceholder,
-} from "./workspaces/contacts/constants"
+} from "./workspaces/directory/constants"
 import { mediaFilePlaceholder } from "./workspaces/medias/constants"
 import { menuItemPlaceholder } from "./workspaces/menus/constants"
 import { templatePlaceholder } from "./workspaces/templates/constants"

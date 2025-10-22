@@ -12,6 +12,8 @@ export {
   FormFiles as Files,
   FormHeader as Header,
   FormImage as Image,
+  // FormImageCropped as ImageCropped,
+  FormImageWithCrop as ImageWithCrop,
   FormInfo as Info,
   FormInput as Input,
   FormKeywords as Keywords,

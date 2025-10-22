@@ -29,15 +29,15 @@ export const Sitemap: React.FC = () => {
 
   return (
     <>
-      <Dashboard.Collection>
-        <Dashboard.Toolbar.Root>
-          <Dashboard.Toolbar.Search {...matchable} />
-          <Dashboard.Toolbar.Aside>
-            <Dashboard.Toolbar.SortFromHook {...sortable} t={_.prefixed(`sort`)} />
-            <SitemapFilters {...filterable} />
-          </Dashboard.Toolbar.Aside>
-        </Dashboard.Toolbar.Root>
+      <Dashboard.Toolbar.Root>
+        <Dashboard.Toolbar.Search {...matchable} />
+        <Dashboard.Toolbar.Aside>
+          <Dashboard.Toolbar.SortFromHook {...sortable} t={_.prefixed(`sort`)} />
+          <SitemapFilters {...filterable} />
+        </Dashboard.Toolbar.Aside>
+      </Dashboard.Toolbar.Root>
 
+      <Dashboard.Collection>
         <Dashboard.Empty
           total={swr.slugs.length}
           results={filtered.length}

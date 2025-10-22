@@ -182,3 +182,9 @@ export const getInitials = (firstName: string, lastName: string, maxLength = 2):
   const initials = firstInitials + lastInitials
   return initials.slice(0, maxLength)
 }
+
+/**
+ * trimSpaces
+ * leave only one space between words
+ */
+export const trimSpaces = (s: string) => s.replace(/\s+/g, " ").trim()

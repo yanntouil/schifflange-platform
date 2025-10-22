@@ -2,7 +2,6 @@ import { Dashboard } from "@compo/dashboard"
 import { useTranslation } from "@compo/localize"
 import { Ui } from "@compo/ui"
 import { type Api } from "@services/dashboard"
-import { FolderPlus } from "lucide-react"
 import React from "react"
 import { useCategories } from "../categories.context"
 import { useFilteredCategories } from "../hooks"
@@ -33,10 +32,6 @@ export const Categories: React.FC = () => {
         <Dashboard.Toolbar.Aside>
           <Dashboard.Toolbar.SortFromHook {...sortable} t={_.prefixed("sort")} />
           <CategoriesFilters {...filterable} />
-          <Dashboard.Toolbar.Button onClick={() => createCategory()}>
-            <FolderPlus aria-hidden />
-            <span>{_("create")}</span>
-          </Dashboard.Toolbar.Button>
           <Dashboard.Toolbar.View view={view} setView={viewProps.setView} />
         </Dashboard.Toolbar.Aside>
       </Dashboard.Toolbar.Root>

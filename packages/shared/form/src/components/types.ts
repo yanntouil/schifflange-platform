@@ -42,6 +42,7 @@ export type FormCrop = {
 export type FormExtraField = {
   name: string
   value: string
+  type?: "phone" | "email" | "url" | "text" | "number" | "boolean" | "date" | "time" | "datetime" | "textarea"
 }
 export type FormSingleFile = {
   url: string

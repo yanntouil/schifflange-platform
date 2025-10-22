@@ -16,7 +16,7 @@ import {
   WorkspaceOwnerErrors,
 } from "../types"
 import { articles } from "./articles"
-import { contacts } from "./contacts"
+import { directory } from "./directory"
 import { forwards } from "./forwards"
 import { medias } from "./medias"
 import { menus } from "./menus"
@@ -58,7 +58,7 @@ export const workspaces = (api: CreateApi, secure: Secure) => ({
     menus: menus(api, secure, wid),
     pages: pages(api, secure, wid),
     articles: articles(api, secure, wid),
-    contacts: contacts(api, secure, wid),
+    directory: directory(api, secure, wid),
 
     // workspace routes
     read: secure(() =>

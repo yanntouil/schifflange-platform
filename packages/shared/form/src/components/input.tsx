@@ -77,6 +77,7 @@ export const FieldInput = React.forwardRef<HTMLInputElement, FieldInputProps>(
 export type FormInputType =
   | "text"
   | "email"
+  | "phone"
   | "date"
   | "datetime-local"
   | "month"

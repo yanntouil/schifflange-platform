@@ -3,6 +3,8 @@ export const config = {
   // prettier-ignore
   acceptImageExtensions: ["jpg", "jpeg", "png", "gif", "svg", "webp", "tiff", "avif", "apng", "jfif", "pjpeg", "pjp"],
   // prettier-ignore
+  acceptCroppableImageExtensions: ["jpg", "jpeg", "png", "webp", "gif", "tiff", "avif", "apng", "jfif", "pjpeg", "pjp"],
+  // prettier-ignore
   acceptedFileExtensions: [
     "pdf", "jpg", "jpeg", "png", "svg", "webp", "gif", "tiff", "psd", "bmp",
     "doc", "docx", "ppt", "pptx", "xls", "xlsx", "txt", "rtf", "odt", "ods",

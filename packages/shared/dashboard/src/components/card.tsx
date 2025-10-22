@@ -123,18 +123,25 @@ const CardHeader: React.FC<CardHeaderProps> = ({ className, children, ...props }
  * RowTitle
  */
 type CardTitleProps = React.ComponentProps<typeof Ui.Hn>
-const CardTitle: React.FC<CardTitleProps> = ({ className, style, ...props }) => {
+const CardTitle: React.FC<CardTitleProps> = ({ className, style, children, ...props }) => {
   const { hasNoMenu, hasNoSelection } = React.useContext(CardContext)
   const menu = hasNoMenu ? 0 : 7
   const selection = hasNoSelection ? 0 : 4
   const aside = menu + selection
-  const marginRight = aside ? `calc(var(--spacing)*${aside + 2})` : 0
+  const asideStyle = { "--aside": aside ? `calc(var(--spacing)*${aside + 2})` : "0px" } as React.CSSProperties
   return (
     <Ui.Hn
-      className={cxm("text-sm leading-tight font-medium", className)}
-      style={{ marginRight, ...style }}
+      className={cxm("text-sm leading-tight font-medium mr--[var(--aside)]", className)}
+      style={{ ...asideStyle, ...style }}
       {...props}
-    />
+    >
+      <span
+        /* replace the margin right by a float right block */
+        className='block float-right h-6 w-[var(--aside)]'
+        aria-hidden
+      />
+      {children}
+    </Ui.Hn>
   )
 }
 

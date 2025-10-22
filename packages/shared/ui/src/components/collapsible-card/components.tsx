@@ -1,11 +1,12 @@
 import { usePersistedState } from "@compo/hooks"
 import { Translation, useTranslation } from "@compo/localize"
+import { cx } from "@compo/utils"
 import * as Primitive from "@radix-ui/react-collapsible"
 import { ChevronUp } from "lucide-react"
 import React from "react"
 import { z } from "zod"
-import { cx } from "@compo/utils"
 import { Button } from "../button"
+import { Hn } from "../hn"
 import { SrOnly } from "../sr-only"
 import { CollapsibleCardContext, useCollapsibleCard } from "./context"
 
@@ -72,19 +73,21 @@ const CardHeader = React.forwardRef<React.ElementRef<"div">, React.ComponentProp
 /**
  * CardHeaderTitle
  */
-const CardHeaderTitle = React.forwardRef<React.ElementRef<"h2">, React.ComponentPropsWithoutRef<"h2">>(
-  ({ className, children, ...props }, ref) => {
-    return (
-      <h2
-        className={cx("flex items-center gap-2 text-base font-semibold leading-none tracking-tight", className)}
-        {...props}
-        ref={ref}
-      >
-        {children}
-      </h2>
-    )
-  }
-)
+const CardHeaderTitle = React.forwardRef<
+  React.ElementRef<"h2">,
+  React.ComponentPropsWithoutRef<"h2"> & { level?: React.ComponentProps<typeof Hn>["level"] }
+>(({ className, children, level = 2, ...props }, ref) => {
+  return (
+    <Hn
+      level={level}
+      className={cx("flex items-center gap-2 text-base font-semibold leading-none tracking-tight", className)}
+      {...props}
+      ref={ref}
+    >
+      {children}
+    </Hn>
+  )
+})
 
 /**
  * CardHeaderAside

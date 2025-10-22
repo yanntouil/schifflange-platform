@@ -27,7 +27,14 @@ export const FormSelectMultiple: React.FC<FormSelectMultipleProps> = ({ classNam
 type ClassNames = SelectMultipleInputProps["classNames"] & Record<string, string>
 type SelectMultipleInputProps = Pick<
   Ui.Select.MultipleProps,
-  "options" | "placeholder" | "disabled" | "maxDisplayedItems" | "displayClear" | "displaySelectAll" | "classNames"
+  | "options"
+  | "placeholder"
+  | "disabled"
+  | "maxDisplayedItems"
+  | "displayClear"
+  | "displaySelectAll"
+  | "noResultsFound"
+  | "classNames"
 >
 const SelectMultipleInput: React.FC<SelectMultipleInputProps> = ({ disabled, ...props }) => {
   const { value, setFieldValue, disabled: ctxDisabled, id } = useFieldContext<string[]>()

@@ -28,10 +28,10 @@ export const useDisplayTemplate = () => {
  * This hook is used to create a template. It will navigate to the new template after creation.
  * this hook is not dependent of the TemplateContextProvider.
  */
-export const useCreateTemplate = (swr: SWRTemplates) => {
+export const useCreateTemplate = (swr?: SWRTemplates) => {
   const { _ } = useTranslation(dictionary)
   const [createTemplate, createTemplateProps] = Ui.useQuickDialog<void, Api.TemplateWithRelations>({
-    mutate: async (template) => swr.append(template),
+    mutate: async (template) => swr?.append(template),
   })
   return [createTemplate, createTemplateProps] as const
 }

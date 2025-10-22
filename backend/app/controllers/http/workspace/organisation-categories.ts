@@ -1,11 +1,12 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
+import Language from '#models/language'
 import OrganisationCategory from '#models/organisation-category'
 import { withProfile } from '#models/user'
+import { Infer } from '#start/vine'
 import {
   createOrganisationCategoryValidator,
   filterOrganisationCategoriesByValidator,
   sortOrganisationCategoriesByValidator,
-  updateOrganisationCategoryTranslationsValidator,
   updateOrganisationCategoryValidator,
 } from '#validators/organisation-categories'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -28,7 +29,6 @@ export default class OrganisationCategoriesController {
     const filterBy = await request.filterBy(filterOrganisationCategoriesByValidator)
     const sortBy = await request.sortBy(sortOrganisationCategoriesByValidator)
     const limit = await request.limit()
-
     const categories = await OrganisationCategory.query()
       .where('workspaceId', workspace.id)
       .withScopes((scope) => scope.filterBy(filterBy))
@@ -183,17 +183,18 @@ export default class OrganisationCategoriesController {
  * Update category translations
  */
 async function updateCategoryTranslations(
-  category: OrganisationCategory,
-  translations?: Record<string, { title?: string; description?: string }>
+  item: OrganisationCategory,
+  payloadTranslations?: Infer<typeof createOrganisationCategoryValidator>['translations']
 ) {
-  if (!translations) return
-  const categoryTranslations = await category.getOrLoadRelation('translations')
+  if (!payloadTranslations) return
+  const languages = await Language.query()
+  const itemTranslations = await item.getOrLoadRelation('translations')
   await Promise.all(
-    A.map(categoryTranslations, async (translation) => {
-      const payload = await updateOrganisationCategoryTranslationsValidator.validate(
-        translations[translation.languageId] ?? {}
-      )
-      await translation.merge(payload).save()
+    A.map(languages, async ({ id }) => {
+      const existingTranslation = A.find(itemTranslations, (t) => t.languageId === id)
+      const payload = G.isNotNullable(payloadTranslations[id]) ? payloadTranslations[id] : {}
+      if (G.isNotNullable(existingTranslation)) return existingTranslation.merge(payload).save()
+      return item.related('translations').create({ languageId: id, ...payload })
     })
   )
 }

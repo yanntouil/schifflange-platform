@@ -1,8 +1,8 @@
-import Contact from '#models/contact'
+import Contact, { preloadContact } from '#models/contact'
 import ContactOrganisationTranslation from '#models/contact-organisation-translation'
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
-import Organisation from '#models/organisation'
+import Organisation, { preloadOrganisation } from '#models/organisation'
 import User, { withProfile } from '#models/user'
 import { type ExtraField } from '#models/user-profile'
 import { columnJSON } from '#utils/column-json'
@@ -170,8 +170,13 @@ export default class ContactOrganisation extends ExtendedModel {
 export const preloadContactOrganisation = (query: PreloaderContract<ContactOrganisation>) =>
   query
     .preload('translations')
-    .preload('contact')
-    .preload('organisation')
+    .preload('organisation', preloadOrganisation)
+    .preload('createdBy', withProfile)
+    .preload('updatedBy', withProfile)
+export const preloadOrganisationContact = (query: PreloaderContract<ContactOrganisation>) =>
+  query
+    .preload('translations')
+    .preload('contact', preloadContact)
     .preload('createdBy', withProfile)
     .preload('updatedBy', withProfile)
 

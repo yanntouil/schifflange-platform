@@ -11,9 +11,9 @@ import { SWRCategories } from "./swr"
  * This hook is used to create a category. It will navigate to the new category after creation.
  * this hook is not dependent of the ArticleContextProvider.
  */
-export const useCreateCategory = (swr: SWRCategories) => {
+export const useCreateCategory = (swr?: SWRCategories) => {
   const [createCategory, createCategoryProps] = Ui.useQuickDialog<void, Api.ArticleCategory>({
-    mutate: async (category) => swr.append(category),
+    mutate: async (category) => swr?.append(category),
   })
   return [createCategory, createCategoryProps] as const
 }
@@ -90,21 +90,21 @@ export const useManageCategory = (swr: SWRCategories, selectable: Selectable<Api
     selectable
   )
 
-  const managePage: ManageCategory = {
+  const manageFn: ManageCategory = {
     createCategory,
     editCategory,
     confirmDeleteCategory,
     confirmDeleteSelectionCategory,
   }
 
-  const managePageProps = {
+  const manageProps = {
     createCategoryProps,
     editCategoryProps,
     confirmDeleteCategoryProps,
     confirmDeleteSelectionCategoryProps,
   }
 
-  return [managePage, managePageProps] as const
+  return [manageFn, manageProps] as const
 }
 
 /**

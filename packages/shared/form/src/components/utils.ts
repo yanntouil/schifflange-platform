@@ -28,7 +28,7 @@ export const extractInputProps = <T extends Record<string, unknown>>(
  * prepare a file url to FormFile component value
  * extractFormFilePayload < - > makeFormFileValue
  */
-export const makeFormFileValue = (fileUrl: Option<string> = null) => {
+export const makeFormFileValue = (fileUrl: Option<string> = null): FormSimpleFileType => {
   return {
     url: fileUrl ?? null,
     file: null,

@@ -1,4 +1,5 @@
 import { ArticlesServiceProvider } from "@compo/articles"
+import { DirectoryServiceProvider } from "@compo/directory"
 import { ForwardsServiceProvider } from "@compo/forwards"
 import { MediasServiceProvider } from "@compo/medias"
 import { MenusServiceProvider } from "@compo/menus"
@@ -8,6 +9,7 @@ import React from "react"
 import { routesTo } from "."
 import {
   useArticleServiceProps,
+  useDirectoryServiceProps,
   useForwardServiceProps,
   useMediaServiceProps,
   useMenusServiceProps,
@@ -25,9 +27,11 @@ export const DashboardServiceProvider: React.FC<{ children: React.ReactNode }> =
         <ForwardsServiceProvider {...useForwardServiceProps()} routesTo={routesTo}>
           <PagesServiceProvider {...usePageServiceProps()} routesTo={routesTo}>
             <ArticlesServiceProvider {...useArticleServiceProps()} routesTo={routesTo}>
-              <MenusServiceProvider {...useMenusServiceProps()} routesTo={routesTo}>
-                {children}
-              </MenusServiceProvider>
+              <DirectoryServiceProvider {...useDirectoryServiceProps()} routesTo={routesTo.directory}>
+                <MenusServiceProvider {...useMenusServiceProps()} routesTo={routesTo}>
+                  {children}
+                </MenusServiceProvider>
+              </DirectoryServiceProvider>
             </ArticlesServiceProvider>
           </PagesServiceProvider>
         </ForwardsServiceProvider>

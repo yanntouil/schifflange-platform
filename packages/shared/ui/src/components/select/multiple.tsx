@@ -1,7 +1,7 @@
 import { Translation, useTranslation } from "@compo/localize"
+import { A, cn, cva, pipe, type VariantProps } from "@compo/utils"
 import { Check, ChevronsUpDown, X } from "lucide-react"
 import * as React from "react"
-import { A, cn, cva, pipe, type VariantProps } from "@compo/utils"
 import { disabledVariants, focusVisibleVariants } from "../../variants"
 import { Badge } from "../badge"
 import { Command } from "../command"
@@ -45,6 +45,7 @@ export type MultiSelectProps = Omit<React.ButtonHTMLAttributes<HTMLButtonElement
     displayClear?: boolean
     displaySelectAll?: boolean
     modalPopover?: boolean
+    noResultsFound?: string
     className?: string
     classNames?: {
       trigger?: string
@@ -68,6 +69,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
     displayClear = false,
     displaySelectAll = false,
     modalPopover = true,
+    noResultsFound,
     className,
     classNames,
     ...rest
@@ -227,7 +229,7 @@ export const MultiSelect = React.forwardRef<HTMLButtonElement, MultiSelectProps>
         <Command.Root>
           <Command.Input placeholder={_("search")} onKeyDown={onKeyDown} />
           <Command.List>
-            <Command.Empty>{_("no-results-found")}</Command.Empty>
+            <Command.Empty>{noResultsFound ?? _("no-results-found")}</Command.Empty>
             <Command.Group>
               {displaySelectAll && (
                 <Command.Item

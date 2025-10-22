@@ -20,6 +20,15 @@ export const useArticleServiceProps = () => {
   }
 }
 
+export const useDirectoryServiceProps = () => {
+  const { workspace, service, makeUrlFromSlug } = useWorkspace()
+  return {
+    service: service.directory,
+    serviceKey: workspace.id,
+    isAdmin: isWorkspaceAdmin(workspace),
+  }
+}
+
 export const useSlugServiceProps = () => {
   const { workspace, service, makeUrlFromSlug } = useWorkspace()
   return {

@@ -1,15 +1,16 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import Contact from '#models/contact'
+import { preloadContactOrganisation } from '#models/contact-organisation'
 import { withProfile } from '#models/user'
 import {
   createContactValidator,
   filterContactsByValidator,
   sortContactsByValidator,
-  updateContactTranslationsValidator,
   updateContactValidator,
 } from '#validators/contacts'
 import type { HttpContext } from '@adonisjs/core/http'
 import { A, G } from '@mobily/ts-belt'
+import type { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
 
 /**
@@ -103,6 +104,7 @@ export default class ContactsController {
       .query()
       .where('id', request.param('contactId'))
       .preload('translations')
+      .preload('contactOrganisations', preloadContactOrganisation)
       .preload('createdBy', withProfile)
       .preload('updatedBy', withProfile)
       .first()
@@ -194,20 +196,19 @@ export default class ContactsController {
  * Update contact translations
  */
 async function updateContactTranslations(
-  contact: Contact,
-  translations?: Record<
-    string,
-    { firstName?: string; lastName?: string; biography?: string; politicalParty?: string }
-  >
+  item: Contact,
+  payloadTranslations?: Infer<typeof createContactValidator>['translations']
 ) {
-  if (!translations) return
-  const contactTranslations = await contact.getOrLoadRelation('translations')
+  if (!payloadTranslations) return
+  const Language = (await import('#models/language')).default
+  const languages = await Language.query()
+  const itemTranslations = await item.getOrLoadRelation('translations')
   await Promise.all(
-    A.map(contactTranslations, async (translation) => {
-      const payload = await updateContactTranslationsValidator.validate(
-        translations[translation.languageId] ?? {}
-      )
-      await translation.merge(payload).save()
+    A.map(languages, async ({ id }) => {
+      const existingTranslation = A.find(itemTranslations, (t) => t.languageId === id)
+      const payload = G.isNotNullable(payloadTranslations[id]) ? payloadTranslations[id] : {}
+      if (G.isNotNullable(existingTranslation)) return existingTranslation.merge(payload).save()
+      return item.related('translations').create({ languageId: id, ...payload })
     })
   )
 }

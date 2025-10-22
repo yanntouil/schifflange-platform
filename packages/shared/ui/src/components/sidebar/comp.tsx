@@ -1,11 +1,11 @@
 "use client"
 
 import { useIsMobile, usePersistedState } from "@compo/hooks"
+import { cn, z } from "@compo/utils"
 import { Slot } from "@radix-ui/react-slot"
 import { VariantProps } from "class-variance-authority"
 import * as React from "react"
 import { Icon, variants } from "../.."
-import { cn, z } from "@compo/utils"
 import { Button } from "../button"
 import { Collapsible } from "../collapsible"
 import { Input } from "../input"
@@ -13,6 +13,7 @@ import { DropdownMenu } from "../menu"
 import { Separator } from "../separator"
 import { Sheet } from "../sheet"
 import { Skeleton } from "../skeleton"
+import { SrOnly } from "../sr-only"
 import { Tooltip } from "../tooltip"
 import { SidebarContext, SidebarContextType, useSidebar } from "./context"
 import { sidebarMenuButtonVariants } from "./variants"
@@ -608,6 +609,38 @@ const SidebarMenuAction: React.FC<SidebarMenuActionProps> = ({
     />
   )
 }
+/**
+ * ContactPlusButton
+ * This button is used to create a contact. It is only visible if the sidebar is expanded.
+ */
+type SidebarMenuSubActionProps = {
+  tooltip: string
+  onClick: () => void
+  className?: string
+  children: React.ReactNode
+}
+const SidebarMenuSubAction: React.FC<SidebarMenuSubActionProps> = ({ tooltip, onClick, className, children }) => {
+  const { state } = useSidebar()
+  const isExpanded = state === "expanded"
+  if (!isExpanded) return null
+  return (
+    <Tooltip.Quick tooltip={tooltip} asChild side='right'>
+      <Button
+        variant='ghost'
+        icon
+        size='xs'
+        className={cn(
+          "-mr-[21px] flex opacity-0 transition-opacity duration-300 group-focus-within/button:opacity-100 group-hover/button:opacity-100",
+          className
+        )}
+        onClick={onClick}
+      >
+        {children}
+        <SrOnly>{tooltip}</SrOnly>
+      </Button>
+    </Tooltip.Quick>
+  )
+}
 
 /**
  * SidebarMenuBadge
@@ -848,24 +881,43 @@ const SidebarCollapsibleMenuSub: React.FC<SidebarCollapsibleMenuButtonProps> = (
 
 type SidebarCollapsibleMenuSubButtonProps = {
   children: React.ReactNode
+  action?: React.ReactNode
 } & (React.ComponentProps<typeof SidebarMenuSubButton> & React.ComponentProps<typeof DropdownMenu.Item>)
-const SidebarCollapsibleMenuSubButton: React.FC<SidebarCollapsibleMenuSubButtonProps> = ({ children, ...props }) => {
+const SidebarCollapsibleMenuSubButton: React.FC<SidebarCollapsibleMenuSubButtonProps> = ({
+  children,
+  className,
+  action,
+  ...props
+}) => {
   const { state } = useSidebar()
-  if (state === "expanded")
+
+  if (state === "expanded") {
+    if (!!action) {
+      return (
+        <div className='group/button flex items-center gap-1'>
+          <SidebarMenuSubItem className={cn("grow", className)}>
+            <SidebarMenuSubButton asChild {...props}>
+              {children}
+            </SidebarMenuSubButton>
+          </SidebarMenuSubItem>
+          {action}
+        </div>
+      )
+    }
     return (
-      <SidebarMenuSubItem>
+      <SidebarMenuSubItem className={className}>
         <SidebarMenuSubButton asChild {...props}>
           {children}
         </SidebarMenuSubButton>
       </SidebarMenuSubItem>
     )
+  }
   return (
     <DropdownMenu.Item asChild {...props}>
       {children}
     </DropdownMenu.Item>
   )
 }
-
 export {
   SidebarCollapsibleMenuButton as CollapsibleMenuButton,
   SidebarCollapsibleMenuItem as CollapsibleMenuItem,
@@ -887,6 +939,7 @@ export {
   SidebarMenuItem as MenuItem,
   SidebarMenuSkeleton as MenuSkeleton,
   SidebarMenuSub as MenuSub,
+  SidebarMenuSubAction as MenuSubAction,
   SidebarMenuSubButton as MenuSubButton,
   SidebarMenuSubItem as MenuSubItem,
   SidebarProvider as Provider,
