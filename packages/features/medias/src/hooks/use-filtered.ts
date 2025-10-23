@@ -34,7 +34,6 @@ export const useFiltered = (params: {
           "extension",
           ({ extension }) => {
             const type = extensionToType(extension)
-            console.log({ extension, type })
             return _(`type-${type ?? "unknown"}`)
           },
         ],

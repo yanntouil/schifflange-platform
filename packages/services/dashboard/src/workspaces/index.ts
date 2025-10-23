@@ -18,6 +18,7 @@ import {
 import { articles } from "./articles"
 import { directory } from "./directory"
 import { forwards } from "./forwards"
+import { libraries } from "./libraries"
 import { medias } from "./medias"
 import { menus } from "./menus"
 import { pages } from "./pages"
@@ -59,6 +60,7 @@ export const workspaces = (api: CreateApi, secure: Secure) => ({
     pages: pages(api, secure, wid),
     articles: articles(api, secure, wid),
     directory: directory(api, secure, wid),
+    libraries: libraries(api, secure, wid),
 
     // workspace routes
     read: secure(() =>

@@ -31,17 +31,17 @@ export const OrganisationsHeader: React.FC<{ hideCreate?: boolean }> = ({ hideCr
 const dictionary = {
   en: {
     title: "Organizations",
-    description: "Manage all organizations",
+    description: "Manage and organize your organizations to share on the website",
     "create-organisation": "Create organisation",
   },
   fr: {
     title: "Organisations",
-    description: "Gérer toutes les organisations",
+    description: "Gérer et organiser vos organisations afin de les partager sur le site",
     "create-organisation": "Créer une organisation",
   },
   de: {
     title: "Organisationen",
-    description: "Alle Organisationen verwalten",
+    description: "Verwalten und organisieren Sie Ihre Organisationen, um sie auf der Website zu teilen",
     "create-organisation": "Organisation erstellen",
   },
 }

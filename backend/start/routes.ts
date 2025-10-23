@@ -62,6 +62,8 @@ const Controller = {
     menus: () => import('#controllers/http/workspace/menus'),
     forwards: () => import('#controllers/http/workspace/forwards'),
     slugs: () => import('#controllers/http/workspace/slugs'),
+    libraries: () => import('#controllers/http/workspace/libraries'),
+    libraryDocuments: () => import('#controllers/http/workspace/library-documents'),
   },
   admin: {
     users: () => import('#controllers/http/admin/users'),
@@ -550,6 +552,39 @@ router
   .where('organisationId', router.matchers.uuid())
   .where('contactId', router.matchers.uuid())
   .where('contactOrganisationId', router.matchers.uuid())
+
+/** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
+ * -- WORKSPACES LIBRARIES --
+ */
+router
+  .group(() => {
+    const { libraries, libraryDocuments, publications } = Controller.workspace
+
+    // libraries
+    router.get('/libraries', [libraries, 'all'])
+    router.get('/libraries/root', [libraries, 'rootIndex'])
+    router.post('/libraries', [libraries, 'create'])
+    router.get('/libraries/:libraryId', [libraries, 'read'])
+    router.put('/libraries/:libraryId', [libraries, 'update'])
+    router.delete('/libraries/:libraryId', [libraries, 'delete'])
+    router.post('/libraries/:libraryId/libraries', [libraries, 'create'])
+
+    // library documents
+    router.get('/libraries/:libraryId/documents', [libraryDocuments, 'all'])
+    router.post('/libraries/:libraryId/documents', [libraryDocuments, 'create'])
+    router.get('/libraries/:libraryId/documents/:documentId', [libraryDocuments, 'read'])
+    router.put('/libraries/:libraryId/documents/:documentId', [libraryDocuments, 'update'])
+    router.delete('/libraries/:libraryId/documents/:documentId', [libraryDocuments, 'delete'])
+
+    // library document publication
+    router.put('/libraries/:libraryId/documents/:documentId/publication', [publications, 'update'])
+  })
+  .middleware(middleware.auth())
+  .middleware(middleware.workspace({ as: 'member' }))
+  .prefix('/api/workspaces/:workspaceId')
+  .where('workspaceId', router.matchers.uuid())
+  .where('libraryId', router.matchers.uuid())
+  .where('documentId', router.matchers.uuid())
 
 /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
  * -- WORKSPACES MENUS --

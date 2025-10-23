@@ -1,5 +1,6 @@
 import { useElementSize } from "@compo/hooks"
 import { useTranslation } from "@compo/localize"
+import { cxm } from "@compo/utils"
 import "core-js/actual/promise/with-resolvers"
 import { LoaderCircle, TriangleAlert } from "lucide-react"
 import React from "react"
@@ -7,7 +8,7 @@ import { useTransform, useTransformControls } from "react-dia"
 import { Document, DocumentProps, Page, PageProps, pdfjs } from "react-pdf"
 import { MiniMap } from "react-zoom-pan-pinch"
 import { Lightbox } from "."
-import { cxm } from "@compo/utils"
+import { Icon } from "../.."
 import { dictionary } from "./dictionary"
 import { SlidePdf } from "./types"
 /**
@@ -293,7 +294,7 @@ const ThumbnailError: React.FC = () => {
 const ThumbnailLoading: React.FC = () => {
   return (
     <ThumbnailWrapper>
-      <LoaderCircle className='size-5 animate-spin' aria-hidden />
+      <Icon.Loader variant='dots' className='size-5' aria-hidden />
     </ThumbnailWrapper>
   )
 }

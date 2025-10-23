@@ -1,14 +1,12 @@
 import { Dashboard } from "@compo/dashboard"
-import { useNow } from "@compo/hooks"
 import { useTranslation } from "@compo/localize"
 import { Ui } from "@compo/ui"
 import { UserTooltip } from "@compo/users"
-import { T } from "@compo/utils"
-import { Calendar1, Clock, ClockArrowDown, ClockArrowUp, Edit, UserCircle } from "lucide-react"
+import { Calendar1, Clock, Edit, UserCircle } from "lucide-react"
 import React from "react"
 import { type PublicationContextType, usePublication } from "../publication.context"
 import { PublicationProvider } from "../publication.context.provider"
-import { isAvailable, wasAvailable, willBeAvailable } from "../utils"
+import { PublicationIcon } from "./publication.icon"
 
 /**
  * Publication
@@ -34,18 +32,8 @@ type PublicationInnerProps = {
   fieldsBefore?: React.ReactNode
 }
 const PublicationInner: React.FC<PublicationInnerProps> = ({ title, children, fieldsBefore }) => {
-  const { _, format, formatDistance } = useTranslation(dictionary)
+  const { _, format } = useTranslation(dictionary)
   const { publication, persistedId, edit } = usePublication()
-
-  const now = useNow()
-  const message = React.useMemo(() => {
-    if (isAvailable(publication, now)) return _("now-available")
-    if (wasAvailable(publication, now) && publication.publishedTo)
-      return _("was-available", { distance: formatDistance(T.parseISO(publication.publishedTo), now) })
-    if (willBeAvailable(publication, now) && publication.publishedFrom)
-      return _("will-be-available", { distance: formatDistance(T.parseISO(publication.publishedFrom), now) })
-    return ""
-  }, [formatDistance, _, publication, now])
 
   return (
     <Ui.CollapsibleCard.Root id={persistedId}>
@@ -58,22 +46,7 @@ const PublicationInner: React.FC<PublicationInnerProps> = ({ title, children, fi
               <Ui.SrOnly>{_("edit")}</Ui.SrOnly>
             </Ui.Button>
           </Ui.Tooltip.Quick>
-          <Ui.Tooltip.Quick tooltip={message} side='left' asChild>
-            <span className='relative flex size-7 items-center justify-center p-0 [&_svg]:size-4'>
-              {isAvailable(publication, now) ? (
-                <span
-                  className='flex items-center justify-center size-4 border border-foreground bg-card rounded-xs'
-                  aria-label={_("now-available")}
-                >
-                  <span className='text-green-700 rounded-xs bg-green-700 size-2.5' aria-hidden />
-                </span>
-              ) : wasAvailable(publication, now) ? (
-                <ClockArrowDown aria-label={_("was-available")} />
-              ) : (
-                <ClockArrowUp aria-label={_("will-be-available")} />
-              )}
-            </span>
-          </Ui.Tooltip.Quick>
+          <PublicationIcon />
         </Ui.CollapsibleCard.Aside>
       </Ui.CollapsibleCard.Header>
       <Ui.CollapsibleCard.Content className='@container/seo overflow-hidden'>

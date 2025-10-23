@@ -9,6 +9,7 @@ import { Link } from "wouter"
 import dashboardRouteTo from "."
 import { SidebarArticles } from "./articles/sidebar"
 import { SidebarDirectory } from "./directory/sidebar"
+import { SidebarLibraries } from "./libraries/sidebar"
 import { SidebarMedias } from "./medias/sidebar"
 import { SidebarPages } from "./pages/sidebar"
 import { SidebarSite } from "./site/sidebar"
@@ -41,6 +42,7 @@ export const Sidebar: React.FC = () => {
               <SidebarArticles />
               <SidebarMedias />
               <SidebarDirectory />
+              <SidebarLibraries />
               <SidebarSite />
             </Ui.Sidebar.GroupContent>
           </Ui.Sidebar.Group>

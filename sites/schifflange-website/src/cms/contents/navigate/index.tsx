@@ -19,7 +19,6 @@ const extractProps = (item: InferItemAsync<"contents-navigate">) => {
   const { previous: previousTranslation, next: nextTranslation } = item.translations.props
   const previous = makeLinkProps(item.props.previous.link, previousTranslation.link, item.slugs)
   const next = makeLinkProps(item.props.next.link, nextTranslation.link, item.slugs)
-  console.log(previous, next)
   return {
     previous,
     next,

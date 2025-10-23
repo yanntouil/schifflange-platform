@@ -172,7 +172,7 @@ const CardField: React.FC<CardFieldProps> = ({ className, tooltip, children, ...
     <Ui.Tooltip.Quick tooltip={tooltip} side='left' asChild>
       <span
         className={cxm(
-          "text-primary w-full shrink-0 items-center rounded-md py-1 text-xs leading-4 font-light tracking-tight [&>svg]:mr-1 [&>svg]:inline-block [&>svg]:size-3.5 [&>svg]:stroke-[1.5]",
+          "text-primary w-full shrink-0 items-center rounded-md py-1 text-xs leading-4 font-light tracking-tight [&>svg]:mr-1 [&>svg]:inline-block [&>svg]:size-3.5 [&>svg]:mb-0.5 [&>svg]:stroke-[1.5]",
           className
         )}
         {...props}

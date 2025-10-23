@@ -23,7 +23,6 @@ export const createForm: CreateItemForm<typeof contentItem> =
       },
       onSubmit: async ({ values }) => {
         const { props, translations } = values
-        console.log("Documents", props.documents)
         const payload = {
           props: {
             level: props.level,

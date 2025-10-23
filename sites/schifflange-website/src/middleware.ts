@@ -103,7 +103,6 @@ const makeRedirectUrl = (pathName: string, url: string, nextUrl: NextURL, lng: s
 }
 const redirectWithLang = (pathName: string, baseUrl: string, nextUrl: NextURL, lng: string) => {
   const redirectUrl = makeRedirectUrl(pathName, baseUrl, nextUrl, lng)
-  console.log("Redirecting to:", redirectUrl.toString())
   return NextResponse.redirect(redirectUrl)
 }
 

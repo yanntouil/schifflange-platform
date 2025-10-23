@@ -28,7 +28,6 @@ export const updateTracker = async (
   }
 
   // check if a trace with the same sessionId and was posted in the last 2 minutes
-  console.log('tracking', { session, date: DateTime.now().minus({ minutes: 2 }).toSQL() })
   const recentTrace = await tracking
     .related('traces')
     .query()

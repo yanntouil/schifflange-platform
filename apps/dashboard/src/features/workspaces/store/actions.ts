@@ -44,7 +44,6 @@ export const loadWorkspaces = async () => {
  * Load user invitations from API
  */
 export const loadInvitations = async () => {
-  console.log("loadInvitations")
   const result = await service.workspaces.invitations.my()
   const invitations = match(result)
     .with({ ok: true }, ({ data }) => data.invitations)

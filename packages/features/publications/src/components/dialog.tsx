@@ -60,7 +60,7 @@ const DialogForm: React.FC<Ui.QuickDialogSafeProps<void>> = ({ close }) => {
 
   const interval = { start: T.startOfYear(T.subYears(new Date(), 5)), end: T.endOfYear(T.addYears(new Date(), 5)) }
   return (
-    <Form.Root form={form} className='space-y-4'>
+    <Form.Root form={form} className='space-y-4 pt-2'>
       <Form.Assertive />
       <Form.Date
         name='publishedAt'

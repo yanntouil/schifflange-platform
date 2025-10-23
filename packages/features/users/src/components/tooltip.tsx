@@ -12,11 +12,13 @@ import React from "react"
 type Props = React.ComponentPropsWithoutRef<typeof Ui.Tooltip.Root> & {
   user?: Option<Api.User>
   children?: React.ReactNode
+  beforeTrigger?: React.ReactNode
   displayUsername?: boolean
   onClick?: React.MouseEventHandler<HTMLSpanElement>
+  className?: string
 }
 export const UserTooltip = React.forwardRef<HTMLSpanElement, Props>(
-  ({ user, children, displayUsername = true, onClick, ...props }, ref) => {
+  ({ user, children, beforeTrigger, displayUsername = true, onClick, className, ...props }, ref) => {
     const { _ } = useTranslation(dictionary)
     const { service } = useDashboardService()
     const springConfig = { stiffness: 100, damping: 5 }
@@ -42,8 +44,9 @@ export const UserTooltip = React.forwardRef<HTMLSpanElement, Props>(
     } as React.CSSProperties
     const url = service.getImageUrl(user?.profile.image, "preview") ?? ""
     return (
-      <Ui.Tooltip.Root>
-        <Ui.Tooltip.Trigger className={cxm("inline-flex items-center gap-1")} onClick={onClick}>
+      <Ui.Tooltip.Root {...props}>
+        <Ui.Tooltip.Trigger className={cxm("inline-flex items-center gap-1", className)} onClick={onClick}>
+          {beforeTrigger}
           <Ui.Avatar.Root
             className={cxm("size-5 rounded-full text-[var(--avatar-color-2)] [&_svg]:size-3")}
             style={style}

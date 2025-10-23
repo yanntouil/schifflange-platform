@@ -44,9 +44,8 @@ export const OrganisationProvider: React.FC<OrganisationProviderProps> = ({ swr,
       ...selectable,
       ...contextProps,
       ...manageOrganisation,
-      swr,
     }),
-    [contextProps, manageOrganisation, swr]
+    [contextProps, manageOrganisation]
   )
   const service = useDirectoryService()
   return (

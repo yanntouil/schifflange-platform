@@ -39,7 +39,6 @@ const ManagePreferencesForm = ({ onOpenChange }: { onOpenChange: (open: boolean)
 
   const categories = [...cookieDeclarations.categories]
   const { consent, acceptAll, rejectAll, setConsent, setIsConsented } = useCookies()
-  console.log(consent)
   const form = useForm({
     values: React.useMemo(
       () => ({

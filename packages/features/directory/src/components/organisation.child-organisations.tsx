@@ -38,7 +38,7 @@ export const OrganisationChildOrganisations: React.FC = () => {
       </Ui.CollapsibleCard.Header>
       <Ui.CollapsibleCard.Content className='@container'>
         <div className='p-6 pt-2 flex flex-col gap-6'>
-          <Organisations hideCreate />
+          <Organisations />
         </div>
       </Ui.CollapsibleCard.Content>
     </Ui.CollapsibleCard.Root>

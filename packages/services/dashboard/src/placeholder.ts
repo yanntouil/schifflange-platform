@@ -6,6 +6,7 @@ import {
   organisationCategoryPlaceholder,
   organisationPlaceholder,
 } from "./workspaces/directory/constants"
+import { libraryDocumentPlaceholder, libraryPlaceholder } from "./workspaces/libraries/constants"
 import { mediaFilePlaceholder } from "./workspaces/medias/constants"
 import { menuItemPlaceholder } from "./workspaces/menus/constants"
 import { templatePlaceholder } from "./workspaces/templates/constants"
@@ -20,4 +21,6 @@ export const placeholder = {
   organisationCategory: organisationCategoryPlaceholder,
   organisation: organisationPlaceholder,
   menuItem: menuItemPlaceholder,
+  library: libraryPlaceholder,
+  libraryDocument: libraryDocumentPlaceholder,
 }

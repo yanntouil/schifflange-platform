@@ -235,7 +235,6 @@ export default class WorkspacesController {
     await delay(4000)
     const { token: encodedToken } = await request.validateUsing(invitationTokenValidator)
     const invitation = await invitationFromToken(encodedToken)
-    console.log('invitation', invitation?.serialize())
     // check if the workspace exists and still active
     if (G.isNullable(invitation.workspace) || invitation.workspace.isNotActive())
       return response.badRequest({

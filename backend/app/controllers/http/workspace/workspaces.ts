@@ -853,7 +853,6 @@ export default class WorkspacesController {
     const user = auth.user!
 
     const { config } = await request.validateUsing(updateConfigValidator)
-    console.log('config', config)
     // Merge the new configuration with existing one
     workspace.config = mergeWorkspaceConfig(config, workspace.config)
 

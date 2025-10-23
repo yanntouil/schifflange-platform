@@ -1,15 +1,23 @@
 import folders from '#config/folders'
 import { E_UNLOADED_RELATION } from '#exceptions/models'
 import Article from '#models/article'
+import ArticleCategory from '#models/article-category'
 import Contact from '#models/contact'
 import ExtendedModel from '#models/extended/extended-model'
+import Forward from '#models/forward'
 import Language from '#models/language'
+import Library from '#models/library'
+import LibraryDocument from '#models/library-document'
 import MediaFile from '#models/media-file'
 import MediaFolder from '#models/media-folder'
+import Menu from '#models/menu'
 import Organisation from '#models/organisation'
 import OrganisationCategory from '#models/organisation-category'
 import Page from '#models/page'
+import Slug from '#models/slug'
+import Template from '#models/template'
 import User from '#models/user'
+import { makeWorkspaceConfig, type WorkspaceConfig } from '#models/workspace-config'
 import WorkspaceProfile from '#models/workspace-profile'
 import WorkspaceTheme from '#models/workspace-theme'
 import WorkspaceInvitation from '#models/workspaces-invitation'
@@ -43,12 +51,6 @@ import type {
 } from '@adonisjs/lucid/types/relations'
 import { A, D, G, S } from '@mobily/ts-belt'
 import { DateTime } from 'luxon'
-import ArticleCategory from './article-category.js'
-import Forward from './forward.js'
-import Menu from './menu.js'
-import Slug from './slug.js'
-import Template from './template.js'
-import { makeWorkspaceConfig, type WorkspaceConfig } from './workspace-config.js'
 
 /**
  * Model Workspace
@@ -155,6 +157,11 @@ export default class Workspace extends ExtendedModel {
 
   @hasMany(() => Contact)
   declare contacts: HasMany<typeof Contact>
+
+  @hasMany(() => Library)
+  declare libraries: HasMany<typeof Library>
+  @hasMany(() => LibraryDocument)
+  declare libraryDocuments: HasMany<typeof LibraryDocument>
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
    * HOOKS

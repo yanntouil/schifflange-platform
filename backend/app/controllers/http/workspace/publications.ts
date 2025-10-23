@@ -1,5 +1,6 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import Article from '#models/article'
+import LibraryDocument from '#models/library-document'
 import Publication, { preloadPublicPublication } from '#models/publication'
 import { luxonOrJsDate } from '#utils/date'
 import { updatePublicationValidator } from '#validators/publications'
@@ -82,6 +83,8 @@ export default class PublicationsController {
 const getModel = (request: HttpContext['request']) => {
   if (G.isNotNullable(request.param('articleId')))
     return { Model: Article, modelId: request.param('articleId') }
+  if (G.isNotNullable(request.param('documentId')))
+    return { Model: LibraryDocument, modelId: request.param('documentId') }
   // Future: Add other models with publication feature here
   throw new Error('Model not found')
 }

@@ -15,7 +15,6 @@ export const Organisation: React.FC = () => {
   - add slection action on OrganisationContacts
   - add filter by isPrimary and isResponsible
   - in OrganisationChildOrganisations remove filter by a specific props
-  - create breadcrumbs helper to display the full breadcrumbs
   */
   return (
     <>
