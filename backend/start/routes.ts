@@ -64,6 +64,7 @@ const Controller = {
     slugs: () => import('#controllers/http/workspace/slugs'),
     libraries: () => import('#controllers/http/workspace/libraries'),
     libraryDocuments: () => import('#controllers/http/workspace/library-documents'),
+    pins: () => import('#controllers/http/workspace/pins'),
   },
   admin: {
     users: () => import('#controllers/http/admin/users'),
@@ -502,7 +503,7 @@ router
  */
 router
   .group(() => {
-    const { contacts, contactOrganisations, organisations, organisationCategories } =
+    const { contacts, contactOrganisations, organisations, organisationCategories, pins } =
       Controller.workspace
 
     // organisation categories
@@ -520,6 +521,10 @@ router
     router.put('/organisations/:organisationId', [organisations, 'update'])
     router.delete('/organisations/:organisationId', [organisations, 'delete'])
     router.post('/organisations/:organisationId/organisations', [organisations, 'create'])
+
+    // pins
+    router.put('/pins/:collections/:collectionId', [pins, 'update'])
+    router.put('/pins/:collections', [pins, 'reorderItems'])
 
     // contacts
     router.get('/contacts', [contacts, 'all'])

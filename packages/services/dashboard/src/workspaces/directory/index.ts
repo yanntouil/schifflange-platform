@@ -1,4 +1,5 @@
 import { type CreateApi } from "../../api"
+import { pins } from "../../pins"
 import { Secure } from "../../store"
 import { NoContent, NotFoundErrors, ValidationErrors, WorkspaceErrors } from "../../types"
 import { appendQS } from "../../utils"
@@ -91,6 +92,7 @@ export const directory = (api: CreateApi, secure: Secure, wid: string) => ({
         }
       )
     ),
+    pins: pins(api, secure, `workspaces/${wid}/pins/organisations`),
     id: (oid: string) => ({
       read: secure(() =>
         api.get<

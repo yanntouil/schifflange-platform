@@ -11,10 +11,11 @@ export type Contacts = MakeRequestOptions<
   }
 >
 export type Organisations = MakeRequestOptions<
-  "createdAt" | "updatedAt",
+  "createdAt" | "updatedAt" | "pinOrder",
   {
     categories?: string[]
     types?: OrganisationType[]
+    pinned?: boolean
   }
 >
 export type OrganisationsCategories = MakeRequestOptions<

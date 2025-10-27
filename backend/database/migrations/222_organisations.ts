@@ -1,6 +1,6 @@
-import { BaseSchema } from '@adonisjs/lucid/schema'
 import { organisationDefaultType, organisationTypes } from '#models/organisation'
 import FileService from '#services/files/file'
+import { BaseSchema } from '@adonisjs/lucid/schema'
 
 export default class extends BaseSchema {
   protected tableName = 'organisations'
@@ -9,10 +9,16 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary().defaultTo(this.raw('UUID()'))
 
+      table.enum('type', organisationTypes).defaultTo(organisationDefaultType)
+      table.boolean('pin').defaultTo(false)
+      table.integer('pin_order').defaultTo(0)
+
       table
-        .enum('type', organisationTypes)
-        .defaultTo(organisationDefaultType)
-      table.uuid('parent_organisation_id').nullable().references('id').inTable('organisations').onDelete('SET NULL')
+        .uuid('parent_organisation_id')
+        .nullable()
+        .references('id')
+        .inTable('organisations')
+        .onDelete('SET NULL')
       table.json('logo_image').defaultTo(FileService.emptyImage)
       table.json('card_image').defaultTo(FileService.emptyImage)
       table.json('phones').defaultTo('[]')

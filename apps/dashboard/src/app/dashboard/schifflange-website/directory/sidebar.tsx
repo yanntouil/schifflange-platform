@@ -6,19 +6,17 @@ import {
   useCreateCategory,
   useCreateOrganisation,
   useDirectoryService,
-  useSwrOrganisation,
 } from "@compo/directory"
 import { OrganisationsCreateDialog } from "@compo/directory/src/components/organisations.create"
 import { useCreateContact } from "@compo/directory/src/contacts.context.actions"
 import { useTranslation } from "@compo/localize"
-import { ContextualLanguageProvider, useLanguage } from "@compo/translations"
+import { ContextualLanguageProvider } from "@compo/translations"
 import { Ui } from "@compo/ui"
-import { placeholder } from "@compo/utils"
-import { placeholder as servicePlaceholder } from "@services/dashboard"
-import { BookUser, Building2, Folders, Plus, Star, Users, UsersRound } from "lucide-react"
+import { BookUser, Building2, Folders, Plus, Users, UsersRound } from "lucide-react"
 import React from "react"
 import { Link } from "wouter"
 import { routesTo } from "."
+import { SidebarPinned } from "./sidebar.pinned"
 
 /**
  * Dashboard Directory Sidebar
@@ -26,8 +24,7 @@ import { routesTo } from "."
 export const SidebarDirectory: React.FC = () => {
   const { _ } = useTranslation(dictionary)
   const { workspace } = useWorkspace()
-  const displayOrganisation = workspace.config.organisation.display
-  const service = useDirectoryService()
+
   return (
     <ContextualLanguageProvider persistedId={`${workspace.id}-languages`}>
       <Ui.Sidebar.Menu>
@@ -37,9 +34,7 @@ export const SidebarDirectory: React.FC = () => {
             <span>{_("title")}</span>
           </Ui.Sidebar.CollapsibleMenuButton>
           <Ui.Sidebar.CollapsibleMenuSub>
-            {/* custom organisation */}
-            {displayOrganisation && <OrganisationLink />}
-
+            <SidebarPinned />
             {/* contacts */}
             <Ui.Sidebar.CollapsibleMenuSubButton action={<ContactPlusButton />}>
               <Link to={routesTo.contacts.list()}>
@@ -47,7 +42,6 @@ export const SidebarDirectory: React.FC = () => {
                 <span>{_("contacts")}</span>
               </Link>
             </Ui.Sidebar.CollapsibleMenuSubButton>
-
             {/* associations */}
             <Ui.Sidebar.CollapsibleMenuSubButton action={<AssociationPlusButton />}>
               <Link to={routesTo.associations.list()}>
@@ -55,7 +49,6 @@ export const SidebarDirectory: React.FC = () => {
                 <span>{_("associations")}</span>
               </Link>
             </Ui.Sidebar.CollapsibleMenuSubButton>
-
             {/* organisations */}
             <Ui.Sidebar.CollapsibleMenuSubButton action={<OrganisationPlusButton />}>
               <Link to={routesTo.organizations.list()}>
@@ -63,7 +56,6 @@ export const SidebarDirectory: React.FC = () => {
                 <span>{_("organisations")}</span>
               </Link>
             </Ui.Sidebar.CollapsibleMenuSubButton>
-
             {/* categories */}
             <Ui.Sidebar.CollapsibleMenuSubButton action={<CategoriesPlusButton />}>
               <Link to={routesTo.categories.list()}>
@@ -75,52 +67,6 @@ export const SidebarDirectory: React.FC = () => {
         </Ui.Sidebar.CollapsibleMenuItem>
       </Ui.Sidebar.Menu>
     </ContextualLanguageProvider>
-  )
-}
-
-/**
- * OrganisationLink
- * This link is used to navigate to the organisation page. It is only visible if the sidebar
- * is expanded and option "display organisation" is activated in workspace configuration.
- */
-const OrganisationLink: React.FC = () => {
-  const { _ } = useTranslation(dictionary)
-  const { workspace } = useWorkspace()
-  const { translate } = useLanguage()
-  const { organisationId } = workspace.config.organisation
-  const { organisation, isLoading, isError } = useSwrOrganisation(organisationId)
-
-  // Don't show anything if no organisation is configured
-  if (!organisationId) return null
-
-  // Show loading state
-  if (isLoading) {
-    return (
-      <div className="flex min-h-[var(--input-default-height)] items-center">
-        <Ui.Sidebar.CollapsibleMenuSubButton className="grow" disabled>
-          <span>
-            <Star className="size-4 animate-pulse" aria-hidden />
-            <span className="text-muted-foreground">{_("loading-organisation")}</span>
-          </span>
-        </Ui.Sidebar.CollapsibleMenuSubButton>
-      </div>
-    )
-  }
-
-  // Show error state
-  if (isError || !organisation) return null
-
-  const organisationName = placeholder(translate(organisation, servicePlaceholder.organisation).name, _("organisation-placeholder"))
-
-  return (
-    <div className="group/button flex items-center gap-1">
-      <Ui.Sidebar.CollapsibleMenuSubButton className="grow">
-        <Link to={routesTo.myMunicipality.list()}>
-          <Star className="size-4" />
-          <span>{organisationName}</span>
-        </Link>
-      </Ui.Sidebar.CollapsibleMenuSubButton>
-    </div>
   )
 }
 

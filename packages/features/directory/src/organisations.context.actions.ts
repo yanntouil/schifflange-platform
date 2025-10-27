@@ -5,6 +5,7 @@ import { match } from "@compo/utils"
 import { type Api } from "@services/dashboard"
 import React from "react"
 import { useLocation } from "wouter"
+import { usePinnedOrganisations } from "./pinned-organisation"
 import { useDirectoryService } from "./service.context"
 import { SWROrganisations } from "./swr.organisations"
 
@@ -45,6 +46,14 @@ export const useCreateOrganisation = (swr?: SWROrganisations) => {
   //   }
   // }
   // return createOrganisation
+}
+
+/**
+ * usePinned
+ */
+export const usePinned = () => {
+  const { makePinnable } = usePinnedOrganisations()
+  return makePinnable
 }
 
 /**
@@ -109,6 +118,7 @@ export const useManageOrganisations = (swr: SWROrganisations, selectable: Select
   const displayOrganisation = useDisplay()
   const [createOrganisation, createOrganisationProps] = useCreateOrganisation(swr)
   const [editOrganisation, editOrganisationProps] = useEdit(swr)
+  const makePinnable = usePinned()
   const [confirmDeleteOrganisation, confirmDeleteOrganisationProps] = useConfirmDelete(swr)
   const [confirmDeleteSelection, confirmDeleteSelectionProps] = useConfirmDeleteSelection(swr, selectable)
 
@@ -116,6 +126,7 @@ export const useManageOrganisations = (swr: SWROrganisations, selectable: Select
     displayOrganisation,
     createOrganisation,
     editOrganisation,
+    makePinnable,
     confirmDeleteOrganisation,
     confirmDeleteSelection,
   }

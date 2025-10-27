@@ -4,6 +4,8 @@ import { type Api } from "@services/dashboard"
 import {
   FilePenLine,
   FilePlusIcon,
+  Pin,
+  PinOff,
   SquareArrowOutUpRight,
   SquareDashedMousePointer,
   SquareMousePointer,
@@ -21,6 +23,7 @@ export const OrganisationsMenu: React.FC<{ organisation: Api.Organisation }> = (
   const ctx = useOrganisations()
   const isContextMenu = Ui.useIsContextMenu()
   const isSelected = ctx.isSelected(organisation)
+  const { isPinned, pin, unpin } = ctx.makePinnable(organisation.id)
   return (
     <>
       {isContextMenu &&
@@ -43,6 +46,17 @@ export const OrganisationsMenu: React.FC<{ organisation: Api.Organisation }> = (
         <FilePenLine aria-hidden />
         {_("edit")}
       </Ui.Menu.Item>
+      {isPinned() ? (
+        <Ui.Menu.Item onClick={() => unpin()}>
+          <PinOff aria-hidden />
+          {_("unpin")}
+        </Ui.Menu.Item>
+      ) : (
+        <Ui.Menu.Item onClick={() => pin()}>
+          <Pin aria-hidden />
+          {_("pin")}
+        </Ui.Menu.Item>
+      )}
       <Ui.Menu.Item onClick={() => ctx.confirmDeleteOrganisation(organisation)}>
         <Trash2 aria-hidden />
         {_("delete")}
@@ -78,6 +92,8 @@ const dictionary = {
     unselect: "Deselect organisation",
     display: "Display organisation",
     edit: "Edit organisation",
+    pin: "Pin organisation",
+    unpin: "Unpin organisation",
     delete: "Delete organisation",
     create: "New organisation",
     "delete-selection": "Delete selected organisations",
@@ -87,6 +103,8 @@ const dictionary = {
     unselect: "Désélectionner l'organisation",
     display: "Afficher l'organisation",
     edit: "Modifier l'organisation",
+    pin: "Épingler l'organisation",
+    unpin: "Désépingler l'organisation",
     delete: "Supprimer l'organisation",
     create: "Nouvelle organisation",
     "delete-selection": "Supprimer les organisations sélectionnées",
@@ -96,6 +114,8 @@ const dictionary = {
     unselect: "Organisation abwählen",
     display: "Organisation anzeigen",
     edit: "Organisation bearbeiten",
+    pin: "Organisation fixieren",
+    unpin: "Organisation lösen",
     delete: "Organisation löschen",
     create: "Neue Organisation",
     "delete-selection": "Ausgewählte Organisationen löschen",

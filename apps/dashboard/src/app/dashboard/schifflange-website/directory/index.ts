@@ -8,6 +8,8 @@ import routeToMyMunicipality from "./my-municipality"
 import routeToMunicipalityId from "./my-municipality/[organizationId]"
 import routeToOrganizations from "./organizations"
 import routeToOrganizationId from "./organizations/[organizationId]"
+import routeToPinned from "./[pinnedId]"
+import routeToPinnedId from "./[pinnedId]/[organizationId]"
 
 export * from "./route"
 const routeToHome = () => `${parentRoute()}/directory`
@@ -29,6 +31,10 @@ export const routesTo = {
   myMunicipality: {
     list: routeToMyMunicipality,
     byId: routeToMunicipalityId,
+  },
+  pinned: {
+    list: routeToPinned,
+    byId: routeToPinnedId,
   },
   categories: {
     list: routeToCategories,

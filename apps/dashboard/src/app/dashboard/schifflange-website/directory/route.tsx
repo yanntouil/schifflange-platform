@@ -11,6 +11,8 @@ import { RouteOrganizationId as RouteMunicipalityOrganizationId } from "./my-mun
 import { RouteMyMunicipality } from "./my-municipality/route"
 import { RouteOrganizations } from "./organizations"
 import { RouteOrganizationId as RouteOrganizationsOrganizationId } from "./organizations/[organizationId]"
+import { RouteOrganizationId as RoutePinnedOrganizationId } from "./[pinnedId]/[organizationId]"
+import { RoutePinnedOrganisation } from "./[pinnedId]/route"
 import Page from "./page"
 
 export const RouteDirectory: React.FC = () => {
@@ -46,6 +48,12 @@ export const RouteDirectory: React.FC = () => {
         </Route>
         <Route path="/my-municipality/:organizationId">
           {({ organizationId }) => <RouteMunicipalityOrganizationId organizationId={organizationId} />}
+        </Route>
+        <Route path="/:pinnedId">
+          <RoutePinnedOrganisation />
+        </Route>
+        <Route path="/:pinnedId/:organizationId">
+          {({ organizationId }) => <RoutePinnedOrganizationId organizationId={organizationId} />}
         </Route>
       </Switch>
     </ContextualLanguageProvider>

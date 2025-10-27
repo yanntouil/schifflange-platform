@@ -63,6 +63,12 @@ export default class Organisation extends ExtendedModel {
   @column()
   declare type: OrganisationType
 
+  @column()
+  declare pin: boolean
+
+  @column()
+  declare pinOrder: number
+
   // hierarchical relationship
   @column()
   declare parentOrganisationId: string | null
@@ -127,6 +133,8 @@ export default class Organisation extends ExtendedModel {
   public static async beforeCreateHook(ressource: Model) {
     ressource.parentOrganisationId ??= null
     ressource.type ??= organisationDefaultType
+    ressource.pin ??= false
+    ressource.pinOrder ??= 0
     ressource.logoImage ??= FileService.emptyImage
     ressource.cardImage ??= FileService.emptyImage
     ressource.phones ??= []
@@ -165,7 +173,7 @@ export default class Organisation extends ExtendedModel {
   public static filterBy = scope<typeof Organisation, QueryScopeCallback<typeof Organisation>>(
     (query, filterBy: Infer<typeof filterOrganisationsByValidator>) => {
       if (D.isEmpty(filterBy)) return query
-      const { categories, types } = filterBy
+      const { categories, types, pinned } = filterBy
       if (G.isNotNullable(categories) && A.isNotEmpty(categories)) {
         query.whereHas('categories', (categoryQuery) => {
           categoryQuery.whereIn('id', categories)
@@ -173,6 +181,9 @@ export default class Organisation extends ExtendedModel {
       }
       if (G.isNotNullable(types) && A.isNotEmpty(types)) {
         query.whereIn('type', types)
+      }
+      if (G.isNotNullable(pinned)) {
+        query.where('pin', pinned)
       }
     }
   )
@@ -188,6 +199,12 @@ export default class Organisation extends ExtendedModel {
     (query, limit: number | undefined) => {
       if (G.isNullable(limit)) return query
       return query.limit(limit)
+    }
+  )
+
+  public static pinned = scope<typeof Organisation, QueryScopeCallback<typeof Organisation>>(
+    (query) => {
+      return query.where('pin', true).orderBy('pin_order', 'asc')
     }
   )
 

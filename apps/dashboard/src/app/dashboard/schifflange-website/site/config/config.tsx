@@ -158,7 +158,7 @@ export const Config: React.FC = () => {
           </div>
         </Form.Alert>
 
-        <div className="space-y-4 border-t pt-6">
+        {/* <div className="space-y-4 border-t pt-6">
           <Form.Fields names={["config", "organisation"]}>
             <Form.Switch
               label={_("organisation-display-label")}
@@ -173,7 +173,7 @@ export const Config: React.FC = () => {
               labelAside={<Form.Info title={_("organisation-id-label")} content={_("organisation-id-info")} />}
             />
           </Form.Fields>
-        </div>
+        </div> */}
       </div>
 
       {/* Actions */}
@@ -236,12 +236,12 @@ const dictionary = {
       "This URL will be used to create absolute links in email notifications, RSS feeds, sitemaps, and social media sharing.",
 
     // Organisation options
-    "organisation-display-label": "Add organisation to directory menu",
-    "organisation-display-info": "Enable to add a direct link to the selected organisation in the directory menu",
-    "organisation-id-label": "Organisation",
-    "organisation-id-placeholder": "Select an organisation",
-    "organisation-id-info": "Select the organisation to add as a shortcut in the directory menu",
-    "organisation-placeholder": "No organisation selected",
+    // "organisation-display-label": "Add organisation to directory menu",
+    // "organisation-display-info": "Enable to add a direct link to the selected organisation in the directory menu",
+    // "organisation-id-label": "Organisation",
+    // "organisation-id-placeholder": "Select an organisation",
+    // "organisation-id-info": "Select the organisation to add as a shortcut in the directory menu",
+    // "organisation-placeholder": "No organisation selected",
 
     // Actions and feedback
     "save-button": "Save configuration",
@@ -290,12 +290,12 @@ const dictionary = {
       "Cette URL sera utilisée pour créer des liens absolus dans les notifications par email, flux RSS, sitemaps et partages sur les réseaux sociaux.",
 
     // Organisation options
-    "organisation-display-label": "Ajouter l'organisation au menu du répertoire",
-    "organisation-display-info": "Activer pour ajouter un lien direct vers l'organisation sélectionnée dans le menu du répertoire",
-    "organisation-id-label": "Organisation",
-    "organisation-id-placeholder": "Sélectionner une organisation",
-    "organisation-id-info": "Sélectionner l'organisation à ajouter comme raccourci dans le menu du répertoire",
-    "organisation-placeholder": "Aucune organisation sélectionnée",
+    // "organisation-display-label": "Ajouter l'organisation au menu du répertoire",
+    // "organisation-display-info": "Activer pour ajouter un lien direct vers l'organisation sélectionnée dans le menu du répertoire",
+    // "organisation-id-label": "Organisation",
+    // "organisation-id-placeholder": "Sélectionner une organisation",
+    // "organisation-id-info": "Sélectionner l'organisation à ajouter comme raccourci dans le menu du répertoire",
+    // "organisation-placeholder": "Aucune organisation sélectionnée",
 
     // Actions and feedback
     "save-button": "Enregistrer la configuration",
@@ -345,12 +345,12 @@ const dictionary = {
       "Diese URL wird verwendet, um absolute Links in E-Mail-Benachrichtigungen, RSS-Feeds, Sitemaps und Social-Media-Freigaben zu erstellen.",
 
     // Organisation options
-    "organisation-display-label": "Organisation zum Verzeichnismenü hinzufügen",
-    "organisation-display-info": "Aktivieren, um einen direkten Link zur ausgewählten Organisation im Verzeichnismenü hinzuzufügen",
-    "organisation-id-label": "Organisation",
-    "organisation-id-placeholder": "Organisation auswählen",
-    "organisation-id-info": "Wählen Sie die Organisation aus, die als Verknüpfung im Verzeichnismenü hinzugefügt werden soll",
-    "organisation-placeholder": "Keine Organisation ausgewählt",
+    // "organisation-display-label": "Organisation zum Verzeichnismenü hinzufügen",
+    // "organisation-display-info": "Aktivieren, um einen direkten Link zur ausgewählten Organisation im Verzeichnismenü hinzuzufügen",
+    // "organisation-id-label": "Organisation",
+    // "organisation-id-placeholder": "Organisation auswählen",
+    // "organisation-id-info": "Wählen Sie die Organisation aus, die als Verknüpfung im Verzeichnismenü hinzugefügt werden soll",
+    // "organisation-placeholder": "Keine Organisation ausgewählt",
 
     // Actions and feedback
     "save-button": "Konfiguration speichern",

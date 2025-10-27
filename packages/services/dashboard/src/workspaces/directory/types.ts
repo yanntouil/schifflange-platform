@@ -1,4 +1,5 @@
 import { directory } from "."
+import { type Pinable } from "../../pins/types"
 import type { ExtraField, SingleImage, Translatable, User } from "../../types"
 
 // contacts
@@ -88,7 +89,8 @@ export type Organisation = {
   updatedById: string
   updatedBy: User
   categories: OrganisationCategory[]
-} & Translatable<OrganisationTranslation>
+} & Translatable<OrganisationTranslation> &
+  Pinable
 
 export type OrganisationTranslation = {
   languageId: string

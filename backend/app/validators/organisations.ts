@@ -67,7 +67,7 @@ export const updateOrganisationTranslationsValidator = vine.compile(
 
 export const sortOrganisationsByValidator = vine.compile(
   vine.object({
-    field: vine.enum(['createdAt', 'updatedAt']).optional(),
+    field: vine.enum(['createdAt', 'updatedAt', 'pinOrder']).optional(),
     direction: vine.enum(['desc', 'asc']).optional(),
   })
 )
@@ -76,5 +76,6 @@ export const filterOrganisationsByValidator = vine.compile(
   vine.object({
     categories: vine.array(vine.string().uuid()).optional(),
     types: vine.array(vine.enum(organisationTypes)).optional(),
+    pinned: vine.boolean().optional(),
   })
 )

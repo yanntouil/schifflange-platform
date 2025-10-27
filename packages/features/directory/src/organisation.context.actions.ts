@@ -5,6 +5,7 @@ import { A, match } from "@compo/utils"
 import { type Api } from "@services/dashboard"
 import React from "react"
 import { useLocation } from "wouter"
+import { usePinnedOrganisations } from "./pinned-organisation"
 import { useDirectoryService } from "./service.context"
 import { SWRSafeOrganisation } from "./swr.organisation"
 
@@ -78,6 +79,14 @@ export const useEdit = (swr: SWRSafeOrganisation) => {
   })
   const editOrganisation = () => edit(swr.organisation)
   return [editOrganisation, editProps] as const
+}
+
+/**
+ * usePinned
+ */
+export const usePinned = () => {
+  const { makePinnable } = usePinnedOrganisations()
+  return makePinnable
 }
 
 /**
@@ -187,6 +196,7 @@ export const useManageOrganisation = (swr: SWRSafeOrganisation, selectable: Sele
   const [contactDetails, contactDetailsProps] = useContactDetails(swr)
   const [editContactOrganisation, editContactOrganisationProps] = useEditContactOrganisation(swr)
   const [editOrganisation, editOrganisationProps] = useEdit(swr)
+  const makePinnable = usePinned()
   const [confirmDelete, confirmDeleteProps] = useConfirmDelete(swr)
   const [confirmDeleteSelection, confirmDeleteSelectionProps] = useConfirmDeleteSelection(swr, selectable)
   const [confirmDeleteContactOrganisation, confirmDeleteContactOrganisationProps] =
@@ -200,6 +210,7 @@ export const useManageOrganisation = (swr: SWRSafeOrganisation, selectable: Sele
     contactDetails,
     editContactOrganisation,
     editOrganisation,
+    makePinnable,
     confirmDelete,
     confirmDeleteSelection,
     confirmDeleteContactOrganisation,
