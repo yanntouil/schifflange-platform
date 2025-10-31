@@ -1,9 +1,12 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
-import Article, { preloadCategory, preloadVisits } from '#models/article'
-import { preloadContent } from '#models/content'
-import { preloadPublicPublication } from '#models/publication'
-import { preloadSeo } from '#models/seo'
-import { withProfile } from '#models/user'
+import Article, { preloadArticle } from '#models/article'
+import { withArticleCategory } from '#models/article-category'
+import { withContent } from '#models/content'
+import { withPublication } from '#models/publication'
+import { withSeo } from '#models/seo'
+import { withSlug } from '#models/slug'
+import { withVisits } from '#models/tracking'
+import { withCreatedBy, withUpdatedBy } from '#models/user'
 import { validationFailure } from '#start/vine'
 import {
   createArticleValidator,
@@ -37,14 +40,14 @@ export default class ArticlesController {
       .withScopes((scope) => scope.filterBy(filterBy))
       .withScopes((scope) => scope.sortBy(sortBy))
       .withScopes((scope) => scope.limit(limit))
-      .preload('seo', preloadSeo)
-      .preload('content', preloadContent)
-      .preload('tracking', preloadVisits)
-      .preload('slug')
-      .preload('publication', preloadPublicPublication)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
-      .preload('category', preloadCategory)
+      .preload(...withSeo())
+      .preload(...withContent())
+      .preload(...withVisits())
+      .preload(...withSlug())
+      .preload(...withPublication())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
+      .preload(...withArticleCategory())
     return response.ok({ articles: A.map(articles, (article) => article.serialize()) })
   }
 
@@ -83,17 +86,7 @@ export default class ArticlesController {
       updatedById: user.id,
     })
     await article.refresh()
-    await article.load((query) =>
-      query
-        .preload('category', preloadCategory)
-        .preload('seo', preloadSeo)
-        .preload('content', preloadContent)
-        .preload('tracking', preloadVisits)
-        .preload('slug')
-        .preload('publication', preloadPublicPublication)
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
-    )
+    await article.load(preloadArticle)
     return response.ok({ article: article.serialize() })
   }
 
@@ -110,14 +103,14 @@ export default class ArticlesController {
     const article = await Article.query()
       .where('id', request.param('articleId'))
       .andWhere('workspaceId', workspace.id)
-      .preload('seo', preloadSeo)
-      .preload('content', preloadContent)
-      .preload('tracking', preloadVisits)
-      .preload('slug')
-      .preload('publication', preloadPublicPublication)
-      .preload('category', preloadCategory)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withSeo())
+      .preload(...withContent())
+      .preload(...withVisits())
+      .preload(...withSlug())
+      .preload(...withPublication())
+      .preload(...withArticleCategory())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .first()
     if (G.isNullable(article)) throw E_RESOURCE_NOT_FOUND
     return response.ok({ article: article.serialize() })
@@ -143,7 +136,7 @@ export default class ArticlesController {
     if (G.isNullable(article)) throw E_RESOURCE_NOT_FOUND
 
     const { categoryId, ...payload } = await request.validateUsing(updateArticleValidator)
-    const now = DateTime.now()
+    const updatedAt = DateTime.now()
 
     // check if category exists in workspace
     if (G.isNotNullable(categoryId)) {
@@ -157,25 +150,9 @@ export default class ArticlesController {
       article.categoryId = categoryId
     } else if (!G.isUndefined(categoryId)) article.categoryId = null
 
-    await article
-      .merge({
-        ...payload,
-        updatedById: user.id,
-        updatedAt: now,
-      })
-      .save()
+    await article.merge({ ...payload, updatedAt, updatedById: user.id }).save()
 
-    await article.load((query) =>
-      query
-        .preload('seo', preloadSeo)
-        .preload('content', preloadContent)
-        .preload('tracking', preloadVisits)
-        .preload('slug')
-        .preload('publication', preloadPublicPublication)
-        .preload('category', preloadCategory)
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
-    )
+    await article.load(preloadArticle)
 
     return response.ok({ article: article.serialize() })
   }

@@ -4,6 +4,7 @@ import {
   copyContentItems,
   preloadContentItems,
   updateContentItemTranslation,
+  withContent,
 } from '#models/content'
 import { preloadFiles } from '#models/media-file'
 import Page from '#models/page'
@@ -327,19 +328,19 @@ const getModelResource = async (request: HttpContext['request'], workspace: Work
     return await Template.query()
       .where('id', request.param('templateId'))
       .andWhere('workspaceId', workspace.id)
-      .preload('content', (query) => query.preload('items'))
+      .preload(...withContent())
       .first()
   if (G.isNotNullable(request.param('pageId')))
     return await Page.query()
       .where('id', request.param('pageId'))
       .andWhere('workspaceId', workspace.id)
-      .preload('content', (query) => query.preload('items'))
+      .preload(...withContent())
       .first()
   if (G.isNotNullable(request.param('articleId')))
     return await Article.query()
       .where('id', request.param('articleId'))
       .andWhere('workspaceId', workspace.id)
-      .preload('content', (query) => query.preload('items'))
+      .preload(...withContent())
       .first()
   throw new Error('Model not found')
 }

@@ -2,7 +2,7 @@ import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
 import MediaFile, { preloadFiles } from '#models/media-file'
 import SeoTranslation from '#models/seo-translation'
-import User, { withProfile } from '#models/user'
+import User, { preloadProfile } from '#models/user'
 import {
   afterCreate,
   beforeDelete,
@@ -125,8 +125,10 @@ export const preloadSeo = (query: PreloaderContract<Seo>) =>
   query
     .preload('translations', (query) => query.preload('image', preloadFiles))
     .preload('files', preloadFiles)
-    .preload('updatedBy', withProfile)
+    .preload('updatedBy', preloadProfile)
 export const preloadPublicSeo = (query: PreloaderContract<Seo>) =>
   query
     .preload('translations', (query) => query.preload('image', preloadFiles))
     .preload('files', (query) => query.preload('translations'))
+export const withSeo = () => ['seo', preloadSeo] as const
+export const withPublicSeo = () => ['seo', preloadPublicSeo] as const

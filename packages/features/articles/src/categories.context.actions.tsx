@@ -4,16 +4,16 @@ import { Ui } from "@compo/ui"
 import { match } from "@compo/utils"
 import { type Api } from "@services/dashboard"
 import { useArticlesService } from "./service.context"
-import { SWRCategories } from "./swr"
+import { SWRCategories } from "./swr.categories"
 
 /**
  * useCreateCategory
  * This hook is used to create a category. It will navigate to the new category after creation.
  * this hook is not dependent of the ArticleContextProvider.
  */
-export const useCreateCategory = (swr?: SWRCategories) => {
+export const useCreateCategory = (append?: (category: Api.ArticleCategory) => void) => {
   const [createCategory, createCategoryProps] = Ui.useQuickDialog<void, Api.ArticleCategory>({
-    mutate: async (category) => swr?.append(category),
+    mutate: async (category) => void append?.(category),
   })
   return [createCategory, createCategoryProps] as const
 }
@@ -82,7 +82,7 @@ export type ManageCategory = {
  * useManageCategory
  */
 export const useManageCategory = (swr: SWRCategories, selectable: Selectable<Api.ArticleCategory>) => {
-  const [createCategory, createCategoryProps] = useCreateCategory(swr)
+  const [createCategory, createCategoryProps] = useCreateCategory(swr.append)
   const [editCategory, editCategoryProps] = useEditCategory(swr)
   const [confirmDeleteCategory, confirmDeleteCategoryProps] = useConfirmDeleteCategory(swr)
   const [confirmDeleteSelectionCategory, confirmDeleteSelectionCategoryProps] = useConfirmDeleteSelectionCategory(
@@ -113,14 +113,6 @@ export const useManageCategory = (swr: SWRCategories, selectable: Selectable<Api
 const dictionary = {
   en: {
     confirm: {
-      create: {
-        title: "Create category",
-        description:
-          "You are about to create a category, if you want to continue you will be redirected to the new category.",
-        success: "New category created",
-        error: "Error while creating category",
-        progress: "Creating category",
-      },
       delete: {
         title: "Delete category",
         success: "Category has been deleted",
@@ -137,14 +129,6 @@ const dictionary = {
   },
   fr: {
     confirm: {
-      create: {
-        title: "Créer une catégorie",
-        description:
-          "Vous êtes sur le point de créer une catégorie, si vous souhaitez continuer vous serez redirigé vers la nouvelle catégorie.",
-        success: "Nouvelle catégorie créée",
-        error: "Erreur lors de la création de la catégorie",
-        progress: "Création de la catégorie en cours",
-      },
       delete: {
         title: "Supprimer la catégorie",
         success: "La catégorie a été supprimée",
@@ -161,14 +145,6 @@ const dictionary = {
   },
   de: {
     confirm: {
-      create: {
-        title: "Kategorie erstellen",
-        description:
-          "Sie sind dabei, eine Kategorie zu erstellen. Wenn Sie fortfahren möchten, werden Sie zur neuen Kategorie weitergeleitet.",
-        success: "Neue Kategorie erstellt",
-        error: "Fehler beim Erstellen der Kategorie",
-        progress: "Kategorie wird erstellt",
-      },
       delete: {
         title: "Kategorie löschen",
         success: "Kategorie wurde gelöscht",

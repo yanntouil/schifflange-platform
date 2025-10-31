@@ -1,6 +1,6 @@
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
-import User, { withProfile } from '#models/user'
+import User, { preloadProfile } from '#models/user'
 import { beforeDelete, belongsTo, column } from '@adonisjs/lucid/orm'
 import type {
   BelongsTo,
@@ -140,7 +140,9 @@ export const defaultInterval = { publishedFrom: null, publishedTo: null }
 /**
  * serializer, preloader and query builder
  */
-export const withPublicationRelation = (query: PreloaderContract<Publication>) =>
-  query.preload('updatedBy', withProfile).preload('publishedBy', withProfile)
+export const preloadPublication = (query: PreloaderContract<Publication>) =>
+  query.preload('updatedBy', preloadProfile).preload('publishedBy', preloadProfile)
+export const withPublication = () => ['publication', preloadPublication] as const
 export const preloadPublicPublication = (query: PreloaderContract<Publication>) =>
-  query.preload('updatedBy', withProfile).preload('publishedBy', withProfile)
+  query.preload('updatedBy', preloadProfile).preload('publishedBy', preloadProfile)
+export const withPublicPublication = () => ['publication', preloadPublicPublication] as const

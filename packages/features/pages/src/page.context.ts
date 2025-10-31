@@ -1,6 +1,6 @@
 import React from "react"
 import { ManagePage } from "./page.context.actions"
-import { SWRSafePage } from "./swr"
+import { SWRSafePage } from "./swr.page"
 
 /**
  * types

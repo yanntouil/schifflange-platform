@@ -5,9 +5,9 @@ import { type Api } from "@services/dashboard"
 import React from "react"
 import { useFiltered } from "../hooks"
 import { usePages } from "../pages.context"
-import { Cards } from "./cards"
-import { Filters } from "./filters"
-import { Table } from "./table"
+import { PagesCards } from "./pages.cards"
+import { PagesFilters } from "./pages.filters"
+import { PagesTable } from "./pages.table"
 
 /**
  * Pages
@@ -32,7 +32,7 @@ export const Pages: React.FC = () => {
         <Dashboard.Toolbar.Search {...matchable} placeholder={_("search")} />
         <Dashboard.Toolbar.Aside>
           <Dashboard.Toolbar.SortFromHook {...sortable} t={_.prefixed("sort")} />
-          <Filters {...filterable} />
+          <PagesFilters {...filterable} />
           <Dashboard.Toolbar.View view={view} setView={viewProps.setView} />
         </Dashboard.Toolbar.Aside>
       </Dashboard.Toolbar.Root>
@@ -47,7 +47,7 @@ export const Pages: React.FC = () => {
           reset={reset}
           isLoading={swr.isLoading}
         >
-          {view === "card" ? <Cards pages={paginatedPages} /> : <Table pages={paginatedPages} />}
+          {view === "card" ? <PagesCards pages={paginatedPages} /> : <PagesTable pages={paginatedPages} />}
         </Dashboard.Empty>
 
         {swr.isLoading && <PagesTableSkeleton count={3} />}

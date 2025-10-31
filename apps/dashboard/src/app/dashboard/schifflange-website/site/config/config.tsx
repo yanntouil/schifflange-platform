@@ -123,6 +123,20 @@ export const Config: React.FC = () => {
             </Form.Fields>
             <p className="text-xs text-gray-600 dark:text-gray-400">{_("articles-example")}</p>
           </div>
+
+          {/* Events */}
+          <div className="space-y-3">
+            <Form.Fields names={["config", "events"]}>
+              <Form.Input
+                label={_("events-slug-prefix-label")}
+                name="slugPrefix"
+                placeholder={_("events-slug-prefix-placeholder")}
+                maxLength={255}
+                labelAside={<Form.Info title={_("events-slug-prefix-label")} content={_("events-slug-prefix-info")} />}
+              />
+            </Form.Fields>
+            <p className="text-xs text-gray-600 dark:text-gray-400">{_("events-example")}</p>
+          </div>
         </div>
 
         {/* Note explicative pour les URLs */}
@@ -217,6 +231,11 @@ const dictionary = {
     "articles-slug-prefix-info":
       "This prefix will be used when creating new articles to generate their initial URL. Existing articles keep their current URLs.",
     "articles-example": "Example: With 'blog' prefix → /blog/my-new-article-title",
+    "events-slug-prefix-label": "Events URL prefix",
+    "events-slug-prefix-placeholder": "events",
+    "events-slug-prefix-info":
+      "This prefix will be used when creating new events to generate their initial URL. Existing events keep their current URLs.",
+    "events-example": "Example: With 'events' prefix → /events/my-new-event-title",
 
     // URL structure explanation
     "url-structure-title": "How URL structure works",
@@ -271,6 +290,11 @@ const dictionary = {
     "articles-slug-prefix-info":
       "Ce préfixe sera utilisé lors de la création d'un nouvel article pour générer son URL initiale. Les articles existants conservent leur URL actuelle.",
     "articles-example": "Exemple : Avec le préfixe 'blog' → /blog/titre-de-mon-nouvel-article",
+    "events-slug-prefix-label": "Préfixe URL des événements",
+    "events-slug-prefix-placeholder": "evenements",
+    "events-slug-prefix-info":
+      "Ce préfixe sera utilisé lors de la création d'un nouvel événement pour générer son URL initiale. Les événements existants conservent leur URL actuelle.",
+    "events-example": "Exemple : Avec le préfixe 'evenements' → /evenements/titre-de-mon-nouvel-evenement",
 
     // URL structure explanation
     "url-structure-title": "Comment fonctionne la structure des URLs",
@@ -325,6 +349,11 @@ const dictionary = {
     "articles-slug-prefix-info":
       "Dieses Präfix wird beim Erstellen neuer Artikel verwendet, um deren anfängliche URL zu generieren. Bestehende Artikel behalten ihre aktuelle URL.",
     "articles-example": "Beispiel: Mit 'blog' Präfix → /blog/mein-neuer-artikel-titel",
+    "events-slug-prefix-label": "Veranstaltungen URL-Präfix",
+    "events-slug-prefix-placeholder": "veranstaltungen",
+    "events-slug-prefix-info":
+      "Dieses Präfix wird beim Erstellen neuer Veranstaltungen verwendet, um deren anfängliche URL zu generieren. Bestehende Veranstaltungen behalten ihre aktuelle URL.",
+    "events-example": "Beispiel: Mit 'veranstaltungen' Präfix → /veranstaltungen/mein-neuer-veranstaltung-titel",
 
     // URL structure explanation
     "url-structure-title": "Wie die URL-Struktur funktioniert",

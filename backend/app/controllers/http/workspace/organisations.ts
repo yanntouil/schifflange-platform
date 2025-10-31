@@ -2,7 +2,7 @@ import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import { preloadOrganisationContact } from '#models/contact-organisation'
 import Organisation, { preloadOrganisation, withChildOrganisations } from '#models/organisation'
 import { preloadOrganisationCategory } from '#models/organisation-category'
-import { withProfile } from '#models/user'
+import { preloadProfile } from '#models/user'
 import { validationFailure } from '#start/vine'
 import {
   createOrganisationValidator,
@@ -41,8 +41,8 @@ export default class OrganisationsController {
       .withCount('contactOrganisations', (query) => query.as('contactCount'))
       .preload('translations')
       .preload('categories', preloadOrganisationCategory)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
     return response.ok({ organisations: A.map(organisations, (org) => org.serialize()) })
   }
 
@@ -68,8 +68,8 @@ export default class OrganisationsController {
       .withScopes((scope) => scope.limit(limit))
       .preload('translations')
       .preload('categories', preloadOrganisationCategory)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
     return response.ok({ organisations: A.map(organisations, (org) => org.serialize()) })
   }
 
@@ -143,10 +143,10 @@ export default class OrganisationsController {
         .preload('translations')
         .preload('categories', preloadOrganisationCategory)
         .preload('parentOrganisation', preloadOrganisation)
-        .preload(...withChildOrganisations)
+        .preload(...withChildOrganisations())
         .preload('contactOrganisations', preloadOrganisationContact)
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
+        .preload('createdBy', preloadProfile)
+        .preload('updatedBy', preloadProfile)
     )
     return response.ok({ organisation: organisation.serialize() })
   }
@@ -169,10 +169,10 @@ export default class OrganisationsController {
       .preload('translations')
       .preload('categories', preloadOrganisationCategory)
       .preload('parentOrganisation', preloadOrganisation)
-      .preload(...withChildOrganisations)
+      .preload(...withChildOrganisations())
       .preload('contactOrganisations', preloadOrganisationContact)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
       .first()
     if (G.isNullable(organisation)) throw E_RESOURCE_NOT_FOUND
     return response.ok({ organisation: organisation.serialize() })
@@ -198,7 +198,7 @@ export default class OrganisationsController {
       .withCount('contactOrganisations', (query) => query.as('contactCount'))
       .preload('translations')
       .preload('categories', preloadOrganisationCategory)
-      .preload('createdBy', withProfile)
+      .preload('createdBy', preloadProfile)
       .first()
     if (G.isNullable(organisation)) throw E_RESOURCE_NOT_FOUND
 
@@ -257,10 +257,10 @@ export default class OrganisationsController {
         .preload('translations')
         .preload('categories', preloadOrganisationCategory)
         .preload('parentOrganisation', preloadOrganisation)
-        .preload(...withChildOrganisations)
+        .preload(...withChildOrganisations())
         .preload('contactOrganisations', preloadOrganisationContact)
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
+        .preload('createdBy', preloadProfile)
+        .preload('updatedBy', preloadProfile)
     )
 
     return response.ok({ organisation: organisation.serialize() })

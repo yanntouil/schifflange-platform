@@ -1,4 +1,5 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
+import Library from '#models/library'
 import Organisation from '#models/organisation'
 import { validationFailure } from '#start/vine'
 import { reorderPinsValidator, updatePinValidator } from '#validators/pins'
@@ -113,6 +114,7 @@ export default class PinsController {
 const getModel = (request: HttpContext['request']) => {
   return match(request.param('collections'))
     .with('organisations', () => Organisation)
+    .with('libraries', () => Library)
     .otherwise(() => {
       throw new Error('Model not found')
     })

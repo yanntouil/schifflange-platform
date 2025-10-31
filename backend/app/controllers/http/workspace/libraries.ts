@@ -1,7 +1,8 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
-import Library, { preloadLibrary, withChildLibraries } from '#models/library'
-import { preloadLibraryDocument } from '#models/library-document'
-import { withProfile } from '#models/user'
+import Library, { preloadLibrary, withChildLibraries, withParentLibrary } from '#models/library'
+import { withLibraryDocuments } from '#models/library-document'
+import { withLibraryTranslations } from '#models/library-translation'
+import { preloadProfile, withCreatedBy, withUpdatedBy } from '#models/user'
 import { validationFailure } from '#start/vine'
 import {
   createLibraryValidator,
@@ -38,9 +39,10 @@ export default class LibrariesController {
       .withScopes((scope) => scope.sortBy(sortBy))
       .withScopes((scope) => scope.limit(limit))
       .withCount('documents', (query) => query.as('documentCount'))
+      .withCount('childLibraries', (query) => query.as('childLibraryCount'))
       .preload('translations')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
     return response.ok({
       libraries: A.map(libraries, (library) => library.serializeWithDocuments()),
     })
@@ -67,9 +69,10 @@ export default class LibrariesController {
       .withScopes((scope) => scope.sortBy(sortBy))
       .withScopes((scope) => scope.limit(limit))
       .withCount('documents', (query) => query.as('documentCount'))
+      .withCount('childLibraries', (query) => query.as('childLibraryCount'))
       .preload('translations')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
     return response.ok({
       libraries: A.map(libraries, (library) => library.serializeWithDocuments()),
     })
@@ -120,15 +123,7 @@ export default class LibrariesController {
     await library.refresh()
     await updateLibraryTranslations(library, translations)
 
-    await library.load((query) =>
-      query
-        .preload('translations')
-        .preload('parentLibrary', preloadLibrary)
-        .preload(...withChildLibraries)
-        .preload('documents', preloadLibraryDocument)
-        .preload('updatedBy', withProfile)
-        .preload('createdBy', withProfile)
-    )
+    await library.load(preloadLibrary)
     return response.ok({ library: library.serializeWithDocuments() })
   }
 
@@ -146,12 +141,12 @@ export default class LibrariesController {
       .related('libraries')
       .query()
       .where('id', request.param('libraryId'))
-      .preload('translations')
-      .preload('parentLibrary', preloadLibrary)
-      .preload(...withChildLibraries)
-      .preload('documents', preloadLibraryDocument)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withLibraryTranslations())
+      .preload(...withParentLibrary())
+      .preload(...withChildLibraries())
+      .preload(...withLibraryDocuments())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .first()
 
     if (G.isNullable(library)) throw E_RESOURCE_NOT_FOUND
@@ -175,7 +170,7 @@ export default class LibrariesController {
       .related('libraries')
       .query()
       .where('id', request.param('libraryId'))
-      .preload('translations')
+      .preload(...withLibraryTranslations())
       .first()
     if (G.isNullable(library)) throw E_RESOURCE_NOT_FOUND
 
@@ -206,15 +201,7 @@ export default class LibrariesController {
       })
       .save()
 
-    await library.load((query) =>
-      query
-        .preload('translations')
-        .preload('parentLibrary', preloadLibrary)
-        .preload(...withChildLibraries)
-        .preload('documents', preloadLibraryDocument)
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
-    )
+    await library.load(preloadLibrary)
     return response.ok({ library: library.serializeWithDocuments() })
   }
 

@@ -7,6 +7,7 @@ import { G } from '@mobily/ts-belt'
 const defaultConfig = {
   site: { url: 'https://website.lu', secure: true },
   articles: { slugPrefix: 'articles', tags: [] },
+  events: { slugPrefix: 'events' },
   organisation: { display: false, organisationId: '' },
 }
 export type WorkspaceConfig = typeof defaultConfig

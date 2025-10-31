@@ -30,9 +30,9 @@ export const FormDate: React.FC<FormDateProps> = ({ classNames, ...props }) => {
 /**
  * FieldDate
  */
-type FieldDateProps = Omit<Ui.DatePickerProps, "onValueChange" | "value" | "id">
+type FieldDateProps = Omit<Ui.DatepickerProps, "onValueChange" | "value" | "id">
 const FieldDate: React.FC<FieldDateProps> = ({ disabled: fieldDisabled, ...props }) => {
   const { value, setFieldValue: onValueChange, disabled: ctxDisabled, id } = useFieldContext<Date | null>()
   const disabled = fieldDisabled || ctxDisabled
-  return <Ui.DatePicker onValueChange={onValueChange} value={value} id={id} disabled={disabled} {...props} />
+  return <Ui.Datepicker onValueChange={onValueChange} value={value} id={id} disabled={disabled} {...props} />
 }

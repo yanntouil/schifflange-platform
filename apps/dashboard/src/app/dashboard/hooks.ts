@@ -17,6 +17,17 @@ export const useArticleServiceProps = () => {
     serviceKey: workspace.id,
     isAdmin: isWorkspaceAdmin(workspace),
     makeUrl: makeUrlFromSlug,
+    publishedUsers: workspace.members,
+  }
+}
+export const useEventServiceProps = () => {
+  const { workspace, service, makeUrlFromSlug } = useWorkspace()
+  return {
+    service: service.events,
+    serviceKey: workspace.id,
+    isAdmin: isWorkspaceAdmin(workspace),
+    makeUrl: makeUrlFromSlug,
+    publishedUsers: workspace.members,
   }
 }
 

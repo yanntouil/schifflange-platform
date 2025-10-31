@@ -79,7 +79,7 @@ const OrganisationPlusButton: React.FC = () => {
   const [create, props] = useCreateOrganisation()
   return (
     <>
-      <Ui.Sidebar.MenuSubAction tooltip={_("create-organisation")} onClick={create}>
+      <Ui.Sidebar.MenuSubAction tooltip={_("create-organisation")} onClick={() => create()}>
         <Plus aria-hidden />
       </Ui.Sidebar.MenuSubAction>
       <OrganisationsCreateDialog {...props} />
@@ -114,7 +114,7 @@ const CategoriesPlusButton: React.FC = () => {
   const [create, props] = useCreateCategory()
   return (
     <>
-      <Ui.Sidebar.MenuSubAction tooltip={_("create-category")} onClick={create}>
+      <Ui.Sidebar.MenuSubAction tooltip={_("create-category")} onClick={() => create()}>
         <Plus aria-hidden />
       </Ui.Sidebar.MenuSubAction>
       <CategoriesCreateDialog {...props} />
@@ -131,7 +131,7 @@ const ContactPlusButton: React.FC = () => {
   const [create, props] = useCreateContact()
   return (
     <>
-      <Ui.Sidebar.MenuSubAction tooltip={_("create-contact")} onClick={create}>
+      <Ui.Sidebar.MenuSubAction tooltip={_("create-contact")} onClick={() => create()}>
         <Plus aria-hidden />
       </Ui.Sidebar.MenuSubAction>
       <ContactsCreateDialog {...props} />
@@ -147,36 +147,36 @@ const dictionary = {
     title: "Annuaire",
     "loading-organisation": "Chargement...",
     "organisation-placeholder": "Sans nom",
-    contacts: "Contacts",
-    "create-contact": "Créer un contact",
-    associations: "Associations",
-    organisations: "Organisations",
-    "create-organisation": "Create an organisation",
-    categories: "Catégories",
-    "create-category": "Créer une catégorie",
+    contacts: "Gérer les contacts",
+    "create-contact": "Créer un nouveau contact",
+    associations: "Gérer les associations",
+    organisations: "Gérer les organisations",
+    "create-organisation": "Créer une nouvelle organisation",
+    categories: "Gérer les catégories",
+    "create-category": "Créer une nouvelle catégorie",
   },
   en: {
     title: "Directory",
     "loading-organisation": "Loading...",
     "organisation-placeholder": "Unnamed",
-    contacts: "Contacts",
-    "create-contact": "Create a contact",
-    associations: "Associations",
-    organisations: "Organisations",
-    "create-organisation": "Create an organisation",
-    categories: "Categories",
-    "create-category": "Create a category",
+    contacts: "Manage contacts",
+    "create-contact": "Create a new contact",
+    associations: "Manage associations",
+    organisations: "Manage organisations",
+    "create-organisation": "Create a new organisation",
+    categories: "Manage categories",
+    "create-category": "Create a new category",
   },
   de: {
     title: "Verzeichnis",
     "loading-organisation": "Wird geladen...",
     "organisation-placeholder": "Unbenannt",
-    contacts: "Kontakte",
-    "create-contact": "Kontakt erstellen",
-    associations: "Vereine",
-    organisations: "Organisationen",
-    "create-organisation": "Organisation erstellen",
-    categories: "Kategorien",
-    "create-category": "Kategorie erstellen",
+    contacts: "Kontakte verwalten",
+    "create-contact": "Neuen Kontakt erstellen",
+    associations: "Vereine verwalten",
+    organisations: "Organisationen verwalten",
+    "create-organisation": "Neue Organisation erstellen",
+    categories: "Kategorien verwalten",
+    "create-category": "Neue Kategorie erstellen",
   },
 }

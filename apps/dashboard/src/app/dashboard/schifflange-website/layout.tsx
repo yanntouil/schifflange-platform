@@ -35,7 +35,7 @@ const Layout: React.FC<React.PropsWithChildren> = ({ children }) => {
           <Ui.Sidebar.Inset>
             <Header />
             <main className="flex flex-1 flex-col gap-4 p-4 pt-0">
-              {children}
+              <div className="flex grow flex-col gap-4">{children}</div>
               <Copyright />
             </main>
           </Ui.Sidebar.Inset>

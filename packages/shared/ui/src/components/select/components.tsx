@@ -1,8 +1,8 @@
+import { A, cn } from "@compo/utils"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import { VariantProps } from "class-variance-authority"
 import { Check, ChevronDown, ChevronUp, ChevronsUpDown } from "lucide-react"
 import * as React from "react"
-import { cn } from "@compo/utils"
 import { MultiSelect, MultiSelectProps } from "./multiple"
 import { selectVariants } from "./variants"
 
@@ -154,12 +154,62 @@ const SelectSeparator = React.forwardRef<
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
+/**
+ * SelectQuick
+ */
+export type SelectQuickProps = {
+  lang?: string
+  placeholder?: string
+  value: string
+  defaultValue?: string
+  onValueChange: (value: string) => void
+  options?: (React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item> & {
+    label: React.ReactNode
+  })[]
+  classNames?: {
+    trigger?: string
+    content?: string
+    item?: string
+  }
+  disabled?: boolean
+  children?: React.ReactNode
+}
+
+const SelectQuick: React.FC<SelectQuickProps> = ({
+  placeholder,
+  value,
+  defaultValue,
+  onValueChange,
+  options = [],
+  classNames,
+  disabled,
+  children,
+  lang,
+}) => {
+  return (
+    <SelectRoot disabled={disabled} defaultValue={defaultValue} value={value} onValueChange={onValueChange}>
+      <SelectTrigger className={cn(classNames?.trigger)}>
+        <SelectValue placeholder={placeholder} lang={lang} />
+      </SelectTrigger>
+      <SelectContent className={classNames?.content}>
+        {children ||
+          A.map(options, (option) => (
+            <SelectItem key={option.value} {...option} className={classNames?.item} lang={lang}>
+              {option.label}
+            </SelectItem>
+          ))}
+      </SelectContent>
+    </SelectRoot>
+  )
+}
+
 export {
   SelectContent as Content,
   SelectGroup as Group,
   SelectItem as Item,
   SelectLabel as Label,
   MultiSelect as Multiple,
+  SelectQuick as Quick,
   SelectRoot as Root,
   SelectScrollDownButton as ScrollDownButton,
   SelectScrollUpButton as ScrollUpButton,

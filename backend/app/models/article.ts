@@ -1,12 +1,12 @@
-import ArticleCategory from '#models/article-category'
-import Content, { preloadContent } from '#models/content'
+import ArticleCategory, { withArticleCategory } from '#models/article-category'
+import Content, { withContent } from '#models/content'
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
 import { preloadFiles } from '#models/media-file'
-import Seo, { preloadSeo } from '#models/seo'
+import Seo, { withSeo } from '#models/seo'
 import Slug from '#models/slug'
-import Tracking from '#models/tracking'
-import User, { withProfile } from '#models/user'
+import Tracking, { withVisits } from '#models/tracking'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import {
   filterArticlesByValidator,
   sortArticlesByValidator,
@@ -25,12 +25,12 @@ import type {
   BelongsTo,
   ExtractModelRelations,
   PreloaderContract,
-  RelationQueryBuilderContract,
+  RelationSubQueryBuilderContract,
 } from '@adonisjs/lucid/types/relations'
 import { A, D, G, S } from '@mobily/ts-belt'
 import { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
-import Publication, { preloadPublicPublication } from './publication.js'
+import Publication, { withPublication } from './publication.js'
 import { makeWorkspaceConfig } from './workspace-config.js'
 import Workspace from './workspace.js'
 
@@ -107,12 +107,16 @@ export default class Article extends ExtendedModel {
 
   @beforeCreate()
   public static async beforeCreateHook(ressource: Model) {
+    const client = ressource.$trx
     const [seo, content, publication, tracking, slug] = await Promise.all([
-      Seo.create({}),
-      Content.create({}),
-      Publication.create({}),
-      Tracking.create({ type: 'views', model: 'article', workspaceId: ressource.workspaceId }),
-      Slug.create({ model: 'article', workspaceId: ressource.workspaceId }),
+      Seo.create({}, { client }),
+      Content.create({}, { client }),
+      Publication.create({}, { client }),
+      Tracking.create(
+        { type: 'views', model: 'article', workspaceId: ressource.workspaceId },
+        { client }
+      ),
+      Slug.create({ model: 'article', workspaceId: ressource.workspaceId }, { client }),
     ])
     ressource.seoId = seo.id
     ressource.contentId = content.id
@@ -241,21 +245,24 @@ export const articleDefaultState = articleStates[0]
 /**
  * preloaders
  */
-export const preloadCategory = (query: PreloaderContract<ArticleCategory>) =>
+export const preloadArticle = (query: PreloaderContract<Article>) =>
   query
-    .preload('translations', (query) => query.preload('image', preloadFiles))
-    .preload('createdBy', withProfile)
-    .preload('updatedBy', withProfile)
-export const preloadVisits = (query: RelationQueryBuilderContract<typeof Tracking, any>) =>
-  query.withCount('traces', (query) => query.as('visits'))
-export const preloadArticles = (query: RelationQueryBuilderContract<typeof Article, any>) =>
-  query
-    .preload('seo', preloadSeo)
-    .preload('content', preloadContent)
-    .preload('tracking', preloadVisits)
-    .preload('publication', preloadPublicPublication)
-    .preload('createdBy', withProfile)
-    .preload('updatedBy', withProfile)
+    .preload(...withArticleCategory())
+    .preload(...withSeo())
+    .preload(...withContent())
+    .preload(...withVisits())
+    .preload(...withPublication())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+export const withArticle = () => ['articles', preloadArticle] as const
+export const withSoftArticle = () =>
+  ['article', (query: PreloaderContract<Article>) => query.preload(...withSeo())] as const
+export const withArticles = () => ['articles', preloadArticle] as const
+export const withArticleCount = () =>
+  [
+    'articles',
+    (query: RelationSubQueryBuilderContract<typeof Article>) => query.as('totalArticles'),
+  ] as const
 
 /**
  * utils

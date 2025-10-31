@@ -1,8 +1,9 @@
 import ContentItem from '#models/content-item'
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
-import { preloadFiles } from '#models/media-file'
-import { withProfile } from '#models/user'
+import { withFiles } from '#models/media-file'
+import { withSlugs } from '#models/slug'
+import { withCreatedBy, withUpdatedBy } from '#models/user'
 import { createContentItemValidator } from '#validators/contents'
 import { beforeDelete, column, hasMany } from '@adonisjs/lucid/orm'
 import type {
@@ -14,7 +15,6 @@ import type {
 import { A, D, G } from '@mobily/ts-belt'
 import { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
-import { preloadSlug } from './slug.js'
 
 /**
  * Model for Content (CMS)
@@ -77,22 +77,27 @@ export default class Content extends ExtendedModel {
  */
 export const preloadContent = (query: PreloaderContract<Content>) =>
   query.preload('items', preloadContentItems)
+export const withContent = () => ['content', preloadContent] as const
 export const preloadContentItems = (query: PreloaderContract<ContentItem>) =>
   query
     .preload('translations')
-    .preload('createdBy', withProfile)
-    .preload('updatedBy', withProfile)
-    .preload('files', preloadFiles)
-    .preload('slugs', preloadSlug)
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+    .preload(...withFiles())
+    .preload(...withSlugs())
+export const withContentItems = () => ['items', preloadContentItems] as const
+
 export const preloadContentItem =
   (id: string) => (query: HasManyQueryBuilderContract<typeof ContentItem, any>) =>
     query
       .where('id', id)
       .preload('translations')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
-      .preload('files', preloadFiles)
-      .preload('slugs', preloadSlug)
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
+      .preload(...withFiles())
+      .preload(...withSlugs())
+export const withContentItem = () => ['item', preloadContentItem] as const
+
 export const preloadPublicContent = (query: PreloaderContract<Content>) =>
   query.preload('items', preloadPublicContentItems)
 export const preloadPublicContentItems = (
@@ -102,7 +107,7 @@ export const preloadPublicContentItems = (
     .where('state', 'published')
     .preload('translations')
     .preload('files', (query) => query.preload('translations'))
-    .preload('slugs', preloadSlug)
+    .preload(...withSlugs())
 
 /**
  * utils

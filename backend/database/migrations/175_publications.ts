@@ -5,13 +5,18 @@ export default class extends BaseSchema {
 
   async up() {
     this.schema.createTable(this.tableName, (table) => {
-      table.uuid('id').primary().defaultTo(this.raw('UUID()'))
+      table.uuid('id').primary().defaultTo(this.db.raw('(UUID())'))
       table.dateTime('published_at')
       table.dateTime('published_from')
       table.dateTime('published_to')
-      table.uuid('published_by_id').references('id').inTable('users').onDelete('SET NULL')
+      table
+        .uuid('published_by_id')
+        .references('id')
+        .inTable('users')
+        .onDelete('SET NULL')
+        .nullable()
 
-      table.uuid('updated_by_id').references('id').inTable('users').onDelete('SET NULL')
+      table.uuid('updated_by_id').references('id').inTable('users').onDelete('SET NULL').nullable()
       table.timestamp('updated_at', { useTz: true })
     })
   }

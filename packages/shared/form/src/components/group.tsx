@@ -1,6 +1,6 @@
 import { G, cxm } from "@compo/utils"
 import React from "react"
-import { FormError, FormItem, FormLabel } from "."
+import { FieldError, FieldItem, FormError, FormItem, FormLabel, Label } from "."
 import { extractGroupProps } from "./utils"
 
 /**
@@ -39,4 +39,31 @@ export type FormGroupClassNames<T extends ClassNames = {}> = T & {
   item?: string
   error?: string
   message?: string
+}
+
+export const FieldGroup: React.FC<React.PropsWithChildren<FormGroupProps> & { error?: string; id?: string }> = ({
+  children,
+  classNames,
+  error,
+  label,
+  labelAside,
+  message,
+  required,
+  id,
+}) => {
+  return (
+    <FieldItem className={classNames?.item}>
+      {G.isNotNullable(label) && !!label && (
+        <div className={cxm("flex min-h-6 items-center justify-between", classNames?.label)}>
+          <Label required={required} htmlFor={id}>
+            {label}
+          </Label>
+          {labelAside}
+        </div>
+      )}
+      {children}
+      {message && <div className={cxm("text-xs text-muted-foreground", classNames?.message)}>{message}</div>}
+      {error && <FieldError className={classNames?.error}>{error}</FieldError>}
+    </FieldItem>
+  )
 }

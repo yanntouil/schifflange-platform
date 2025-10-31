@@ -6,7 +6,7 @@ import { Api } from "@services/dashboard"
 import React from "react"
 import { ArticleContext, useArticle } from "./article.context"
 import { useManageArticle } from "./article.context.actions"
-import { SWRSafeArticle } from "./swr"
+import { SWRSafeArticle } from "./swr.article"
 
 /**
  * ArticlesProvider

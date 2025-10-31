@@ -1,6 +1,6 @@
 import Content from '#models/content'
 import ExtendedModel from '#models/extended/extended-model'
-import Seo from '#models/seo'
+import Seo, { withSeo } from '#models/seo'
 import Slug from '#models/slug'
 import Tracking from '#models/tracking'
 import User from '#models/user'
@@ -8,6 +8,7 @@ import { afterCreate, beforeCreate, beforeDelete, belongsTo, column } from '@ado
 import type {
   BelongsTo,
   ExtractModelRelations,
+  PreloaderContract,
   RelationQueryBuilderContract,
 } from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
@@ -78,11 +79,15 @@ export default class Page extends ExtendedModel {
 
   @beforeCreate()
   public static async beforeCreateHook(ressource: Model) {
+    const client = ressource.$trx
     const [seo, content, tracking, slug] = await Promise.all([
-      Seo.create({}),
-      Content.create({}),
-      Tracking.create({ type: 'views', model: 'page', workspaceId: ressource.workspaceId }),
-      Slug.create({ model: 'page', workspaceId: ressource.workspaceId }),
+      Seo.create({}, { client }),
+      Content.create({}, { client }),
+      Tracking.create(
+        { type: 'views', model: 'page', workspaceId: ressource.workspaceId },
+        { client }
+      ),
+      Slug.create({ model: 'page', workspaceId: ressource.workspaceId }, { client }),
     ])
     ressource.seoId = seo.id
     ressource.contentId = content.id
@@ -163,3 +168,6 @@ export const pageDefaultState = pageStates[0]
  */
 export const preloadVisits = (query: RelationQueryBuilderContract<typeof Tracking, any>) =>
   query.withCount('traces', (query) => query.as('visits'))
+
+export const withSoftPage = () =>
+  ['page', (query: PreloaderContract<Page>) => query.preload(...withSeo())] as const

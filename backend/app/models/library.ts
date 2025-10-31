@@ -1,15 +1,25 @@
 import ExtendedModel from '#models/extended/extended-model'
-import LibraryDocument from '#models/library-document'
-import LibraryTranslation from '#models/library-translation'
-import User, { withProfile } from '#models/user'
+import LibraryDocument, { withDocumentCount } from '#models/library-document'
+import LibraryTranslation, { withLibraryTranslations } from '#models/library-translation'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import Workspace from '#models/workspace'
 import { filterLibrariesByValidator, sortLibrariesByValidator } from '#validators/libraries'
-import { beforeCreate, beforeDelete, belongsTo, column, hasMany, scope } from '@adonisjs/lucid/orm'
+import {
+  beforeCreate,
+  beforeDelete,
+  belongsTo,
+  column,
+  computed,
+  hasMany,
+  scope,
+} from '@adonisjs/lucid/orm'
 import { QueryScopeCallback } from '@adonisjs/lucid/types/model'
 import type {
   BelongsTo,
   HasMany,
   HasManyQueryBuilderContract,
+  PreloaderContract,
+  RelationSubQueryBuilderContract,
 } from '@adonisjs/lucid/types/relations'
 import { ExtractModelRelations } from '@adonisjs/lucid/types/relations'
 import { A, D, G, O } from '@mobily/ts-belt'
@@ -34,6 +44,12 @@ export default class Library extends ExtendedModel {
 
   @hasMany(() => LibraryDocument, { foreignKey: 'libraryId' })
   declare documents: HasMany<typeof LibraryDocument>
+
+  @column()
+  declare pin: boolean
+
+  @column()
+  declare pinOrder: number
 
   // hierarchical relationship
   @column()
@@ -72,6 +88,8 @@ export default class Library extends ExtendedModel {
   @beforeCreate()
   public static async beforeCreateHook(ressource: Model) {
     ressource.parentLibraryId ??= null
+    ressource.pin ??= false
+    ressource.pinOrder ??= 0
   }
 
   @beforeDelete()
@@ -82,8 +100,14 @@ export default class Library extends ExtendedModel {
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
    * COMPUTED
    */
+
+  @computed()
   public get documentCount(): number {
-    return this.$extras?.documentCount ?? 0
+    return this.$extras?.documentCount ?? this.documents?.length ?? 0
+  }
+  @computed()
+  public get childLibraryCount(): number {
+    return this.$extras?.childLibraryCount ?? this.childLibraries?.length ?? 0
   }
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
@@ -93,7 +117,10 @@ export default class Library extends ExtendedModel {
   public static filterBy = scope<typeof Library, QueryScopeCallback<typeof Library>>(
     (query, filterBy: Infer<typeof filterLibrariesByValidator>) => {
       if (D.isEmpty(filterBy)) return query
-      // Add filters here if needed
+      const { pinned } = filterBy
+      if (G.isNotNullable(pinned)) {
+        query.where('pin', pinned)
+      }
     }
   )
 
@@ -111,6 +138,10 @@ export default class Library extends ExtendedModel {
     }
   )
 
+  public static pinned = scope<typeof Library, QueryScopeCallback<typeof Library>>((query) => {
+    return query.where('pin', true).orderBy('pin_order', 'asc')
+  })
+
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
    * SERIALIZERS
    */
@@ -122,7 +153,7 @@ export default class Library extends ExtendedModel {
     }
   }
 
-  public publicSerialize(language: Language) {
+  public publicSerialize(_language: Language) {
     return {
       ...D.deleteKeys(this.serialize(), ['updatedById', 'updatedBy', 'updatedAt']),
     }
@@ -197,19 +228,30 @@ type LibraryTree = {
 /**
  * preloaders
  */
-export const preloadLibrary = (query: HasManyQueryBuilderContract<typeof Library, any>) =>
+export const preloadLibrary = (query: PreloaderContract<Library>) =>
   query
-    .preload('translations')
-    .preload('parentLibrary', preloadLibrary)
-    .preload('createdBy', withProfile)
-    .preload('updatedBy', withProfile)
+    .preload(...withLibraryTranslations())
+    .preload(...withParentLibrary())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
 
-export const withChildLibraries = [
-  'childLibraries',
-  (query: HasManyQueryBuilderContract<typeof Library, any>) =>
-    query
-      .preload('translations')
-      .preload('parentLibrary', preloadLibrary)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile),
-] as const
+export const withParentLibrary = () => ['parentLibrary', preloadLibrary] as const
+export const withLibrary = () => ['library', preloadLibrary] as const
+export const withChildLibraryCount = () =>
+  [
+    'childLibraries',
+    (query: RelationSubQueryBuilderContract<typeof Library>) => query.as('childLibraryCount'),
+  ] as const
+
+export const withChildLibraries = () =>
+  [
+    'childLibraries',
+    (query: HasManyQueryBuilderContract<typeof Library, any>) =>
+      query
+        .preload(...withLibraryTranslations())
+        .preload(...withParentLibrary())
+        .withCount(...withDocumentCount())
+        .withCount(...withChildLibraryCount())
+        .preload(...withCreatedBy())
+        .preload(...withUpdatedBy()),
+  ] as const

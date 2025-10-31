@@ -1,7 +1,11 @@
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
 import { beforeCreate, beforeDelete, belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo, ExtractModelRelations } from '@adonisjs/lucid/types/relations'
+import type {
+  BelongsTo,
+  ExtractModelRelations,
+  PreloaderContract,
+} from '@adonisjs/lucid/types/relations'
 import { D, G } from '@mobily/ts-belt'
 
 /**
@@ -74,3 +78,12 @@ export default class OrganisationCategoryTranslation extends ExtendedModel {
     return this[relation] as Model[T]
   }
 }
+
+/**
+ * preloaders
+ */
+export const preloadOrganisationCategoryTranslation = (
+  query: PreloaderContract<OrganisationCategoryTranslation>
+) => query
+export const withOrganisationCategoryTranslations = () =>
+  ['translations', preloadOrganisationCategoryTranslation] as const

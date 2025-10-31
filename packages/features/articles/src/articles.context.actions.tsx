@@ -7,7 +7,7 @@ import { type Api } from "@services/dashboard"
 import React from "react"
 import { useLocation } from "wouter"
 import { useArticlesService } from "./service.context"
-import { SWRArticles } from "./swr"
+import { SWRArticles } from "./swr.articles"
 
 /**
  * useDisplay
@@ -29,19 +29,10 @@ export const useDisplay = () => {
  * This hook is used to create a article. It will navigate to the new article after creation.
  * this hook is not dependent of the ArticleContextProvider.
  */
-export const useCreateArticle = () => {
+export const useCreateArticle = (append?: (article: Api.ArticleWithRelations) => void) => {
   const { _ } = useTranslation(dictionary)
-  const [, navigate] = useLocation()
-  const { service, routesTo } = useArticlesService()
-  const [createArticle, createArticleProps] = Ui.useConfirm<void>({
-    onAsyncConfirm: async () =>
-      match(await service.create({}))
-        .with({ ok: false }, () => true)
-        .otherwise(({ data }) => {
-          navigate(routesTo.articles.byId(data.article.id))
-          return false
-        }),
-    t: _.prefixed("confirm.create"),
+  const [createArticle, createArticleProps] = Ui.useQuickDialog<void, Api.ArticleWithRelations>({
+    mutate: async (article) => void append?.(article),
   })
   return [createArticle, createArticleProps] as const
 }
@@ -140,7 +131,7 @@ export type ManageArticle = ReturnType<typeof useManageArticle>[0]
  */
 export const useManageArticle = (swr: SWRArticles, selectable: Selectable<Api.ArticleWithRelations>) => {
   const displayArticle = useDisplay()
-  const [createArticle, createArticleProps] = useCreateArticle()
+  const [createArticle, createArticleProps] = useCreateArticle(swr.append)
   const toggleStateArticle = useToggleState(swr)
   const [editArticle, editArticleProps] = useEdit(swr)
   const [editSlug, editSlugProps] = useEditSlug(swr)

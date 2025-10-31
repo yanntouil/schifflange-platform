@@ -1,8 +1,8 @@
 import { useWorkspace } from "@/features/workspaces"
 import { service } from "@/services"
 import { useTranslation } from "@compo/localize"
-import { useCreatePage } from "@compo/pages"
-import { CreateTemplateDialog, TemplatesServiceProvider, useCreateTemplate } from "@compo/templates"
+import { PagesCreateDialog, useCreatePage, useMutatePages } from "@compo/pages"
+import { CreateTemplateDialog, TemplatesServiceProvider, useCreateTemplate, useMutateTemplates } from "@compo/templates"
 import { ContextualLanguageProvider } from "@compo/translations"
 import { Icon, Ui } from "@compo/ui"
 import { Files, LayoutTemplate, Plus } from "lucide-react"
@@ -71,13 +71,14 @@ export const SidebarPages: React.FC = () => {
  */
 const PagePlusButton: React.FC = () => {
   const { _ } = useTranslation(dictionary)
-  const [create, props] = useCreatePage()
+  const { append } = useMutatePages()
+  const [create, props] = useCreatePage(append)
   return (
     <>
-      <Ui.Sidebar.MenuSubAction tooltip={_("create-page")} onClick={create}>
+      <Ui.Sidebar.MenuSubAction tooltip={_("create-page")} onClick={() => create()}>
         <Plus aria-hidden />
       </Ui.Sidebar.MenuSubAction>
-      <Ui.Confirm {...props} />
+      <PagesCreateDialog {...props} />
     </>
   )
 }
@@ -103,10 +104,11 @@ const TemplatesPlusButton: React.FC = () => {
 }
 const TemplatesPlusButtonInner: React.FC = () => {
   const { _ } = useTranslation(dictionary)
-  const [create, props] = useCreateTemplate()
+  const { append } = useMutateTemplates()
+  const [create, props] = useCreateTemplate(append)
   return (
     <>
-      <Ui.Sidebar.MenuSubAction tooltip={_("create-template")} onClick={create}>
+      <Ui.Sidebar.MenuSubAction tooltip={_("create-template")} onClick={() => create()}>
         <Plus aria-hidden />
       </Ui.Sidebar.MenuSubAction>
       <CreateTemplateDialog {...props} />

@@ -1,8 +1,10 @@
 import Article from '#models/article'
-import ArticleCategoryTranslation from '#models/article-category-translation'
+import ArticleCategoryTranslation, {
+  withArticleCategoryTranslations,
+} from '#models/article-category-translation'
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
-import User from '#models/user'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import {
   filterArticleCategoriesByValidator,
   sortArticleCategoriesByValidator,
@@ -17,7 +19,12 @@ import {
   hasMany,
   scope,
 } from '@adonisjs/lucid/orm'
-import type { BelongsTo, ExtractModelRelations, HasMany } from '@adonisjs/lucid/types/relations'
+import type {
+  BelongsTo,
+  ExtractModelRelations,
+  HasMany,
+  PreloaderContract,
+} from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
 import { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
@@ -95,7 +102,7 @@ export default class ArticleCategory extends ExtendedModel {
 
   @computed()
   public get totalArticles() {
-    return this.$extras?.totalArticles
+    return this.$extras?.totalArticles ?? 0
   }
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
@@ -159,3 +166,13 @@ export default class ArticleCategory extends ExtendedModel {
     return this[relation] as Model[T]
   }
 }
+
+/**
+ * preloaders
+ */
+export const preloadArticleCategory = (query: PreloaderContract<ArticleCategory>) =>
+  query
+    .preload(...withArticleCategoryTranslations())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+export const withArticleCategory = () => ['category', preloadArticleCategory] as const

@@ -16,6 +16,7 @@ export type ArticlesServiceContextType = {
     }
   }
   makeUrl: (slug: Api.Slug, code?: string) => string
+  publishedUsers: Api.User[]
 }
 
 /**

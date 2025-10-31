@@ -1,8 +1,8 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
-import { preloadArticles, updateCategoryTranslation } from '#models/article'
-import ArticleCategory from '#models/article-category'
-import { preloadFiles } from '#models/media-file'
-import { withProfile } from '#models/user'
+import { updateCategoryTranslation, withArticleCount } from '#models/article'
+import ArticleCategory, { preloadArticleCategory } from '#models/article-category'
+import { withArticleCategoryTranslations } from '#models/article-category-translation'
+import { withCreatedBy, withUpdatedBy } from '#models/user'
 import {
   createArticleCategoryValidator,
   filterArticleCategoriesByValidator,
@@ -35,10 +35,10 @@ export default class ArticleCategoriesController {
       .withScopes((scope) => scope.filterBy(filterBy))
       .withScopes((scope) => scope.sortBy(sortBy))
       .withScopes((scope) => scope.limit(limit))
-      .preload('translations', (query) => query.preload('image', preloadFiles))
-      .withCount('articles', (query) => query.as('totalArticles'))
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withArticleCategoryTranslations())
+      .withCount(...withArticleCount())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .orderBy('order', 'desc')
     return response.ok({ categories: A.map(categories, (category) => category.serialize()) })
   }
@@ -68,10 +68,8 @@ export default class ArticleCategoriesController {
 
     await category.refresh()
     await updateCategoryTranslation(category, translations)
-    await category.load((query) =>
-      query.preload('createdBy', withProfile).preload('updatedBy', withProfile)
-    )
-    return response.ok({ category: { ...category.serialize(), totalArticles: 0 } })
+    await category.load(preloadArticleCategory)
+    return response.ok({ category: category.serialize() })
   }
 
   /**
@@ -87,11 +85,10 @@ export default class ArticleCategoriesController {
     const category = await ArticleCategory.query()
       .where('id', request.param('categoryId'))
       .andWhere('workspaceId', workspace.id)
-      .preload('translations', (query) => query.preload('image', preloadFiles))
-      .preload('articles', preloadArticles)
-      .withCount('articles', (query) => query.as('totalArticles'))
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withArticleCategoryTranslations())
+      .withCount(...withArticleCount())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .first()
     if (G.isNullable(category)) throw E_RESOURCE_NOT_FOUND
     return response.ok({ category: category.serialize() })
@@ -113,9 +110,10 @@ export default class ArticleCategoriesController {
     const category = await ArticleCategory.query()
       .where('id', request.param('categoryId'))
       .andWhere('workspaceId', workspace.id)
-      .withCount('articles', (query) => query.as('totalArticles'))
-      .preload('translations')
-      .preload('createdBy', withProfile)
+      .withCount(...withArticleCount())
+      .preload(...withArticleCategoryTranslations())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .first()
     if (G.isNullable(category)) throw E_RESOURCE_NOT_FOUND
 
@@ -130,7 +128,7 @@ export default class ArticleCategoriesController {
         updatedAt: now,
       })
       .save()
-    await category.load((query) => query.preload('updatedBy', withProfile))
+    await category.load(preloadArticleCategory)
 
     return response.ok({ category: category.serialize() })
   }

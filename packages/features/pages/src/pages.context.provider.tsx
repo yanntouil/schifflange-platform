@@ -3,10 +3,10 @@ import { EditSlugDialog } from "@compo/slugs"
 import { Ui } from "@compo/ui"
 import { type Api } from "@services/dashboard"
 import React from "react"
-import { EditPageDialog } from "./components/dialogs"
+import { PagesCreateDialog, PagesEditDialog } from "./components"
 import { PagesContext } from "./pages.context"
 import { useManagePage } from "./pages.context.actions"
-import { SWRPages } from "./swr"
+import { SWRPages } from "./swr.pages"
 
 /**
  * PagesProvider
@@ -79,9 +79,9 @@ const ManagePage: React.FC<ManagePageProps> = ({
 }) => {
   return (
     <>
-      <EditPageDialog {...editPageProps} />
+      <PagesEditDialog {...editPageProps} />
       <EditSlugDialog {...editSlugProps} />
-      <Ui.Confirm {...createPageProps} />
+      <PagesCreateDialog {...createPageProps} />
       <Ui.Confirm {...confirmDeletePageProps} />
       <Ui.Confirm {...confirmDeleteSelectionProps} />
     </>

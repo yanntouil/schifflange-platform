@@ -1,12 +1,12 @@
-import { Form, FormLocalized, useForm } from "@compo/form"
+import { Form, useForm } from "@compo/form"
 import { useTranslation } from "@compo/localize"
-import { FormMedia } from "@compo/medias"
-import { FormTranslatableTabs, useContextualLanguage, useFormTranslatable } from "@compo/translations"
+import { useFormTranslatable } from "@compo/translations"
 import { Ui } from "@compo/ui"
 import { D, match } from "@compo/utils"
 import { type Api, placeholder as servicePlaceholder } from "@services/dashboard"
 import React from "react"
 import { useArticlesService } from "../service.context"
+import { CategoryForm } from "./categories.form"
 
 /**
  * CategoriesEditDialog
@@ -18,7 +18,7 @@ export const CategoriesEditDialog: React.FC<Ui.QuickDialogProps<Api.ArticleCateg
       title={_("title")}
       description={_("description")}
       {...props}
-      classNames={{ content: "sm:max-w-lg", header: "z-10", close: "z-10" }}
+      classNames={{ content: "sm:max-w-3xl", header: "z-10", close: "z-10" }}
       sticky
     >
       {item && <DialogForm {...props} item={item} />}
@@ -28,7 +28,6 @@ export const CategoriesEditDialog: React.FC<Ui.QuickDialogProps<Api.ArticleCateg
 
 const DialogForm: React.FC<Ui.QuickDialogSafeProps<Api.ArticleCategory>> = ({ item, close, mutate }) => {
   const { _ } = useTranslation(dictionary)
-  const { current } = useContextualLanguage()
   const { service } = useArticlesService()
   const form = useForm({
     values: {
@@ -55,38 +54,7 @@ const DialogForm: React.FC<Ui.QuickDialogSafeProps<Api.ArticleCategory>> = ({ it
   return (
     <Form.Root form={form} className='space-y-4'>
       <Form.Assertive />
-      <Form.Fields name='translations'>
-        <FormTranslatableTabs className='space-y-4' defaultLanguage={current.id}>
-          {({ code }) => (
-            <>
-              <FormMedia.Image
-                label={_("image-label")}
-                name='image'
-                ratio='aspect-[4/3]'
-                contextKey={`category`}
-                labelAside={<FormLocalized title={_("image-label")} content={_("image-info")} />}
-              />
-              <Form.Input
-                label={_("title-label")}
-                name='title'
-                placeholder={_("title-placeholder")}
-                lang={code}
-                maxLength={255}
-                labelAside={<FormLocalized title={_("title-label")} content={_("title-info")} />}
-              />
-              <Form.Textarea
-                label={_("description-label")}
-                name='description'
-                placeholder={_("description-placeholder")}
-                lang={code}
-                maxLength={500}
-                labelAside={<FormLocalized title={_("description-label")} content={_("description-info")} />}
-              />
-            </>
-          )}
-        </FormTranslatableTabs>
-      </Form.Fields>
-
+      <CategoryForm />
       <Ui.QuickDialogStickyFooter>
         <Form.Submit className='w-full'>{_("submit")}</Form.Submit>
       </Ui.QuickDialogStickyFooter>
@@ -99,14 +67,6 @@ const dictionary = {
     title: "Modifier la catégorie",
     description:
       "Modifiez les informations de cette catégorie. Il est nécessaire de remplir tous les champs pour chacune des langues.",
-    "image-label": "Image",
-    "image-info": "L'image est utilisée pour représenter visuellement la catégorie dans l'interface.",
-    "title-label": "Titre",
-    "title-placeholder": "Nom de la catégorie",
-    "title-info": "Le titre de la catégorie qui sera affiché dans l'interface et utilisé pour organiser les articles.",
-    "description-label": "Description",
-    "description-placeholder": "Entrez une courte description de la catégorie",
-    "description-info": "La description aide à comprendre le type d'articles que cette catégorie contient.",
     submit: "Mettre à jour",
     updated: "La catégorie a été modifiée avec succès.",
     "validation-error": "Une erreur est survenue lors de la validation des données.",
@@ -114,14 +74,6 @@ const dictionary = {
   en: {
     title: "Edit category",
     description: "Edit the information for this category. It is necessary to fill in all fields for each language.",
-    "image-label": "Image",
-    "image-info": "The image is used to visually represent the category in the interface.",
-    "title-label": "Title",
-    "title-placeholder": "Category name",
-    "title-info": "The category title that will be displayed in the interface and used to organize articles.",
-    "description-label": "Description",
-    "description-placeholder": "Enter a short description of the category",
-    "description-info": "The description helps understand the type of articles this category contains.",
     submit: "Update",
     updated: "The category has been edited successfully.",
     "validation-error": "An error occurred during the validation of the data.",
@@ -130,15 +82,6 @@ const dictionary = {
     title: "Kategorie bearbeiten",
     description:
       "Bearbeiten Sie die Informationen für diese Kategorie. Es ist notwendig, alle Felder für jede Sprache auszufüllen.",
-    "image-label": "Bild",
-    "image-info": "Das Bild wird verwendet, um die Kategorie visuell in der Benutzeroberfläche darzustellen.",
-    "title-label": "Titel",
-    "title-placeholder": "Kategoriename",
-    "title-info":
-      "Der Kategorietitel, der in der Benutzeroberfläche angezeigt und zur Organisation von Artikeln verwendet wird.",
-    "description-label": "Beschreibung",
-    "description-placeholder": "Geben Sie eine kurze Beschreibung der Kategorie ein",
-    "description-info": "Die Beschreibung hilft zu verstehen, welche Art von Artikeln diese Kategorie enthält.",
     submit: "Aktualisieren",
     updated: "Die Kategorie wurde erfolgreich bearbeitet.",
     "validation-error": "Ein Fehler ist bei der Validierung der Daten aufgetreten.",

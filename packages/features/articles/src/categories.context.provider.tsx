@@ -6,7 +6,7 @@ import { CategoriesContext } from "./categories.context"
 import { useManageCategory } from "./categories.context.actions"
 import { CategoriesCreateDialog } from "./components/categories.create"
 import { CategoriesEditDialog } from "./components/categories.edit"
-import { SWRCategories } from "./swr"
+import { SWRCategories } from "./swr.categories"
 
 /**
  * CategoriesProvider

@@ -1,11 +1,13 @@
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
 import OrganisationCategory, {
-  preloadOrganisationCategory,
   preloadPublicOrganisationCategory,
+  withOrganisationCategories,
 } from '#models/organisation-category'
-import OrganisationTranslation from '#models/organisation-translation'
-import User, { withProfile } from '#models/user'
+import OrganisationTranslation, {
+  withOrganisationTranslations,
+} from '#models/organisation-translation'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import { type ExtraField } from '#models/user-profile'
 import FileService, { type SingleImage } from '#services/files/file'
 import { columnJSON } from '#utils/column-json'
@@ -36,7 +38,7 @@ import type {
 import { A, D, G, O } from '@mobily/ts-belt'
 import { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
-import ContactOrganisation from './contact-organisation.js'
+import ContactOrganisation, { withContactOrganisationCount } from './contact-organisation.js'
 
 /**
  * Model for Organisation (CMS)
@@ -368,22 +370,26 @@ type OrganisationTree = {
  */
 export const preloadOrganisation = (query: HasManyQueryBuilderContract<typeof Organisation, any>) =>
   query
-    .preload('categories', preloadOrganisationCategory)
-    .preload('translations')
-    .preload('parentOrganisation', preloadOrganisation)
-    .preload('createdBy', withProfile)
-    .preload('updatedBy', withProfile)
-export const withChildOrganisations = [
-  'childOrganisations',
-  (query: HasManyQueryBuilderContract<typeof Organisation, any>) =>
-    query
-      .withCount('contactOrganisations', (query) => query.as('contactCount'))
-      .preload('categories', preloadOrganisationCategory)
-      .preload('translations')
-      .preload('parentOrganisation', preloadOrganisation)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile),
-] as const
+    .preload(...withOrganisationCategories())
+    .preload(...withOrganisationTranslations())
+    .preload(...withParentOrganisation())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+export const withOrganisation = () => ['organisation', preloadOrganisation] as const
+export const withParentOrganisation = () => ['parentOrganisation', preloadOrganisation] as const
+export const withChildOrganisations = () =>
+  [
+    'childOrganisations',
+    (query: HasManyQueryBuilderContract<typeof Organisation, any>) =>
+      query
+        .withCount(...withContactOrganisationCount())
+        .preload(...withOrganisationCategories())
+        .preload(...withOrganisationTranslations())
+        .preload(...withParentOrganisation())
+        .preload(...withCreatedBy())
+        .preload(...withUpdatedBy()),
+  ] as const
+
 export const preloadPublicOrganisation = (query: PreloaderContract<Organisation>) =>
   query
     .preload('translations')

@@ -30,9 +30,13 @@ export const updateLibraryValidator = vine.compile(
 
 export const sortLibrariesByValidator = vine.compile(
   vine.object({
-    field: vine.enum(['createdAt', 'updatedAt']).optional(),
+    field: vine.enum(['createdAt', 'updatedAt', 'pinOrder']).optional(),
     direction: vine.enum(['desc', 'asc']).optional(),
   })
 )
 
-export const filterLibrariesByValidator = vine.compile(vine.object({}))
+export const filterLibrariesByValidator = vine.compile(
+  vine.object({
+    pinned: vine.boolean().optional(),
+  })
+)

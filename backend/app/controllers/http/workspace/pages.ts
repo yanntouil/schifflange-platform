@@ -2,7 +2,7 @@ import { E_RESOURCE_NOT_ALLOWED, E_RESOURCE_NOT_FOUND } from '#exceptions/resour
 import { preloadContent } from '#models/content'
 import Page, { preloadVisits } from '#models/page'
 import { preloadSeo } from '#models/seo'
-import { withProfile } from '#models/user'
+import { preloadProfile } from '#models/user'
 import { createPageValidator, updatePageValidator } from '#validators/pages'
 import type { HttpContext } from '@adonisjs/core/http'
 import { A, G } from '@mobily/ts-belt'
@@ -28,8 +28,8 @@ export default class PagesController {
       .preload('content', preloadContent)
       .preload('tracking', preloadVisits)
       .preload('slug')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
     return response.ok({ pages: A.map(pages, (page) => page.serialize()) })
   }
 
@@ -65,8 +65,8 @@ export default class PagesController {
         .preload('content', preloadContent)
         .preload('tracking', preloadVisits)
         .preload('slug')
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
+        .preload('createdBy', preloadProfile)
+        .preload('updatedBy', preloadProfile)
     )
     return response.ok({ page: page.serialize() })
   }
@@ -88,8 +88,8 @@ export default class PagesController {
       .preload('content', preloadContent)
       .preload('tracking', preloadVisits)
       .preload('slug')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
       .first()
     if (G.isNullable(page)) throw E_RESOURCE_NOT_FOUND
     return response.ok({ page: page.serialize() })
@@ -117,8 +117,8 @@ export default class PagesController {
       .preload('content', preloadContent)
       .preload('tracking', preloadVisits)
       .preload('slug')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
       .first()
     if (G.isNullable(page)) throw E_RESOURCE_NOT_FOUND
 
@@ -134,7 +134,7 @@ export default class PagesController {
       page.updatedById = user.id
       page.updatedAt = DateTime.now()
       await page.save()
-      await page.load('updatedBy', withProfile)
+      await page.load('updatedBy', preloadProfile)
     }
 
     return response.ok({ page: page.serialize() })

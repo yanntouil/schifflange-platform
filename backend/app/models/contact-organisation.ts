@@ -1,9 +1,11 @@
-import Contact, { preloadContact } from '#models/contact'
-import ContactOrganisationTranslation from '#models/contact-organisation-translation'
+import Contact, { withContact } from '#models/contact'
+import ContactOrganisationTranslation, {
+  withContactOrganisationTranslations,
+} from '#models/contact-organisation-translation'
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
-import Organisation, { preloadOrganisation } from '#models/organisation'
-import User, { withProfile } from '#models/user'
+import Organisation, { withOrganisation } from '#models/organisation'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import { type ExtraField } from '#models/user-profile'
 import { columnJSON } from '#utils/column-json'
 import {
@@ -19,6 +21,7 @@ import type {
   ExtractModelRelations,
   HasMany,
   PreloaderContract,
+  RelationSubQueryBuilderContract,
 } from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
 import { DateTime } from 'luxon'
@@ -169,16 +172,27 @@ export default class ContactOrganisation extends ExtendedModel {
  */
 export const preloadContactOrganisation = (query: PreloaderContract<ContactOrganisation>) =>
   query
-    .preload('translations')
-    .preload('organisation', preloadOrganisation)
-    .preload('createdBy', withProfile)
-    .preload('updatedBy', withProfile)
+    .preload(...withContactOrganisationTranslations())
+    .preload(...withOrganisation())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
 export const preloadOrganisationContact = (query: PreloaderContract<ContactOrganisation>) =>
   query
-    .preload('translations')
-    .preload('contact', preloadContact)
-    .preload('createdBy', withProfile)
-    .preload('updatedBy', withProfile)
+    .preload(...withContactOrganisationTranslations())
+    .preload(...withContact())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+
+export const withContactOrganisations = () =>
+  ['contactOrganisations', preloadContactOrganisation] as const
+export const withOrganisationContact = () =>
+  ['contactOrganisation', preloadOrganisationContact] as const
 
 export const preloadPublicContactOrganisation = (query: PreloaderContract<ContactOrganisation>) =>
   query.preload('translations').preload('contact').preload('organisation')
+export const withContactOrganisationCount = () =>
+  [
+    'contactOrganisations',
+    (query: RelationSubQueryBuilderContract<typeof ContactOrganisation>) =>
+      query.as('contactCount'),
+  ] as const

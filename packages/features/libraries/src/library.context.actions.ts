@@ -7,6 +7,7 @@ import { useLocation } from "wouter"
 import { useLibrariesService } from "./service.context"
 import { useSwrLibraries } from "./swr.libraries"
 import { SWRSafeLibrary } from "./swr.library"
+import { usePinnedLibraries } from "./swr.pinned-library"
 
 /**
  * useEditLibrary
@@ -22,6 +23,14 @@ export const useEditLibrary = (swr: SWRSafeLibrary) => {
   })
   const editLibrary = () => editLibraryFn(swr.library)
   return [editLibrary, editLibraryProps] as const
+}
+
+/**
+ * usePinned
+ */
+export const usePinned = () => {
+  const { makePinnable } = usePinnedLibraries()
+  return makePinnable
 }
 
 /**
@@ -115,6 +124,7 @@ export type ManageLibrary = ReturnType<typeof useManageLibrary>[0]
  */
 export const useManageLibrary = (swr: SWRSafeLibrary, selectable: Selectable<Api.LibraryDocument>) => {
   const [editLibrary, editLibraryProps] = useEditLibrary(swr)
+  const makePinned = usePinned()
   const [confirmDeleteLibrary, confirmDeleteLibraryProps] = useConfirmDeleteLibrary(swr)
   const [createDocument, createDocumentProps] = useCreateDocument(swr)
   const [editLibraryDocument, editLibraryDocumentProps] = useEditDocument(swr)
@@ -123,6 +133,7 @@ export const useManageLibrary = (swr: SWRSafeLibrary, selectable: Selectable<Api
 
   const manageFn = {
     editLibrary,
+    makePinned,
     confirmDeleteLibrary,
     createDocument,
     editLibraryDocument,

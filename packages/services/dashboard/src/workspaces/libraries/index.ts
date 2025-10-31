@@ -1,4 +1,5 @@
 import { type CreateApi } from "../../api"
+import { pins } from "../../pins"
 import { publication } from "../../publications"
 import { Secure } from "../../store"
 import { NoContent, NotFoundErrors, ValidationErrors, WorkspaceErrors } from "../../types"
@@ -20,6 +21,7 @@ export const libraries = (api: CreateApi, secure: Secure, wid: string) => ({
       data: payload,
     })
   ),
+  pins: pins(api, secure, `workspaces/${wid}/pins/libraries`),
 
   id: (lid: string) => ({
     read: secure(() =>

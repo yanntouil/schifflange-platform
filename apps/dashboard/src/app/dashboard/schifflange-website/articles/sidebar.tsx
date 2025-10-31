@@ -1,8 +1,15 @@
 import { useWorkspace } from "@/features/workspaces"
 import { service } from "@/services"
-import { CategoriesCreateDialog, useCreateArticle, useCreateCategory } from "@compo/articles"
+import {
+  ArticlesCreateDialog,
+  CategoriesCreateDialog,
+  useCreateArticle,
+  useCreateCategory,
+  useMutateArticles,
+  useMutateCategories,
+} from "@compo/articles"
 import { useTranslation } from "@compo/localize"
-import { CreateTemplateDialog, TemplatesServiceProvider, useCreateTemplate } from "@compo/templates"
+import { CreateTemplateDialog, TemplatesServiceProvider, useCreateTemplate, useMutateTemplates } from "@compo/templates"
 import { ContextualLanguageProvider } from "@compo/translations"
 import { Icon, Ui } from "@compo/ui"
 import { Files, Folders, LayoutTemplate, Newspaper, Plus } from "lucide-react"
@@ -16,10 +23,7 @@ import { routesTo } from "."
  */
 export const SidebarArticles: React.FC = () => {
   const { _ } = useTranslation(dictionary)
-  const titleIconRef = React.useRef<Icon.LayoutPanelTopHandle>(null)
-  const createIconRef = React.useRef<Icon.FilePenLineHandle>(null)
   const statsIconRef = React.useRef<Icon.ChartPieHandle>(null)
-  const [createArticle, createArticleProps] = useCreateArticle()
   const { workspace } = useWorkspace()
   return (
     <ContextualLanguageProvider persistedId={`${workspace.id}-languages`}>
@@ -67,7 +71,6 @@ export const SidebarArticles: React.FC = () => {
           </Ui.Sidebar.CollapsibleMenuSub>
         </Ui.Sidebar.CollapsibleMenuItem>
       </Ui.Sidebar.Menu>
-      <Ui.Confirm {...createArticleProps} />
     </ContextualLanguageProvider>
   )
 }
@@ -78,13 +81,14 @@ export const SidebarArticles: React.FC = () => {
  */
 const ArticlePlusButton: React.FC = () => {
   const { _ } = useTranslation(dictionary)
-  const [create, props] = useCreateArticle()
+  const { append } = useMutateArticles()
+  const [create, props] = useCreateArticle(append)
   return (
     <>
-      <Ui.Sidebar.MenuSubAction tooltip={_("create-article")} onClick={create}>
+      <Ui.Sidebar.MenuSubAction tooltip={_("create-article")} onClick={() => create()}>
         <Plus aria-hidden />
       </Ui.Sidebar.MenuSubAction>
-      <Ui.Confirm {...props} />
+      <ArticlesCreateDialog {...props} />
     </>
   )
 }
@@ -95,10 +99,11 @@ const ArticlePlusButton: React.FC = () => {
  */
 const CategoriesPlusButton: React.FC = () => {
   const { _ } = useTranslation(dictionary)
-  const [create, props] = useCreateCategory()
+  const { append } = useMutateCategories()
+  const [create, props] = useCreateCategory(append)
   return (
     <>
-      <Ui.Sidebar.MenuSubAction tooltip={_("create-category")} onClick={create}>
+      <Ui.Sidebar.MenuSubAction tooltip={_("create-category")} onClick={() => create()}>
         <Plus aria-hidden />
       </Ui.Sidebar.MenuSubAction>
       <CategoriesCreateDialog {...props} />
@@ -127,10 +132,11 @@ const TemplatesPlusButton: React.FC = () => {
 }
 const TemplatesPlusButtonInner: React.FC = () => {
   const { _ } = useTranslation(dictionary)
-  const [create, props] = useCreateTemplate()
+  const { append } = useMutateTemplates()
+  const [create, props] = useCreateTemplate(append)
   return (
     <>
-      <Ui.Sidebar.MenuSubAction tooltip={_("create-template")} onClick={create}>
+      <Ui.Sidebar.MenuSubAction tooltip={_("create-template")} onClick={() => create()}>
         <Plus aria-hidden />
       </Ui.Sidebar.MenuSubAction>
       <CreateTemplateDialog {...props} />

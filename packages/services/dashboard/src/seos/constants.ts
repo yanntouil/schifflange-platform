@@ -1,13 +1,11 @@
-/**
- * mediaFilePlaceholder
- * @description The placeholder for the media file use in the translation fn
- */
-export const seoPlaceholder = {
+import { SeoTranslation } from "./types"
+
+export const seoPlaceholder: SeoTranslation = {
   languageId: "",
   title: "",
   description: "",
   keywords: [],
-  imageId: "",
+  imageId: null,
   image: null,
   socials: [],
 }

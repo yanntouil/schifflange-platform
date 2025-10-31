@@ -23,13 +23,15 @@ export const SitemapFilters: React.FC<ReturnType<typeof useSitemapFilters>[0]> =
   const tooltip = hasActiveFilter ? _("tooltip", { selectedState }) : _("tooltip-all", { selectedState })
 
   // manage models
-  const models = ["page", "article"]
+  const models = ["page", "article", "event"]
   const hasActiveFilterModel = models.some((model) => isActive(model))
   const selectedModel = isActive("page")
     ? _("model-short-page")
     : isActive("article")
       ? _("model-short-article")
-      : _("model-short-all")
+      : isActive("event")
+        ? _("model-short-event")
+        : _("model-short-all")
 
   return (
     <Ui.DropdownMenu.Root>
@@ -100,6 +102,7 @@ const dictionary = {
     "model-all": "Tous les types",
     "model-page": "Seulement les pages",
     "model-article": "Seulement les articles",
+    "model-event": "Seulement les événements",
     "model-short-all": "Tous les types",
     "model-short-page": "Pages",
     "model-short-article": "Articles",
@@ -108,45 +111,49 @@ const dictionary = {
   },
   de: {
     tooltip: "Zeigt {{selectedState}} an",
-    "tooltip-all": "Zeigt alle Seiten an",
+    "tooltip-all": "Zeigt alle Ressourcen an",
 
     "state-label": "Status: {{selectedState}}",
-    "state-all": "Alle Seiten",
-    "state-draft": "Nur Entwurf-Seiten",
-    "state-published": "Nur veröffentlichte Seiten",
-    "state-short-all": "Alle Seiten",
-    "state-short-draft": "Entwurf-Seiten",
-    "state-short-published": "Veröffentlichte Seiten",
+    "state-all": "Alle Ressourcen",
+    "state-draft": "Nur Entwurf-Ressourcen",
+    "state-published": "Nur veröffentlichte Ressourcen",
+    "state-short-all": "Alle Ressourcen",
+    "state-short-draft": "Entwurf-Ressourcen",
+    "state-short-published": "Veröffentlichte Ressourcen",
 
     "model-label": "Typ: {{selectedModel}}",
     "model-all": "Alle Typen",
     "model-page": "Nur Seiten",
     "model-article": "Nur Artikel",
+    "model-event": "Nur Veranstaltungen",
     "model-short-all": "Alle Typen",
     "model-short-page": "Seiten",
     "model-short-article": "Artikel",
+    "model-short-event": "Veranstaltungen",
 
     "reset-filters": "Filter zurücksetzen",
   },
   en: {
     tooltip: "Displaying {{selectedState}}",
-    "tooltip-all": "Displaying all pages",
+    "tooltip-all": "Displaying all resources",
 
     "state-label": "State: {{selectedState}}",
-    "state-all": "All pages",
-    "state-draft": "Only draft pages",
-    "state-published": "Only published pages",
-    "state-short-all": "All pages",
-    "state-short-draft": "Draft pages",
-    "state-short-published": "Published pages",
+    "state-all": "All resources",
+    "state-draft": "Only draft resources",
+    "state-published": "Only published resources",
+    "state-short-all": "All resources",
+    "state-short-draft": "Draft resources",
+    "state-short-published": "Published resources",
 
     "model-label": "Type: {{selectedModel}}",
     "model-all": "All types",
     "model-page": "Only pages",
     "model-article": "Only articles",
-    "model-short-all": "Tous les types",
+    "model-event": "Only events",
+    "model-short-all": "All types",
     "model-short-page": "Pages",
     "model-short-article": "Articles",
+    "model-short-event": "Events",
 
     "reset-filters": "Reset filters",
   },

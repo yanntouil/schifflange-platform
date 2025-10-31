@@ -18,7 +18,7 @@ import {
 import { SortableContext, arrayMove, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable"
 import { CSS } from "@dnd-kit/utilities"
 import { Api, placeholder as servicePlaceholder } from "@services/dashboard"
-import { GripVertical } from "lucide-react"
+import { GripVertical, PinOff } from "lucide-react"
 import React from "react"
 import { Link } from "wouter"
 import { routesTo } from "."
@@ -29,7 +29,7 @@ import { routesTo } from "."
 export const SidebarPinned: React.FC = () => {
   const { _ } = useTranslation(dictionary)
   const pinnedOrganisations = usePinnedOrganisations()
-  const { organisations } = pinnedOrganisations
+  const { organisations, makePinnable } = pinnedOrganisations
   const [activeId, setActiveId] = React.useState<string | null>(null)
   const [isShiftPressed, setIsShiftPressed] = React.useState(false)
 
@@ -117,7 +117,7 @@ export const SidebarPinned: React.FC = () => {
     >
       <SortableContext items={sortedOrganisations} strategy={verticalListSortingStrategy}>
         {A.mapWithIndex(sortedOrganisations, (index, o) => (
-          <PinLink key={index} organisation={o} onKeyDown={onKeyDown} showGrip={isShiftPressed} />
+          <PinLink key={index} organisation={o} onKeyDown={onKeyDown} showGrip={isShiftPressed} makePinnable={makePinnable} />
         ))}
         <Primitives.Portal>
           <DragOverlay>{activeOrganisation ? <PinLinkOverlay organisation={activeOrganisation} /> : null}</DragOverlay>
@@ -136,10 +136,11 @@ const PinLink: React.FC<{
   organisation: Api.Organisation
   onKeyDown: (e: React.KeyboardEvent<HTMLButtonElement>, organisation: Api.Organisation) => void
   showGrip: boolean
-}> = ({ organisation, onKeyDown, showGrip }) => {
+  makePinnable: ReturnType<typeof usePinnedOrganisations>["makePinnable"]
+}> = ({ organisation, onKeyDown, showGrip, makePinnable }) => {
   const { _ } = useTranslation(dictionary)
   const { translate } = useLanguage()
-
+  const { unpin } = makePinnable(organisation.id)
   const organisationName = placeholder(translate(organisation, servicePlaceholder.organisation).name, _("organisation-placeholder"))
 
   const { scheme } = Ui.useTheme()
@@ -158,42 +159,58 @@ const PinLink: React.FC<{
     opacity: isDragging ? 0 : 1,
   }
 
+  const PinOffButton = (
+    <Ui.Sidebar.MenuSubAction onClick={unpin} tooltip={_("unpin")} className="opacity-50 hover:opacity-100 [&>svg]:size-3">
+      <PinOff aria-hidden />
+      <span className="sr-only">{_("unpin")}</span>
+    </Ui.Sidebar.MenuSubAction>
+  )
+
+  const GripButton = (
+    <Ui.Sidebar.MenuSubAction
+      className="cursor-grab touch-none opacity-50 hover:opacity-100 active:cursor-grabbing [&>svg]:size-3"
+      {...listeners}
+      {...attributes}
+      onKeyDown={(e) => onKeyDown(e, organisation)}
+    >
+      <GripVertical aria-hidden />
+      <span className="sr-only">{_("drag")}</span>
+    </Ui.Sidebar.MenuSubAction>
+  )
+
   return (
-    <div ref={setNodeRef} style={style} className="group/button flex items-center gap-1">
-      <Ui.Sidebar.CollapsibleMenuSubButton className="grow">
-        <Link to={routesTo.pinned.list(organisation.id)}>
-          {image ? (
-            <Ui.Image
-              src={image}
-              classNames={{
-                wrapper: "size-4 flex-none",
-                image: "size-4 object-contain",
-              }}
-              alt={organisationName}
-            >
-              <Ui.ImageEmpty />
-            </Ui.Image>
-          ) : (
-            <div className="flex size-4 flex-none items-center justify-center rounded-sm border text-[5px] font-medium" style={colorStyle}>
-              {initials}
-            </div>
-          )}
-          <span>{organisationName}</span>
-        </Link>
-      </Ui.Sidebar.CollapsibleMenuSubButton>
-      {showGrip && (
-        <button
-          type="button"
-          className="cursor-grab touch-none p-1 opacity-0 transition-opacity duration-300 group-hover/button:opacity-100 active:cursor-grabbing"
-          {...listeners}
-          {...attributes}
-          onKeyDown={(e) => onKeyDown(e, organisation)}
-        >
-          <GripVertical className="size-3 opacity-50 hover:opacity-100" aria-hidden />
-          <span className="sr-only">{_("drag")}</span>
-        </button>
-      )}
-    </div>
+    <Ui.Sidebar.CollapsibleMenuSubButton
+      ref={setNodeRef}
+      style={style}
+      action={
+        showGrip ? (
+          <>
+            {PinOffButton}
+            {GripButton}
+          </>
+        ) : undefined
+      }
+    >
+      <Link to={routesTo.pinned.list(organisation.id)} className="grid grid-cols-[auto_1fr] items-center gap-2">
+        {image ? (
+          <Ui.Image
+            src={image}
+            classNames={{
+              wrapper: "size-4 flex-none",
+              image: "size-4 object-contain",
+            }}
+            alt={organisationName}
+          >
+            <Ui.ImageEmpty />
+          </Ui.Image>
+        ) : (
+          <div className="flex size-4 flex-none items-center justify-center rounded-sm border text-[5px] font-medium" style={colorStyle}>
+            {initials}
+          </div>
+        )}
+        <span className="line-clamp-1">{organisationName}</span>
+      </Link>
+    </Ui.Sidebar.CollapsibleMenuSubButton>
   )
 }
 
@@ -215,32 +232,39 @@ const PinLinkOverlay: React.FC<{ organisation: Api.Organisation }> = ({ organisa
   const image = getImageUrl(organisation.logoImage, "thumbnail")
 
   return (
-    <div className="group/button bg-sidebar flex items-center gap-1 rounded opacity-50 shadow">
-      <Ui.Sidebar.CollapsibleMenuSubButton className="block grow">
-        <span className="flex items-center gap-2">
-          {image ? (
-            <Ui.Image
-              src={image}
-              classNames={{
-                wrapper: "size-4 flex-none",
-                image: "size-4 object-contain",
-              }}
-              alt={organisationName}
-            >
-              <Ui.ImageEmpty />
-            </Ui.Image>
-          ) : (
-            <div className="flex size-4 flex-none items-center justify-center rounded-sm border text-[5px] font-medium" style={colorStyle}>
-              {initials}
-            </div>
-          )}
-          <span>{organisationName}</span>
-        </span>
-      </Ui.Sidebar.CollapsibleMenuSubButton>
-      <div className="p-1">
-        <GripVertical className="size-3 opacity-50" aria-hidden />
-      </div>
-    </div>
+    <Ui.Sidebar.CollapsibleMenuSubButton
+      className="bg-sidebar block opacity-50 shadow"
+      action={
+        <>
+          <Ui.Sidebar.MenuSubAction className="[&>svg]:size-3">
+            <PinOff aria-hidden className="opacity-50" />
+          </Ui.Sidebar.MenuSubAction>
+          <Ui.Sidebar.MenuSubAction className="[&>svg]:size-3">
+            <GripVertical aria-hidden className="opacity-50" />
+          </Ui.Sidebar.MenuSubAction>
+        </>
+      }
+    >
+      <span className="grid grid-cols-[auto_1fr] items-center gap-2">
+        {image ? (
+          <Ui.Image
+            src={image}
+            classNames={{
+              wrapper: "size-4 flex-none",
+              image: "size-4 object-contain",
+            }}
+            alt={organisationName}
+          >
+            <Ui.ImageEmpty />
+          </Ui.Image>
+        ) : (
+          <div className="flex size-4 flex-none items-center justify-center rounded-sm border text-[5px] font-medium" style={colorStyle}>
+            {initials}
+          </div>
+        )}
+        <span className="line-clamp-1">{organisationName}</span>
+      </span>
+    </Ui.Sidebar.CollapsibleMenuSubButton>
   )
 }
 
@@ -251,13 +275,16 @@ const dictionary = {
   fr: {
     "organisation-placeholder": "Sans nom",
     drag: "Déplacer l'organisation",
+    unpin: "Désépingler l'organisation",
   },
   en: {
     "organisation-placeholder": "Unnamed",
     drag: "Drag organisation",
+    unpin: "Unpin organisation",
   },
   de: {
     "organisation-placeholder": "Unbenannt",
     drag: "Organisation verschieben",
+    unpin: "Organisation lösen",
   },
 }

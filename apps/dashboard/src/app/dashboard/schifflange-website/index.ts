@@ -1,6 +1,7 @@
 import parentRoute from ".."
 import { routesTo as routesToArticles } from "./articles"
 import { routesTo as routesToDirectory } from "./directory"
+import { routesTo as routesToEvents } from "./events"
 import { routesTo as routesToLibraries } from "./libraries"
 import { default as routesToMedias } from "./medias"
 import { routesTo as routesToPages } from "./pages"
@@ -13,6 +14,7 @@ export const routesTo = {
   dashboard: routeToDashboard,
   pages: routesToPages,
   articles: routesToArticles,
+  events: routesToEvents,
   medias: routesToMedias,
   directory: routesToDirectory,
   libraries: routesToLibraries,

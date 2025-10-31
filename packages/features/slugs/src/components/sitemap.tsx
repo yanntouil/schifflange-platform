@@ -2,11 +2,12 @@ import { Dashboard } from "@compo/dashboard"
 import { useTranslation } from "@compo/localize"
 import { useContextualLanguage } from "@compo/translations"
 import { Ui } from "@compo/ui"
-import { A, cx, D, G, match, placeholder } from "@compo/utils"
+import { A, cx, D, G, placeholder } from "@compo/utils"
 import { type Api, placeholder as servicePlaceholder } from "@services/dashboard"
 import { ChevronsUpDown, Link2 } from "lucide-react"
 import React from "react"
 import { Link } from "wouter"
+import { useRouteTo } from "../hooks"
 import { useSlugsService } from "../service.context"
 import { useSWRSlugs } from "../swr"
 import { getSlugResource } from "../utils"
@@ -148,16 +149,10 @@ const Slug: React.FC<{
 }> = ({ slug, editSlug }) => {
   const { _ } = useTranslation(dictionary)
   const { translate } = useContextualLanguage()
-  const { routesTo, getImageUrl } = useSlugsService()
+  const { getImageUrl } = useSlugsService()
   const ressource = getSlugResource(slug)
   const seoTranslated = translate(ressource.seo, servicePlaceholder.seo)
-
-  const ressourcePath = React.useMemo(() => {
-    return match(slug)
-      .with({ model: "page" }, ({ page }) => routesTo.pages.byId(page.id))
-      .with({ model: "article" }, ({ article }) => routesTo.articles.byId(article.id))
-      .exhaustive()
-  }, [slug, routesTo.pages.byId, routesTo.articles.byId])
+  const ressourcePath = useRouteTo(slug)
 
   const image = seoTranslated?.image
     ? {

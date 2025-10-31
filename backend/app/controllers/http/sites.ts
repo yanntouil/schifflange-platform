@@ -12,7 +12,7 @@ import MenuItem from '#models/menu-item'
 import { preloadPublicPublication } from '#models/publication'
 import { preloadPublicSeo } from '#models/seo'
 import Slug, { preloadSlug } from '#models/slug'
-import { withProfile } from '#models/user'
+import { preloadProfile } from '#models/user'
 // import Workspace from '#models/workspace'
 import { makePath } from '#services/drive'
 import { filterArticlesByValidator, sortArticlesByValidator } from '#validators/articles'
@@ -217,7 +217,7 @@ export default class SitesController {
       .preload('content', preloadPublicContent)
       .preload('publication', preloadPublicPublication)
       .preload('slug')
-      .preload('createdBy', withProfile)
+      .preload('createdBy', preloadProfile)
 
     return response.ok({
       locale: siteLanguage.code,
@@ -257,7 +257,7 @@ export default class SitesController {
       .preload('content', preloadPublicContent)
       .preload('publication', preloadPublicPublication)
       .preload('slug')
-      .preload('createdBy', withProfile)
+      .preload('createdBy', preloadProfile)
       .paginate(...pagination)
 
     return response.ok({
@@ -292,7 +292,7 @@ export default class SitesController {
       .preload('content', preloadPublicContent)
       .preload('publication', preloadPublicPublication)
       .preload('slug')
-      .preload('createdBy', withProfile)
+      .preload('createdBy', preloadProfile)
       .first()
 
     return response.ok({

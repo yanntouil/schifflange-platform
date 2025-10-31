@@ -7,7 +7,7 @@ import { type Api } from "@services/dashboard"
 import React from "react"
 import { useLocation } from "wouter"
 import { usePagesService } from "./service.context"
-import { SWRPages } from "./swr"
+import { SWRPages } from "./swr.pages"
 
 /**
  * useDisplayPage
@@ -29,19 +29,9 @@ export const useDisplayPage = () => {
  * This hook is used to create a page. It will navigate to the new page after creation.
  * this hook is not dependent of the PageContextProvider.
  */
-export const useCreatePage = () => {
-  const { _ } = useTranslation(dictionary)
-  const [, navigate] = useLocation()
-  const { service, routesTo } = usePagesService()
-  const [createPage, createPageProps] = Ui.useConfirm<void>({
-    onAsyncConfirm: async (page) =>
-      match(await service.create())
-        .with({ ok: false }, () => true)
-        .otherwise(({ data }) => {
-          navigate(routesTo.pages.byId(data.page.id))
-          return false
-        }),
-    t: _.prefixed("confirm.create"),
+export const useCreatePage = (append?: (page: Api.PageWithRelations) => void) => {
+  const [createPage, createPageProps] = Ui.useQuickDialog<void, Api.PageWithRelations>({
+    mutate: async (page) => void append?.(page),
   })
   return [createPage, createPageProps] as const
 }
@@ -160,7 +150,7 @@ export type ManagePage = ReturnType<typeof useManagePage>[0]
  */
 export const useManagePage = (swr: SWRPages, selectable: Selectable<Api.PageWithRelations>) => {
   const displayPage = useDisplayPage()
-  const [createPage, createPageProps] = useCreatePage()
+  const [createPage, createPageProps] = useCreatePage(swr.append)
   const toggleStatePage = useToggleStatePage(swr)
   const toggleLockPage = useToggleLockPage(swr)
   const [editPage, editPageProps] = useEditPage(swr)

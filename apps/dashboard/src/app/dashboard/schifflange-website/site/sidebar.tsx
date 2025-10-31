@@ -59,23 +59,23 @@ export const SidebarSite: React.FC = () => {
 const dictionary = {
   fr: {
     title: "Site",
-    menus: "Menus",
+    menus: "Gérer les menus",
     sitemap: "Plan du site",
-    forwards: "Redirections",
+    forwards: "Gérer les redirections",
     config: "Configuration",
   },
   en: {
     title: "Site",
-    menus: "Menus",
+    menus: "Manage menus",
     sitemap: "Site map",
-    forwards: "Forwards",
+    forwards: "Manage forwards",
     config: "Configuration",
   },
   de: {
     title: "Website",
-    menus: "Menüs",
+    menus: "Menüs verwalten",
     sitemap: "Sitemap",
-    forwards: "Weiterleitungen",
+    forwards: "Weiterleitungen verwalten",
     config: "Konfiguration",
   },
 }

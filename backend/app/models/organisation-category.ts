@@ -1,8 +1,10 @@
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
 import Organisation, { organisationDefaultType, type OrganisationType } from '#models/organisation'
-import OrganisationCategoryTranslation from '#models/organisation-category-translation'
-import User, { withProfile } from '#models/user'
+import OrganisationCategoryTranslation, {
+  withOrganisationCategoryTranslations,
+} from '#models/organisation-category-translation'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import Workspace from '#models/workspace'
 import FileService, { type SingleImage } from '#services/files/file'
 import { columnJSON } from '#utils/column-json'
@@ -215,7 +217,11 @@ export default class OrganisationCategory extends ExtendedModel {
  * preloaders
  */
 export const preloadOrganisationCategory = (query: PreloaderContract<OrganisationCategory>) =>
-  query.preload('translations').preload('createdBy', withProfile).preload('updatedBy', withProfile)
+  query
+    .preload(...withOrganisationCategoryTranslations())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+export const withOrganisationCategories = () => ['categories', preloadOrganisationCategory] as const
 
 export const preloadPublicOrganisationCategory = (query: PreloaderContract<OrganisationCategory>) =>
   query.preload('translations')

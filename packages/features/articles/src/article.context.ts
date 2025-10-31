@@ -1,6 +1,6 @@
 import React from "react"
 import { ManageArticle } from "./article.context.actions"
-import { SWRSafeArticle } from "./swr"
+import { SWRSafeArticle } from "./swr.article"
 
 /**
  * types

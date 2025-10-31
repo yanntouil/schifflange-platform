@@ -4,9 +4,9 @@ import { MakeRequestOptions } from "../../types"
  * queries
  */
 export type Libraries = MakeRequestOptions<
-  "createdAt" | "updatedAt",
+  "createdAt" | "updatedAt" | "pinOrder",
   {
-    //
+    pinned?: boolean
   }
 >
 

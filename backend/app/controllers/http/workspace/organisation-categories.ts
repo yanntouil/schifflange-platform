@@ -1,7 +1,7 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import Language from '#models/language'
 import OrganisationCategory from '#models/organisation-category'
-import { withProfile } from '#models/user'
+import { preloadProfile } from '#models/user'
 import { Infer } from '#start/vine'
 import {
   createOrganisationCategoryValidator,
@@ -36,8 +36,8 @@ export default class OrganisationCategoriesController {
       .withScopes((scope) => scope.limit(limit))
       .preload('translations')
       .withCount('organisations', (query) => query.as('totalOrganisations'))
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
       .orderBy('order', 'desc')
     return response.ok({ categories: A.map(categories, (category) => category.serialize()) })
   }
@@ -79,8 +79,8 @@ export default class OrganisationCategoriesController {
     await category.load((query) =>
       query
         .preload('translations')
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
+        .preload('createdBy', preloadProfile)
+        .preload('updatedBy', preloadProfile)
     )
     return response.ok({ category: { ...category.serialize(), totalOrganisations: 0 } })
   }
@@ -100,8 +100,8 @@ export default class OrganisationCategoriesController {
       .andWhere('workspaceId', workspace.id)
       .preload('translations')
       .withCount('organisations', (query) => query.as('totalOrganisations'))
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
       .first()
     if (G.isNullable(category)) throw E_RESOURCE_NOT_FOUND
     return response.ok({ category: category.serialize() })
@@ -125,7 +125,7 @@ export default class OrganisationCategoriesController {
       .andWhere('workspaceId', workspace.id)
       .withCount('organisations', (query) => query.as('totalOrganisations'))
       .preload('translations')
-      .preload('createdBy', withProfile)
+      .preload('createdBy', preloadProfile)
       .first()
     if (G.isNullable(category)) throw E_RESOURCE_NOT_FOUND
 
@@ -151,7 +151,9 @@ export default class OrganisationCategoriesController {
         updatedAt: now,
       })
       .save()
-    await category.load((query) => query.preload('translations').preload('updatedBy', withProfile))
+    await category.load((query) =>
+      query.preload('translations').preload('updatedBy', preloadProfile)
+    )
 
     return response.ok({ category: category.serialize() })
   }

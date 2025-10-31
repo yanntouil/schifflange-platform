@@ -48,11 +48,20 @@ const SelectInput: React.FC<SelectInputProps> = ({
   children,
   lang,
 }) => {
-  const { value, setFieldValue, disabled: ctxDisabled } = useFieldContext<string>()
+  const { value, setFieldValue, disabled: ctxDisabled, id, name } = useFieldContext<string>()
 
   return (
-    <Ui.Select.Root disabled={disabled || ctxDisabled} defaultValue={value} value={value} onValueChange={setFieldValue}>
-      <Ui.Select.Trigger className={cxm(variants.inputBackground(), variants.inputBorder(), classNames?.trigger)}>
+    <Ui.Select.Root
+      disabled={disabled || ctxDisabled}
+      defaultValue={value}
+      value={value}
+      onValueChange={setFieldValue}
+      name={name}
+    >
+      <Ui.Select.Trigger
+        className={cxm(variants.inputBackground(), variants.inputBorder(), classNames?.trigger)}
+        id={id}
+      >
         <Ui.Select.Value placeholder={placeholder} lang={lang} />
       </Ui.Select.Trigger>
       <Ui.Select.Content className={classNames?.content}>

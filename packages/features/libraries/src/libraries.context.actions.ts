@@ -6,6 +6,7 @@ import { type Api } from "@services/dashboard"
 import React from "react"
 import { useLocation } from "wouter"
 import { useLibrariesService } from "./service.context"
+import { usePinnedLibraries } from "./swr.pinned-library"
 import { SWRLibraries } from "./swr.libraries"
 
 /**
@@ -33,6 +34,14 @@ export const useCreateLibrary = (swr?: SWRLibraries) => {
     mutate: async (library) => void swr?.append(library),
   })
   return [createLibrary, createLibraryProps] as const
+}
+
+/**
+ * usePinned
+ */
+export const usePinned = () => {
+  const { makePinnable } = usePinnedLibraries()
+  return makePinnable
 }
 
 /**
@@ -97,6 +106,7 @@ export const useManageLibraries = (swr: SWRLibraries, selectable: Selectable<Api
   const displayLibrary = useDisplay()
   const [createLibrary, createLibraryProps] = useCreateLibrary(swr)
   const [editLibrary, editLibraryProps] = useEdit(swr)
+  const makePinnable = usePinned()
   const [confirmDeleteLibrary, confirmDeleteLibraryProps] = useConfirmDelete(swr)
   const [confirmDeleteSelection, confirmDeleteSelectionProps] = useConfirmDeleteSelection(swr, selectable)
 
@@ -104,6 +114,7 @@ export const useManageLibraries = (swr: SWRLibraries, selectable: Selectable<Api
     displayLibrary,
     createLibrary,
     editLibrary,
+    makePinnable,
     confirmDeleteLibrary,
     confirmDeleteSelection,
   }

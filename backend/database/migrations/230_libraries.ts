@@ -7,9 +7,22 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.uuid('id').primary().defaultTo(this.raw('UUID()'))
 
-      table.uuid('workspace_id').nullable().references('id').inTable('workspaces').onDelete('CASCADE')
+      table
+        .uuid('workspace_id')
+        .nullable()
+        .references('id')
+        .inTable('workspaces')
+        .onDelete('CASCADE')
 
-      table.uuid('parent_library_id').nullable().references('id').inTable('libraries').onDelete('CASCADE')
+      table
+        .uuid('parent_library_id')
+        .nullable()
+        .references('id')
+        .inTable('libraries')
+        .onDelete('CASCADE')
+
+      table.boolean('pin').defaultTo(false)
+      table.integer('pin_order').defaultTo(0)
 
       table.uuid('created_by_id').nullable().references('id').inTable('users').onDelete('SET NULL')
       table.timestamp('created_at')

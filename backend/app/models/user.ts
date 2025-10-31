@@ -333,4 +333,6 @@ export type UserStatus = (typeof userStatuses)[number]
 /**
  * serializer, preloader and query builder
  */
-export const withProfile = (query: PreloaderContract<User>) => query.preload('profile')
+export const preloadProfile = (query: PreloaderContract<User>) => query.preload('profile')
+export const withCreatedBy = () => ['createdBy', preloadProfile] as const
+export const withUpdatedBy = () => ['updatedBy', preloadProfile] as const

@@ -1,8 +1,11 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
-import LibraryDocument, { preloadVisits } from '#models/library-document'
-import { preloadFiles } from '#models/media-file'
-import { withPublicationRelation } from '#models/publication'
-import { withProfile } from '#models/user'
+import LibraryDocument, { preloadLibraryDocument } from '#models/library-document'
+import { withLibraryDocumentTranslations } from '#models/library-document-translation'
+import { withLibraryTranslations } from '#models/library-translation'
+import { withFiles } from '#models/media-file'
+import { withPublication } from '#models/publication'
+import { withVisits } from '#models/tracking'
+import { withCreatedBy, withUpdatedBy } from '#models/user'
 import { validationFailure } from '#start/vine'
 import {
   createLibraryDocumentValidator,
@@ -40,12 +43,12 @@ export default class LibraryDocumentsController {
       .withScopes((scope) => scope.filterBy(filterBy))
       .withScopes((scope) => scope.sortBy(sortBy))
       .withScopes((scope) => scope.limit(limit))
-      .preload('translations')
-      .preload('files', preloadFiles)
-      .preload('publication', withPublicationRelation)
-      .preload('tracking', preloadVisits)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withLibraryDocumentTranslations())
+      .preload(...withFiles())
+      .preload(...withPublication())
+      .preload(...withVisits())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
     return response.ok({
       libraryDocuments: A.map(libraryDocuments, (doc) => doc.serializeWithFiles()),
     })
@@ -69,6 +72,7 @@ export default class LibraryDocumentsController {
       .related('libraries')
       .query()
       .where('id', request.param('libraryId'))
+      .preload(...withLibraryTranslations())
       .first()
     if (G.isNullable(library)) throw E_RESOURCE_NOT_FOUND
 
@@ -111,15 +115,7 @@ export default class LibraryDocumentsController {
     // Create translations
     await updateLibraryDocumentTranslations(libraryDocument, translations)
 
-    await libraryDocument.load((query) =>
-      query
-        .preload('translations')
-        .preload('files', preloadFiles)
-        .preload('publication', withPublicationRelation)
-        .preload('tracking', preloadVisits)
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
-    )
+    await libraryDocument.load(preloadLibraryDocument)
     return response.ok({ libraryDocument: libraryDocument.serializeWithFiles() })
   }
 
@@ -138,12 +134,12 @@ export default class LibraryDocumentsController {
       .query()
       .where('id', request.param('documentId'))
       .andWhere('libraryId', request.param('libraryId'))
-      .preload('translations')
-      .preload('files', preloadFiles)
-      .preload('publication', withPublicationRelation)
-      .preload('tracking', preloadVisits)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withLibraryDocumentTranslations())
+      .preload(...withFiles())
+      .preload(...withPublication())
+      .preload(...withVisits())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .first()
     if (G.isNullable(libraryDocument)) throw E_RESOURCE_NOT_FOUND
     return response.ok({ libraryDocument: libraryDocument.serializeWithFiles() })
@@ -167,7 +163,7 @@ export default class LibraryDocumentsController {
       .query()
       .where('id', request.param('documentId'))
       .andWhere('libraryId', request.param('libraryId'))
-      .preload('translations')
+      .preload(...withLibraryDocumentTranslations())
       .first()
     if (G.isNullable(libraryDocument)) throw E_RESOURCE_NOT_FOUND
 
@@ -195,14 +191,7 @@ export default class LibraryDocumentsController {
       })
       .save()
 
-    await libraryDocument.load((query) =>
-      query
-        .preload('translations')
-        .preload('files', preloadFiles)
-        .preload('publication', withPublicationRelation)
-        .preload('tracking', preloadVisits)
-        .preload('updatedBy', withProfile)
-    )
+    await libraryDocument.load(preloadLibraryDocument)
 
     return response.ok({ libraryDocument: libraryDocument.serializeWithFiles() })
   }

@@ -45,8 +45,6 @@ const Page: React.FC<Props> = ({ page, mutateSeo, updateItem, appendItem, reject
     mutate: mutateSeo,
     placeholder: _("placeholder", { language: t(current.code).toLowerCase() }),
     slug: { url: makeUrl(page.slug), path: page.slug.path },
-    makePath,
-    getImageUrl,
   }
 
   // prepare templates service props (use in content component)

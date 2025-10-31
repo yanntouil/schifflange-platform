@@ -17,6 +17,7 @@ export const getSlugResource = (slug: Api.Slug & Api.WithModel) => {
   return match(slug)
     .with({ model: "page" }, ({ page }) => page)
     .with({ model: "article" }, ({ article }) => article)
+    .with({ model: "event" }, ({ event }) => event)
     .exhaustive()
 }
 
@@ -29,6 +30,9 @@ export const isSlugPage = (slug: Api.Slug & Api.WithModel): slug is Api.Slug & A
 export const isSlugArticle = (slug: Api.Slug & Api.WithModel): slug is Api.Slug & Api.WithArticle => {
   return slug.model === "article"
 }
+export const isSlugEvent = (slug: Api.Slug & Api.WithModel): slug is Api.Slug & Api.WithEvent => {
+  return slug.model === "event"
+}
 
 /**
  * getSlugResourceProp
@@ -38,6 +42,7 @@ export const getSlugResourceProp = (slug: Api.Slug & Api.WithModel) => {
   return match(slug.model)
     .with("page", () => "page" as const)
     .with("article", () => "article" as const)
+    .with("event", () => "event" as const)
     .exhaustive()
 }
 

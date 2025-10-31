@@ -2,7 +2,7 @@ import { Selectable } from "@compo/hooks"
 import { type Api } from "@services/dashboard"
 import React from "react"
 import { ManageCategory } from "./categories.context.actions"
-import { SWRCategories } from "./swr"
+import { SWRCategories } from "./swr.categories"
 
 /**
  * types

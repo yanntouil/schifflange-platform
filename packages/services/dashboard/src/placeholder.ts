@@ -6,6 +6,7 @@ import {
   organisationCategoryPlaceholder,
   organisationPlaceholder,
 } from "./workspaces/directory/constants"
+import { eventCategoryPlaceholder, eventPlaceholder } from "./workspaces/events/constants"
 import { libraryDocumentPlaceholder, libraryPlaceholder } from "./workspaces/libraries/constants"
 import { mediaFilePlaceholder } from "./workspaces/medias/constants"
 import { menuItemPlaceholder } from "./workspaces/menus/constants"
@@ -23,4 +24,6 @@ export const placeholder = {
   menuItem: menuItemPlaceholder,
   library: libraryPlaceholder,
   libraryDocument: libraryDocumentPlaceholder,
+  eventCategory: eventCategoryPlaceholder,
+  event: eventPlaceholder,
 }

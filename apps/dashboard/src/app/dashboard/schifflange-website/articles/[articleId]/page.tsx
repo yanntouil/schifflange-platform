@@ -25,7 +25,7 @@ const Page: React.FC<Props> = ({ article, mutateSeo, mutatePublication, updateIt
   const { workspace, service: workspaceService } = useWorkspace()
   const { t, current } = useContextualLanguage()
 
-  const { service, makePath, getImageUrl, makeUrl } = useArticlesService()
+  const { service, makeUrl } = useArticlesService()
 
   // prepare content props
   const { makePreviewItemUrl } = useWorkspace()
@@ -48,8 +48,6 @@ const Page: React.FC<Props> = ({ article, mutateSeo, mutatePublication, updateIt
     mutate: mutateSeo,
     placeholder: _("placeholder", { language: t(current.code).toLowerCase() }),
     slug: { url: makeUrl(article.slug), path: article.slug.path },
-    makePath,
-    getImageUrl,
   }
 
   // prepare publication props
@@ -59,7 +57,6 @@ const Page: React.FC<Props> = ({ article, mutateSeo, mutatePublication, updateIt
     service: publicationService,
     publication: article.publication,
     mutate: mutatePublication,
-    getImageUrl,
     publishedUsers: workspace.members,
   }
 

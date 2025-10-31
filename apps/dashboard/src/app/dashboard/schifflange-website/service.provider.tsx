@@ -1,5 +1,6 @@
 import { ArticlesServiceProvider } from "@compo/articles"
 import { DirectoryServiceProvider } from "@compo/directory"
+import { EventsServiceProvider } from "@compo/events"
 import { ForwardsServiceProvider } from "@compo/forwards"
 import { LibrariesServiceProvider } from "@compo/libraries"
 import { MediasServiceProvider } from "@compo/medias"
@@ -11,6 +12,7 @@ import { routesTo } from "."
 import {
   useArticleServiceProps,
   useDirectoryServiceProps,
+  useEventServiceProps,
   useForwardServiceProps,
   useLibrariesServiceProps,
   useMediaServiceProps,
@@ -29,13 +31,15 @@ export const DashboardServiceProvider: React.FC<{ children: React.ReactNode }> =
         <ForwardsServiceProvider {...useForwardServiceProps()} routesTo={routesTo}>
           <PagesServiceProvider {...usePageServiceProps()} routesTo={routesTo}>
             <ArticlesServiceProvider {...useArticleServiceProps()} routesTo={routesTo}>
-              <DirectoryServiceProvider {...useDirectoryServiceProps()} routesTo={routesTo.directory}>
-                <LibrariesServiceProvider {...useLibrariesServiceProps()} routesTo={routesTo.libraries}>
-                  <MenusServiceProvider {...useMenusServiceProps()} routesTo={routesTo}>
-                    {children}
-                  </MenusServiceProvider>
-                </LibrariesServiceProvider>
-              </DirectoryServiceProvider>
+              <EventsServiceProvider {...useEventServiceProps()} routesTo={routesTo}>
+                <DirectoryServiceProvider {...useDirectoryServiceProps()} routesTo={routesTo.directory}>
+                  <LibrariesServiceProvider {...useLibrariesServiceProps()} routesTo={routesTo.libraries}>
+                    <MenusServiceProvider {...useMenusServiceProps()} routesTo={routesTo}>
+                      {children}
+                    </MenusServiceProvider>
+                  </LibrariesServiceProvider>
+                </DirectoryServiceProvider>
+              </EventsServiceProvider>
             </ArticlesServiceProvider>
           </PagesServiceProvider>
         </ForwardsServiceProvider>

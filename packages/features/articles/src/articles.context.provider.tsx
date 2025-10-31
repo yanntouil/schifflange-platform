@@ -5,8 +5,9 @@ import { type Api } from "@services/dashboard"
 import React from "react"
 import { ArticlesContext } from "./articles.context"
 import { useManageArticle } from "./articles.context.actions"
+import { ArticlesCreateDialog } from "./components/articles.create"
 import { ArticlesEditDialog } from "./components/articles.edit"
-import { SWRArticles } from "./swr"
+import { SWRArticles } from "./swr.articles"
 
 /**
  * ArticlesProvider
@@ -81,7 +82,7 @@ const ManageArticle: React.FC<ManageArticleProps> = ({
     <>
       <ArticlesEditDialog {...editArticleProps} />
       <EditSlugDialog {...editSlugProps} />
-      <Ui.Confirm {...createArticleProps} />
+      <ArticlesCreateDialog {...createArticleProps} />
       <Ui.Confirm {...confirmDeleteArticleProps} />
       <Ui.Confirm {...confirmDeleteSelectionProps} />
     </>

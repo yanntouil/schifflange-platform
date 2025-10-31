@@ -1,10 +1,12 @@
 import ExtendedModel from '#models/extended/extended-model'
 import Library from '#models/library'
-import LibraryDocumentTranslation from '#models/library-document-translation'
-import MediaFile, { preloadFiles } from '#models/media-file'
-import Publication, { preloadPublicPublication } from '#models/publication'
-import Tracking from '#models/tracking'
-import User, { withProfile } from '#models/user'
+import LibraryDocumentTranslation, {
+  withLibraryDocumentTranslations,
+} from '#models/library-document-translation'
+import MediaFile, { withFiles } from '#models/media-file'
+import Publication, { withPublication } from '#models/publication'
+import Tracking, { withVisits } from '#models/tracking'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import Workspace from '#models/workspace'
 import {
   filterLibraryDocumentsByValidator,
@@ -25,7 +27,7 @@ import type {
   BelongsTo,
   HasMany,
   ManyToMany,
-  RelationQueryBuilderContract,
+  RelationSubQueryBuilderContract,
 } from '@adonisjs/lucid/types/relations'
 import { ExtractModelRelations } from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
@@ -100,13 +102,14 @@ export default class LibraryDocument extends ExtendedModel {
 
   @beforeCreate()
   public static async beforeCreateHook(ressource: Model) {
+    const client = ressource.$trx
     const [publication, tracking] = await Promise.all([
-      Publication.create({}),
+      Publication.create({}, { client }),
       Tracking.create({
         type: 'views',
         model: 'library document',
         workspaceId: ressource.workspaceId,
-      }),
+      }, { client }),
     ])
     ressource.publicationId = publication.id
     ressource.trackingId = tracking.id
@@ -194,11 +197,16 @@ export default class LibraryDocument extends ExtendedModel {
  */
 export const preloadLibraryDocument = (query: any) =>
   query
-    .preload('translations')
-    .preload('files', preloadFiles)
-    .preload('publication', preloadPublicPublication)
-    .preload('tracking', preloadVisits)
-    .preload('createdBy', withProfile)
-    .preload('updatedBy', withProfile)
-export const preloadVisits = (query: RelationQueryBuilderContract<typeof Tracking, any>) =>
-  query.withCount('traces', (query) => query.as('visits'))
+    .preload(...withLibraryDocumentTranslations())
+    .preload(...withFiles())
+    .preload(...withPublication())
+    .preload(...withVisits())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+export const withLibraryDocument = () => ['document', preloadLibraryDocument] as const
+export const withLibraryDocuments = () => ['documents', preloadLibraryDocument] as const
+export const withDocumentCount = () =>
+  [
+    'documents',
+    (query: RelationSubQueryBuilderContract<typeof LibraryDocument>) => query.as('documentCount'),
+  ] as const

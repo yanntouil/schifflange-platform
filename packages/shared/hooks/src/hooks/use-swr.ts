@@ -1,9 +1,9 @@
 "use client"
 
+import { assert, ImplicitAny, makeQS } from "@compo/utils"
 import { Except, FetchResult, FetchResultDeclaration, InferDeclaration, NoResponse } from "adnf"
 import React from "react"
 import useDefaultSWR, { SWRConfiguration } from "swr"
-import { assert, ImplicitAny, makeQS } from "@compo/utils"
 
 export const useSWR = <V, E, C extends SWRConfiguration<V, FetchResultError<E>>>(
   declaration?: FetchResultDeclaration<V, E> | null,
@@ -73,4 +73,7 @@ export type InferSWRError<T> = FetchResultError<InferExcept<T>>
  */
 export const useMemoKey = <T extends Record<string, unknown>>(key: string, params: T) => {
   return React.useMemo(() => `${key}-${makeQS(params)}`, [key, params])
+}
+export const useMemoCacheKey = <T extends Record<string, unknown>>(key: string, params: T) => {
+  return React.useMemo(() => [`${key}-${makeQS(params)}`, "no-cache-key"] as const, [key, params])
 }

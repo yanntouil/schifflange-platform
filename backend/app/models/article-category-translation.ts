@@ -1,8 +1,12 @@
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
-import MediaFile from '#models/media-file'
+import MediaFile, { withImage } from '#models/media-file'
 import { beforeCreate, beforeDelete, belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo, ExtractModelRelations } from '@adonisjs/lucid/types/relations'
+import type {
+  BelongsTo,
+  ExtractModelRelations,
+  PreloaderContract,
+} from '@adonisjs/lucid/types/relations'
 import { D, G } from '@mobily/ts-belt'
 
 /**
@@ -83,3 +87,12 @@ export default class ArticleCategoryTranslation extends ExtendedModel {
     return this[relation] as Model[T]
   }
 }
+
+/**
+ * preloaders
+ */
+export const preloadArticleCategoryTranslation = (
+  query: PreloaderContract<ArticleCategoryTranslation>
+) => query.preload(...withImage())
+export const withArticleCategoryTranslations = () =>
+  ['translations', preloadArticleCategoryTranslation] as const

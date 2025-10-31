@@ -1,6 +1,8 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
+import { withSoftArticle } from '#models/article'
+import { withSoftEvent } from '#models/event'
 import Forward from '#models/forward'
-import { preloadSeo } from '#models/seo'
+import { withSoftPage } from '#models/page'
 import Slug from '#models/slug'
 import { updateSlugValidator } from '#validators/slugs'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -24,8 +26,9 @@ export default class SlugsController {
   async all({ workspace, response }: HttpContext) {
     const slugs = await Slug.query()
       .where('workspaceId', workspace.id)
-      .preload('page', (query) => query.preload('seo', preloadSeo))
-      .preload('article', (query) => query.preload('seo', preloadSeo))
+      .preload(...withSoftArticle())
+      .preload(...withSoftPage())
+      .preload(...withSoftEvent())
     response.ok({ slugs })
   }
 
@@ -46,8 +49,9 @@ export default class SlugsController {
     const slug = await Slug.query()
       .where('workspaceId', workspace.id)
       .andWhere('id', request.param('slugId'))
-      .preload('page', (query) => query.preload('seo', preloadSeo))
-      .preload('article', (query) => query.preload('seo', preloadSeo))
+      .preload(...withSoftArticle())
+      .preload(...withSoftPage())
+      .preload(...withSoftEvent())
       .first()
     if (G.isNullable(slug)) throw E_RESOURCE_NOT_FOUND
 
@@ -74,7 +78,7 @@ export default class SlugsController {
 
     if (slug.$isDirty) {
       await slug.save()
-      await (slug.page || slug.article)
+      await (slug.page || slug.article || slug.event)
         ?.merge({ updatedAt: DateTime.now(), updatedById: user.id })
         .save()
     }

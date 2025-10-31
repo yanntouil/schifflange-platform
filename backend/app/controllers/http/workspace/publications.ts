@@ -1,5 +1,6 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import Article from '#models/article'
+import Event from '#models/event'
 import LibraryDocument from '#models/library-document'
 import Publication, { preloadPublicPublication } from '#models/publication'
 import { luxonOrJsDate } from '#utils/date'
@@ -85,6 +86,8 @@ const getModel = (request: HttpContext['request']) => {
     return { Model: Article, modelId: request.param('articleId') }
   if (G.isNotNullable(request.param('documentId')))
     return { Model: LibraryDocument, modelId: request.param('documentId') }
+  if (G.isNotNullable(request.param('eventId')))
+    return { Model: Event, modelId: request.param('eventId') }
   // Future: Add other models with publication feature here
   throw new Error('Model not found')
 }

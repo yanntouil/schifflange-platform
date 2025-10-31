@@ -1,8 +1,9 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
-import { preloadContact } from '#models/contact'
+import { withContact } from '#models/contact'
 import ContactOrganisation from '#models/contact-organisation'
-import { preloadOrganisation } from '#models/organisation'
-import { withProfile } from '#models/user'
+import { withContactOrganisationTranslations } from '#models/contact-organisation-translation'
+import { withOrganisation } from '#models/organisation'
+import { withCreatedBy, withUpdatedBy } from '#models/user'
 import {
   createContactOrganisationValidator,
   updateContactOrganisationValidator,
@@ -35,10 +36,10 @@ export default class ContactOrganisationsController {
 
     const contactOrganisations = await ContactOrganisation.query()
       .where('contact_id', contact.id)
-      .preload('translations')
-      .preload('organisation', (query) => query.preload('translations'))
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withContactOrganisationTranslations())
+      .preload(...withOrganisation())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .orderBy('order', 'asc')
 
     return response.ok({
@@ -95,11 +96,11 @@ export default class ContactOrganisationsController {
 
     await contactOrganisation.load((query) =>
       query
-        .preload('translations')
-        .preload('organisation', (query) => query.preload('translations'))
-        .preload('contact', (query) => query.preload('translations'))
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
+        .preload(...withContactOrganisationTranslations())
+        .preload(...withOrganisation())
+        .preload(...withContact())
+        .preload(...withCreatedBy())
+        .preload(...withUpdatedBy())
     )
 
     return response.ok({ contactOrganisation: contactOrganisation.serialize() })
@@ -125,11 +126,11 @@ export default class ContactOrganisationsController {
     const contactOrganisation = await ContactOrganisation.query()
       .where('id', request.param('contactOrganisationId'))
       .where('contact_id', contact.id)
-      .preload('translations')
-      .preload('organisation', (query) => query.preload('translations'))
-      .preload('contact', (query) => query.preload('translations'))
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withContactOrganisationTranslations())
+      .preload(...withOrganisation())
+      .preload(...withContact())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .first()
 
     if (G.isNullable(contactOrganisation)) throw E_RESOURCE_NOT_FOUND
@@ -160,7 +161,7 @@ export default class ContactOrganisationsController {
     const contactOrganisation = await ContactOrganisation.query()
       .where('id', request.param('contactOrganisationId'))
       .where('contact_id', contact.id)
-      .preload('translations')
+      .preload(...withContactOrganisationTranslations())
       .first()
     if (G.isNullable(contactOrganisation)) throw E_RESOURCE_NOT_FOUND
 
@@ -187,10 +188,11 @@ export default class ContactOrganisationsController {
 
     await contactOrganisation.load((query) =>
       query
-        .preload('translations')
-        .preload('organisation', preloadOrganisation)
-        .preload('contact', preloadContact)
-        .preload('updatedBy', withProfile)
+        .preload(...withContactOrganisationTranslations())
+        .preload(...withOrganisation())
+        .preload(...withContact())
+        .preload(...withCreatedBy())
+        .preload(...withUpdatedBy())
     )
 
     return response.ok({ contactOrganisation: contactOrganisation.serialize() })

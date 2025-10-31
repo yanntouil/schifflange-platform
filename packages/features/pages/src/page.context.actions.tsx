@@ -5,7 +5,7 @@ import { type Api } from "@services/dashboard"
 import React from "react"
 import { useLocation } from "wouter"
 import { usePagesService } from "./service.context"
-import { SWRSafePage } from "./swr"
+import { SWRSafePage } from "./swr.page"
 
 /**
  * useDisplayStats

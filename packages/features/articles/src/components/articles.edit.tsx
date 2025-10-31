@@ -1,11 +1,11 @@
-import { Form, FormInfo, useForm } from "@compo/form"
+import { Form, useForm } from "@compo/form"
 import { useTranslation } from "@compo/localize"
 import { Ui } from "@compo/ui"
 import { match } from "@compo/utils"
 import { type Api } from "@services/dashboard"
 import React from "react"
-import { useArticlesService, useArticlesStateOptions } from ".."
-import { useCategoryOptions } from "../hooks/use-category-options"
+import { useArticlesService } from ".."
+import { ArticlesForm } from "./articles.form"
 
 /**
  * ArticlesEditDialog
@@ -55,25 +55,10 @@ const DialogForm: React.FC<Ui.QuickDialogSafeProps<Api.ArticleWithRelations>> = 
         })
     },
   })
-
-  const stateOptions = useArticlesStateOptions()
-  const [categoryOptions, isLoadingCategoryOptions] = useCategoryOptions(true)
-
   return (
     <Form.Root form={form} className='space-y-4'>
       <Form.Assertive />
-      <Form.Select
-        label={_("state-label")}
-        name='state'
-        options={stateOptions}
-        labelAside={<FormInfo title={_("state-label")} content={_("state-info")} />}
-      />
-      <Form.Select
-        label={_("category-label")}
-        name='categoryId'
-        options={categoryOptions}
-        labelAside={<FormInfo title={_("category-label")} content={_("category-info")} />}
-      />
+      <ArticlesForm />
       <Ui.QuickDialogStickyFooter>
         <Form.Submit className='w-full'>{_("submit")}</Form.Submit>
       </Ui.QuickDialogStickyFooter>

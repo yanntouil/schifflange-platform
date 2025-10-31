@@ -4,6 +4,8 @@ import { type Api } from "@services/dashboard"
 import {
   FilePenLine,
   FilePlusIcon,
+  Pin,
+  PinOff,
   SquareArrowOutUpRight,
   SquareDashedMousePointer,
   SquareMousePointer,
@@ -21,6 +23,7 @@ export const LibrariesMenu: React.FC<{ library: Api.Library }> = ({ library }) =
   const ctx = useLibraries()
   const isContextMenu = Ui.useIsContextMenu()
   const isSelected = ctx.isSelected(library)
+  const { isPinned, pin, unpin } = ctx.makePinnable(library.id)
   return (
     <>
       {isContextMenu &&
@@ -43,6 +46,17 @@ export const LibrariesMenu: React.FC<{ library: Api.Library }> = ({ library }) =
         <FilePenLine aria-hidden />
         {_("edit")}
       </Ui.Menu.Item>
+      {isPinned() ? (
+        <Ui.Menu.Item onClick={() => unpin()}>
+          <PinOff aria-hidden />
+          {_("unpin")}
+        </Ui.Menu.Item>
+      ) : (
+        <Ui.Menu.Item onClick={() => pin()}>
+          <Pin aria-hidden />
+          {_("pin")}
+        </Ui.Menu.Item>
+      )}
       <Ui.Menu.Item onClick={() => ctx.confirmDeleteLibrary(library)}>
         <Trash2 aria-hidden />
         {_("delete")}
@@ -78,6 +92,8 @@ const dictionary = {
     unselect: "Deselect library",
     display: "Display library",
     edit: "Edit library",
+    pin: "Pin library",
+    unpin: "Unpin library",
     delete: "Delete library",
     create: "New library",
     "delete-selection": "Delete selected libraries",
@@ -87,6 +103,8 @@ const dictionary = {
     unselect: "Désélectionner la bibliothèque",
     display: "Afficher la bibliothèque",
     edit: "Modifier la bibliothèque",
+    pin: "Épingler la bibliothèque",
+    unpin: "Désépingler la bibliothèque",
     delete: "Supprimer la bibliothèque",
     create: "Nouvelle bibliothèque",
     "delete-selection": "Supprimer les bibliothèques sélectionnées",
@@ -96,6 +114,8 @@ const dictionary = {
     unselect: "Bibliothek abwählen",
     display: "Bibliothek anzeigen",
     edit: "Bibliothek bearbeiten",
+    pin: "Bibliothek fixieren",
+    unpin: "Bibliothek lösen",
     delete: "Bibliothek löschen",
     create: "Neue Bibliothek",
     "delete-selection": "Ausgewählte Bibliotheken löschen",

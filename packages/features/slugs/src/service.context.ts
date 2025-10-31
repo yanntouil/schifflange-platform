@@ -4,18 +4,18 @@ import { createContext, useContext } from "react"
 /**
  * types
  */
+type RoutesToById = {
+  byId: (id: string) => string
+}
 export type SlugsServiceContextType = {
   service: Api.SlugsService
   serviceKey: string
   isAdmin: boolean
   makeUrl: (page: Api.Slug) => string
   routesTo: {
-    pages: {
-      byId: (pageId: string) => string
-    }
-    articles: {
-      byId: (articleId: string) => string
-    }
+    pages: RoutesToById
+    articles: RoutesToById
+    events: RoutesToById
   }
   makePath: Api.Service["makePath"]
   getImageUrl: Api.Service["getImageUrl"]

@@ -1,4 +1,4 @@
-import { type Api } from "@services/dashboard"
+import { useDashboardService, type Api } from "@services/dashboard"
 import React from "react"
 
 /**
@@ -10,7 +10,6 @@ export type PublicationContextType = {
   service: Api.PublicationService
   publication: Api.Publication
   mutate: (publication: Api.Publication) => void
-  getImageUrl: Api.GetImageUrl
   publishedUsers: Api.User[]
   edit: () => void
 }
@@ -25,6 +24,9 @@ export const PublicationContext = React.createContext<PublicationContextType | n
  */
 export const usePublication = () => {
   const context = React.useContext(PublicationContext)
+  const {
+    service: { getImageUrl, makePath },
+  } = useDashboardService()
   if (!context) throw new Error("usePublication must be used within a PublicationProvider")
-  return context
+  return { ...context, getImageUrl, makePath }
 }

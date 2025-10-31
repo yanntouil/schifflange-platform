@@ -1,8 +1,8 @@
 import ContactOrganisation from '#models/contact-organisation'
-import ContactTranslation from '#models/contact-translation'
+import ContactTranslation, { withContactTranslations } from '#models/contact-translation'
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
-import User, { withProfile } from '#models/user'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import { type ExtraField } from '#models/user-profile'
 import FileService, { type SingleImage } from '#services/files/file'
 import { columnJSON } from '#utils/column-json'
@@ -230,7 +230,13 @@ export default class Contact extends ExtendedModel {
  * preloaders
  */
 export const preloadContact = (query: PreloaderContract<Contact>) =>
-  query.preload('translations').preload('createdBy', withProfile).preload('updatedBy', withProfile)
+  query
+    .preload(...withContactTranslations())
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+
+export const withContact = () => ['contact', preloadContact] as const
+export const withContacts = () => ['contacts', preloadContact] as const
 
 export const preloadPublicContact = (query: PreloaderContract<Contact>) =>
   query.preload('translations')

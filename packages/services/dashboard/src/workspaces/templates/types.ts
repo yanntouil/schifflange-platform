@@ -15,7 +15,7 @@ export type Template = {
   updatedBy: User
 } & Translatable<TemplateTranslation>
 
-export type TemplateType = "page" | "article" | "project"
+export type TemplateType = "page" | "article" | "event"
 
 export type TemplateTranslation = {
   id: string

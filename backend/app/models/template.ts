@@ -71,7 +71,8 @@ export default class Template extends ExtendedModel {
 
   @beforeCreate()
   public static async beforeCreateHook(ressource: Model) {
-    const content = await Content.create({})
+    const client = ressource.$trx
+    const content = await Content.create({}, { client })
     ressource.contentId = content.id
   }
 
@@ -168,6 +169,6 @@ export default class Template extends ExtendedModel {
 /**
  * constants and types related to templates
  */
-export const templateTypes = ['page', 'article'] as const
+export const templateTypes = ['page', 'article', 'event'] as const
 export type TemplateType = (typeof templateTypes)[number]
 export const templateDefaultType = templateTypes[0]

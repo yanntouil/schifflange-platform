@@ -1,5 +1,6 @@
 import { Translation, useTranslation } from "@compo/localize"
 import { Ui } from "@compo/ui"
+import { cxm } from "@compo/utils"
 import { G } from "@mobily/ts-belt"
 import { Info } from "lucide-react"
 import React from "react"
@@ -8,18 +9,28 @@ import React from "react"
  * FormInfo
  */
 type FormInfoProps = {
-  classNames?: {}
+  classNames?: {
+    trigger?: string
+  }
+  className?: string
   "aria-label"?: React.ReactNode
   title?: React.ReactNode
   content?: React.ReactNode
   children?: React.ReactNode
 }
-export const FormInfo: React.FC<FormInfoProps> = ({ title, content, "aria-label": ariaLabel, children }) => {
+export const FormInfo: React.FC<FormInfoProps> = ({
+  title,
+  content,
+  "aria-label": ariaLabel,
+  children,
+  classNames,
+  className,
+}) => {
   const { _ } = useTranslation(dictionary)
   return (
     <Ui.Popover.Root>
       <Ui.Popover.Trigger asChild>
-        <Ui.Button variant='ghost' icon size='xs' className='-my-1'>
+        <Ui.Button variant='ghost' icon size='xs' className={cxm("-my-1", classNames?.trigger, className)}>
           <Info aria-hidden />
           <Ui.SrOnly>{ariaLabel || _("aria-label")}</Ui.SrOnly>
         </Ui.Button>

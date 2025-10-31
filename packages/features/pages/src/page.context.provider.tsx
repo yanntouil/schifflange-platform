@@ -6,7 +6,7 @@ import { type Api } from "@services/dashboard"
 import React from "react"
 import { PageContext, usePage } from "./page.context"
 import { useManagePage } from "./page.context.actions"
-import { SWRSafePage } from "./swr"
+import { SWRSafePage } from "./swr.page"
 
 /**
  * PagesProvider

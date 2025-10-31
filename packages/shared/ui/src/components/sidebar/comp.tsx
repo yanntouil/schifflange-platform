@@ -614,32 +614,44 @@ const SidebarMenuAction: React.FC<SidebarMenuActionProps> = ({
  * This button is used to create a contact. It is only visible if the sidebar is expanded.
  */
 type SidebarMenuSubActionProps = {
-  tooltip: string
-  onClick: () => void
-  className?: string
-  children: React.ReactNode
-}
-const SidebarMenuSubAction: React.FC<SidebarMenuSubActionProps> = ({ tooltip, onClick, className, children }) => {
+  tooltip?: string
+} & React.ComponentProps<typeof Button>
+const SidebarMenuSubAction: React.FC<SidebarMenuSubActionProps> = ({
+  tooltip,
+  onClick,
+  className,
+  children,
+  ...props
+}) => {
   const { state } = useSidebar()
   const isExpanded = state === "expanded"
   if (!isExpanded) return null
-  return (
-    <Tooltip.Quick tooltip={tooltip} asChild side='right'>
-      <Button
-        variant='ghost'
-        icon
-        size='xs'
-        className={cn(
-          "-mr-[21px] flex opacity-0 transition-opacity duration-300 group-focus-within/button:opacity-100 group-hover/button:opacity-100",
-          className
-        )}
-        onClick={onClick}
-      >
-        {children}
-        <SrOnly>{tooltip}</SrOnly>
-      </Button>
-    </Tooltip.Quick>
+
+  const button = (
+    <Button
+      variant='ghost'
+      icon
+      size='xs'
+      className={cn(
+        // -mr-[21px]
+        "flex opacity-0 bg-sidebar-accent transition-opacity duration-300 group-focus-within/menu-sub-item:opacity-100 group-hover/menu-sub-item:opacity-100",
+        className
+      )}
+      onClick={onClick}
+      {...props}
+    >
+      {children}
+      <SrOnly>{tooltip}</SrOnly>
+    </Button>
   )
+  if (tooltip) {
+    return (
+      <Tooltip.Quick tooltip={tooltip} asChild side='right'>
+        {button}
+      </Tooltip.Quick>
+    )
+  }
+  return button
 }
 
 /**
@@ -725,16 +737,18 @@ const SidebarMenuSub: React.FC<SidebarMenuSubProps> = ({ className, ...props }) 
  * this is the sub item for the sidebar
  */
 type SidebarMenuSubItemProps = React.ComponentProps<"li">
-const SidebarMenuSubItem: React.FC<SidebarMenuSubItemProps> = ({ className, ...props }) => {
+const SidebarMenuSubItem = React.forwardRef<HTMLLIElement, SidebarMenuSubItemProps>(({ className, ...props }, ref) => {
   return (
     <li
+      ref={ref}
       data-slot='sidebar-menu-sub-item'
       data-sidebar='menu-sub-item'
       className={cn("group/menu-sub-item relative", className)}
       {...props}
     />
   )
-}
+})
+SidebarMenuSubItem.displayName = "SidebarMenuSubItem"
 
 /**
  * SidebarMenuSubButton
@@ -883,41 +897,39 @@ type SidebarCollapsibleMenuSubButtonProps = {
   children: React.ReactNode
   action?: React.ReactNode
 } & (React.ComponentProps<typeof SidebarMenuSubButton> & React.ComponentProps<typeof DropdownMenu.Item>)
-const SidebarCollapsibleMenuSubButton: React.FC<SidebarCollapsibleMenuSubButtonProps> = ({
-  children,
-  className,
-  action,
-  ...props
-}) => {
-  const { state } = useSidebar()
+const SidebarCollapsibleMenuSubButton = React.forwardRef<any, SidebarCollapsibleMenuSubButtonProps>(
+  ({ children, className, style, action, ...props }, ref) => {
+    const { state } = useSidebar()
 
-  if (state === "expanded") {
-    if (!!action) {
-      return (
-        <div className='group/button flex items-center gap-1'>
-          <SidebarMenuSubItem className={cn("grow", className)}>
+    if (state === "expanded") {
+      if (!!action) {
+        return (
+          <SidebarMenuSubItem className={cn("grow", className)} style={style} ref={ref}>
             <SidebarMenuSubButton asChild {...props}>
               {children}
             </SidebarMenuSubButton>
+            <span className='absolute -right-[21px] top-0 flex items-center opacity-0 group-focus-within/menu-sub-item:opacity-100 group-hover/menu-sub-item:opacity-100'>
+              {action}
+            </span>
           </SidebarMenuSubItem>
-          {action}
-        </div>
+        )
+      }
+      return (
+        <SidebarMenuSubItem className={className} ref={ref}>
+          <SidebarMenuSubButton asChild {...props}>
+            {children}
+          </SidebarMenuSubButton>
+        </SidebarMenuSubItem>
       )
     }
     return (
-      <SidebarMenuSubItem className={className}>
-        <SidebarMenuSubButton asChild {...props}>
-          {children}
-        </SidebarMenuSubButton>
-      </SidebarMenuSubItem>
+      <DropdownMenu.Item asChild {...props} ref={ref}>
+        {children}
+      </DropdownMenu.Item>
     )
   }
-  return (
-    <DropdownMenu.Item asChild {...props}>
-      {children}
-    </DropdownMenu.Item>
-  )
-}
+)
+SidebarCollapsibleMenuSubButton.displayName = "SidebarCollapsibleMenuSubButton"
 export {
   SidebarCollapsibleMenuButton as CollapsibleMenuButton,
   SidebarCollapsibleMenuItem as CollapsibleMenuItem,

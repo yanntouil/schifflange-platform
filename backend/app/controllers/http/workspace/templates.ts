@@ -1,7 +1,7 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import { copyContentItems, preloadContent } from '#models/content'
 import Template from '#models/template'
-import { withProfile } from '#models/user'
+import { preloadProfile } from '#models/user'
 import {
   createTemplateValidator,
   filterTemplatesByValidator,
@@ -37,8 +37,8 @@ export default class TemplatesController {
       .withScopes((scope) => scope.limit(limit))
       .preload('content', preloadContent)
       .preload('translations')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
     return response.ok({ templates: A.map(templates, (template) => template.serialize()) })
   }
 
@@ -70,8 +70,8 @@ export default class TemplatesController {
       query
         .preload('content', preloadContent)
         .preload('translations')
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
+        .preload('createdBy', preloadProfile)
+        .preload('updatedBy', preloadProfile)
     )
     return response.ok({ template: template.serialize() })
   }
@@ -91,8 +91,8 @@ export default class TemplatesController {
       .andWhere('workspaceId', workspace.id)
       .preload('content', preloadContent)
       .preload('translations')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
       .first()
     if (G.isNullable(template)) throw E_RESOURCE_NOT_FOUND
     return response.ok({ template: template.serialize() })
@@ -117,8 +117,8 @@ export default class TemplatesController {
       .where('id', request.param('templateId'))
       .preload('content', preloadContent)
       .preload('translations')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload('createdBy', preloadProfile)
+      .preload('updatedBy', preloadProfile)
       .first()
     if (G.isNullable(template)) throw E_RESOURCE_NOT_FOUND
 
@@ -131,7 +131,7 @@ export default class TemplatesController {
       template.updatedAt = DateTime.now()
       await template.save()
       await template.load((query) =>
-        query.preload('updatedBy', withProfile).preload('translations')
+        query.preload('updatedBy', preloadProfile).preload('translations')
       )
     }
 
@@ -192,8 +192,8 @@ export default class TemplatesController {
       query
         .preload('content', preloadContent)
         .preload('translations')
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
+        .preload('createdBy', preloadProfile)
+        .preload('updatedBy', preloadProfile)
     )
     return response.ok({ template: template.serialize() })
   }

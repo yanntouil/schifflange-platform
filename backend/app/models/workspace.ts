@@ -3,6 +3,8 @@ import { E_UNLOADED_RELATION } from '#exceptions/models'
 import Article from '#models/article'
 import ArticleCategory from '#models/article-category'
 import Contact from '#models/contact'
+import Event from '#models/event'
+import EventCategory from '#models/event-category'
 import ExtendedModel from '#models/extended/extended-model'
 import Forward from '#models/forward'
 import Language from '#models/language'
@@ -51,6 +53,7 @@ import type {
 } from '@adonisjs/lucid/types/relations'
 import { A, D, G, S } from '@mobily/ts-belt'
 import { DateTime } from 'luxon'
+import ScheduleRule from './schedule-rule.js'
 
 /**
  * Model Workspace
@@ -162,6 +165,15 @@ export default class Workspace extends ExtendedModel {
   declare libraries: HasMany<typeof Library>
   @hasMany(() => LibraryDocument)
   declare libraryDocuments: HasMany<typeof LibraryDocument>
+
+  @hasMany(() => Event)
+  declare events: HasMany<typeof Event>
+
+  @hasMany(() => EventCategory)
+  declare eventCategories: HasMany<typeof EventCategory>
+
+  @hasMany(() => ScheduleRule)
+  declare schedules: HasMany<typeof ScheduleRule>
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
    * HOOKS
@@ -330,6 +342,9 @@ export default class Workspace extends ExtendedModel {
           'organisationCategories',
           'organisations',
           'contacts',
+          'events',
+          'eventCategories',
+          'schedules',
         ] as const,
         async (related) => {
           const children = await this.getOrLoadRelation(related)

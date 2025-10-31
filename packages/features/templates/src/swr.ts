@@ -1,8 +1,9 @@
 import { ContentMutationsHelpers } from "@compo/contents"
-import { useMemoKey, useSWR } from "@compo/hooks"
+import { useMemoCacheKey, useMemoKey, useSWR } from "@compo/hooks"
 import { A } from "@compo/utils"
 import { type Api } from "@services/dashboard"
 import React from "react"
+import { useSWRConfig } from "swr"
 import { useTemplatesService } from "./service.context"
 
 /**
@@ -10,44 +11,37 @@ import { useTemplatesService } from "./service.context"
  */
 export const useSwrTemplates = () => {
   const { service, serviceKey, type } = useTemplatesService()
-
+  const key = useMemoKey(baseKey, { serviceKey })
   const { data, mutate, ...props } = useSWR(
-    {
-      fetch: () => service.all({ filterBy: { types: [type] } }),
-      key: useMemoKey("dashboard-templates", { serviceKey }),
-    },
-    {
-      fallbackData: {
-        templates: [],
-      },
-      keepPreviousData: true,
-    }
+    { fetch: () => service.all({ filterBy: { types: [type] } }), key },
+    { fallbackData: { templates: [] }, keepPreviousData: true }
   )
-
   const templates = React.useMemo(() => A.filter(data.templates, (f) => f.type === type), [data, type])
-
-  // mutation helper
-  const mutateTemplates = (fn: (items: Api.TemplateWithRelations[]) => Api.TemplateWithRelations[]) =>
-    mutate((data) => data && { ...data, templates: fn(data.templates) }, { revalidate: true })
-  const swr = {
+  return {
     ...props,
+    ...createTemplateMutations((fn: (items: Api.TemplateWithRelations[]) => Api.TemplateWithRelations[]) =>
+      mutate((data) => data && { ...data, templates: fn(data.templates) }, { revalidate: true })
+    ),
     mutate,
-    update: (template: Partial<Api.TemplateWithRelations>) =>
-      void mutateTemplates(
-        (templates) =>
-          A.map(templates, (f) => (f.id === template.id ? { ...f, ...template } : f)) as Api.TemplateWithRelations[]
-      ),
-    reject: (template: Api.TemplateWithRelations) =>
-      void mutateTemplates(
-        (templates) => A.filter(templates, (f) => f.id !== template.id) as Api.TemplateWithRelations[]
-      ),
-    rejectById: (id: string) =>
-      void mutateTemplates((templates) => A.filter(templates, (f) => f.id !== id) as Api.TemplateWithRelations[]),
-    append: (template: Api.TemplateWithRelations) =>
-      void mutateTemplates((templates) => A.append(templates, template) as Api.TemplateWithRelations[]),
+    templates,
   }
+}
 
-  return { templates, ...swr }
+/**
+ * useMutateTemplates
+ */
+export const useMutateTemplates = () => {
+  const { serviceKey } = useTemplatesService()
+  const { mutate } = useSWRConfig()
+  const key = useMemoCacheKey(baseKey, { serviceKey })
+  return createTemplateMutations((fn: (items: Api.TemplateWithRelations[]) => Api.TemplateWithRelations[]) =>
+    mutate(
+      key,
+      (data: { templates: Api.TemplateWithRelations[] } | undefined) =>
+        data && { ...data, templates: fn(data.templates) },
+      { revalidate: true }
+    )
+  )
 }
 
 /**
@@ -138,3 +132,23 @@ export const reorder =
     sortedIds
       ? A.map(items, (item) => ({ ...item, order: A.getIndexBy(sortedIds, (id) => id === item.id) ?? 0 }))
       : items
+
+/**
+ * constants
+ */
+const baseKey = "dashboard-templates"
+
+/**
+ * utils
+ */
+const createTemplateMutations = (
+  mutateFn: (fn: (items: Api.TemplateWithRelations[]) => Api.TemplateWithRelations[]) => void
+) => {
+  return {
+    append: (template: Api.TemplateWithRelations) => void mutateFn(A.append(template)),
+    update: (template: Partial<Api.TemplateWithRelations>) =>
+      void mutateFn(A.map((f) => (f.id === template.id ? { ...f, ...template } : f))),
+    reject: (template: Api.TemplateWithRelations) => void mutateFn(A.filter((f) => f.id !== template.id)),
+    rejectById: (id: string) => void mutateFn(A.filter((f) => f.id !== id)),
+  }
+}

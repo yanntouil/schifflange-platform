@@ -5,7 +5,11 @@ import type { MediaFile, MediaFileWithRelations, Publication, Translatable, User
 export type Library = {
   id: string
   workspaceId: string
+  pin: boolean
+  pinOrder: number
   parentLibraryId: string | null
+  childLibraryCount: number
+  documentCount: number
   createdAt: string
   createdById: string
   createdBy: User

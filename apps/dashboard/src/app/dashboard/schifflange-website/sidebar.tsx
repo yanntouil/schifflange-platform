@@ -9,6 +9,7 @@ import { Link } from "wouter"
 import dashboardRouteTo from "."
 import { SidebarArticles } from "./articles/sidebar"
 import { SidebarDirectory } from "./directory/sidebar"
+import { SidebarEvents } from "./events/sidebar"
 import { SidebarLibraries } from "./libraries/sidebar"
 import { SidebarMedias } from "./medias/sidebar"
 import { SidebarPages } from "./pages/sidebar"
@@ -38,11 +39,34 @@ export const Sidebar: React.FC = () => {
                   </Ui.Sidebar.MenuButton>
                 </Ui.Sidebar.MenuItem>
               </Ui.Sidebar.Menu>
+            </Ui.Sidebar.GroupContent>
+          </Ui.Sidebar.Group>
+
+          <Ui.Sidebar.Group>
+            <Ui.Sidebar.GroupLabel>
+              <span>{_("section-content")}</span>
+            </Ui.Sidebar.GroupLabel>
+            <Ui.Sidebar.GroupContent>
               <SidebarPages />
               <SidebarArticles />
+              <SidebarEvents />
+            </Ui.Sidebar.GroupContent>
+          </Ui.Sidebar.Group>
+          <Ui.Sidebar.Group>
+            <Ui.Sidebar.GroupLabel>
+              <span>{_("section-resources")}</span>
+            </Ui.Sidebar.GroupLabel>
+            <Ui.Sidebar.GroupContent>
               <SidebarMedias />
               <SidebarDirectory />
               <SidebarLibraries />
+            </Ui.Sidebar.GroupContent>
+          </Ui.Sidebar.Group>
+          <Ui.Sidebar.Group>
+            <Ui.Sidebar.GroupLabel>
+              <span>{_("section-settings")}</span>
+            </Ui.Sidebar.GroupLabel>
+            <Ui.Sidebar.GroupContent>
               <SidebarSite />
             </Ui.Sidebar.GroupContent>
           </Ui.Sidebar.Group>
@@ -60,11 +84,20 @@ export const Sidebar: React.FC = () => {
 const dictionary = {
   en: {
     home: "Home",
+    "section-content": "Content",
+    "section-resources": "Resources",
+    "section-settings": "Settings",
   },
   fr: {
     home: "Accueil",
+    "section-content": "Contenu",
+    "section-resources": "Ressources",
+    "section-settings": "Paramètres",
   },
   de: {
     home: "Startseite",
+    "section-content": "Inhalt",
+    "section-resources": "Ressourcen",
+    "section-settings": "Einstellungen",
   },
 }

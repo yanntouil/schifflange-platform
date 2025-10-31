@@ -1,7 +1,8 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
-import Contact from '#models/contact'
-import { preloadContactOrganisation } from '#models/contact-organisation'
-import { withProfile } from '#models/user'
+import Contact, { preloadContact } from '#models/contact'
+import { withContactOrganisations } from '#models/contact-organisation'
+import { withContactTranslations } from '#models/contact-translation'
+import { withCreatedBy, withUpdatedBy } from '#models/user'
 import {
   createContactValidator,
   filterContactsByValidator,
@@ -36,9 +37,9 @@ export default class ContactsController {
       .withScopes((scope) => scope.filterBy(filterBy))
       .withScopes((scope) => scope.sortBy(sortBy))
       .withScopes((scope) => scope.limit(limit))
-      .preload('translations')
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withContactTranslations())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
     return response.ok({ contacts: A.map(contacts, (contact) => contact.serialize()) })
   }
 
@@ -82,9 +83,9 @@ export default class ContactsController {
 
     await contact.load((query) =>
       query
-        .preload('translations')
-        .preload('createdBy', withProfile)
-        .preload('updatedBy', withProfile)
+        .preload(...withContactTranslations())
+        .preload(...withCreatedBy())
+        .preload(...withUpdatedBy())
     )
     return response.ok({ contact: contact.serialize() })
   }
@@ -103,10 +104,10 @@ export default class ContactsController {
       .related('contacts')
       .query()
       .where('id', request.param('contactId'))
-      .preload('translations')
-      .preload('contactOrganisations', preloadContactOrganisation)
-      .preload('createdBy', withProfile)
-      .preload('updatedBy', withProfile)
+      .preload(...withContactTranslations())
+      .preload(...withContactOrganisations())
+      .preload(...withCreatedBy())
+      .preload(...withUpdatedBy())
       .first()
     if (G.isNullable(contact)) throw E_RESOURCE_NOT_FOUND
     return response.ok({ contact: contact.serialize() })
@@ -129,8 +130,7 @@ export default class ContactsController {
       .related('contacts')
       .query()
       .where('id', request.param('contactId'))
-      .preload('translations')
-      .preload('createdBy', withProfile)
+      .preload(...withContactTranslations())
       .first()
     if (G.isNullable(contact)) throw E_RESOURCE_NOT_FOUND
 
@@ -164,7 +164,7 @@ export default class ContactsController {
       })
       .save()
 
-    await contact.load((query) => query.preload('translations').preload('updatedBy', withProfile))
+    await contact.load(preloadContact)
 
     return response.ok({ contact: contact.serialize() })
   }

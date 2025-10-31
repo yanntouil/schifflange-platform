@@ -2,7 +2,7 @@ import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
 import FileTranslation from '#models/media-file-translation'
 import MediaFolder from '#models/media-folder'
-import User from '#models/user'
+import User, { withCreatedBy, withUpdatedBy } from '#models/user'
 import { driveDeleteSafe } from '#services/drive'
 import { type FileExif } from '#services/files/exif'
 import { columnJSON } from '#utils/column-json'
@@ -272,5 +272,7 @@ type Aspect = {
 export const preloadFiles = (query: PreloaderContract<MediaFile>) =>
   query
     .preload('translations')
-    .preload('createdBy', (query) => query.preload('profile'))
-    .preload('updatedBy', (query) => query.preload('profile'))
+    .preload(...withCreatedBy())
+    .preload(...withUpdatedBy())
+export const withFiles = () => ['files', preloadFiles] as const
+export const withImage = () => ['image', preloadFiles] as const

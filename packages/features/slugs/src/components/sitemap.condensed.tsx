@@ -2,11 +2,12 @@ import { Dashboard } from "@compo/dashboard"
 import { useTranslation } from "@compo/localize"
 import { useContextualLanguage } from "@compo/translations"
 import { Ui } from "@compo/ui"
-import { match, placeholder } from "@compo/utils"
+import { placeholder } from "@compo/utils"
 import { type Api, placeholder as servicePlaceholder } from "@services/dashboard"
 import { LayoutPanelTop } from "lucide-react"
 import React from "react"
 import { Link } from "wouter"
+import { useRouteTo } from "../hooks"
 import { useSlugsService } from "../service.context"
 import { useSWRSlugs } from "../swr"
 import { getSlugResource } from "../utils"
@@ -93,14 +94,8 @@ const CompactSlug: React.FC<{ slug: Api.Slug & Api.WithModel }> = ({ slug }) => 
   const { translate } = useContextualLanguage()
   const { getImageUrl } = useSlugsService()
   const ressource = getSlugResource(slug)
+  const ressourcePath = useRouteTo(slug)
   const seoTranslated = translate(ressource.seo, servicePlaceholder.seo)
-  const { routesTo } = useSlugsService()
-  const ressourcePath = React.useMemo(() => {
-    return match(slug)
-      .with({ model: "page" }, (slug) => routesTo.pages.byId(slug.page.id))
-      .with({ model: "article" }, (slug) => routesTo.articles.byId(slug.article.id))
-      .exhaustive()
-  }, [slug, routesTo.pages.byId, routesTo.articles.byId])
 
   const image = seoTranslated?.image
     ? {
@@ -149,6 +144,8 @@ const dictionary = {
     "type-page-tooltip": "Page statique du site",
     "type-article": "Article",
     "type-article-tooltip": "Article de blog ou actualité",
+    "type-event": "Événement",
+    "type-event-tooltip": "Événement",
     "title-placeholder": "Sans titre",
     "description-placeholder": "Sans description",
     sort: {
@@ -175,6 +172,8 @@ const dictionary = {
     "type-page-tooltip": "Statische Website-Seite",
     "type-article": "Artikel",
     "type-article-tooltip": "Blog-Beitrag oder Nachrichtenartikel",
+    "type-event": "Veranstaltung",
+    "type-event-tooltip": "Veranstaltung",
     "title-placeholder": "Ohne Titel",
     "description-placeholder": "Keine Beschreibung",
     sort: {
@@ -201,6 +200,8 @@ const dictionary = {
     "type-page-tooltip": "Static website page",
     "type-article": "Article",
     "type-article-tooltip": "Blog post or news article",
+    "type-event": "Event",
+    "type-event-tooltip": "Event",
     "title-placeholder": "Untitled",
     "description-placeholder": "No description",
     sort: {

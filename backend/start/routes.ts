@@ -53,18 +53,21 @@ const Controller = {
     organisationCategories: () => import('#controllers/http/workspace/organisation-categories'),
     medias: () => import('#controllers/http/workspace/medias'),
     seos: () => import('#controllers/http/workspace/seos'),
-    contents: () => import('#controllers/http/workspace/contents'),
-    templates: () => import('#controllers/http/workspace/templates'),
     publications: () => import('#controllers/http/workspace/publications'),
+    contents: () => import('#controllers/http/workspace/contents'),
+    slugs: () => import('#controllers/http/workspace/slugs'),
+    forwards: () => import('#controllers/http/workspace/forwards'),
+    schedules: () => import('#controllers/http/workspace/schedules'),
+    templates: () => import('#controllers/http/workspace/templates'),
+    pins: () => import('#controllers/http/workspace/pins'),
     pages: () => import('#controllers/http/workspace/pages'),
     articles: () => import('#controllers/http/workspace/articles'),
     articleCategories: () => import('#controllers/http/workspace/article-categories'),
+    events: () => import('#controllers/http/workspace/events'),
+    eventCategories: () => import('#controllers/http/workspace/event-categories'),
     menus: () => import('#controllers/http/workspace/menus'),
-    forwards: () => import('#controllers/http/workspace/forwards'),
-    slugs: () => import('#controllers/http/workspace/slugs'),
     libraries: () => import('#controllers/http/workspace/libraries'),
     libraryDocuments: () => import('#controllers/http/workspace/library-documents'),
-    pins: () => import('#controllers/http/workspace/pins'),
   },
   admin: {
     users: () => import('#controllers/http/admin/users'),
@@ -385,6 +388,20 @@ router
   .where('fileId', router.matchers.uuid())
 
 /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
+ * -- WORKSPACES SCHEDULES --
+ */
+router
+  .group(() => {
+    const { schedules } = Controller.workspace
+    router.put('/schedules/:scheduleId', [schedules, 'update'])
+  })
+  .middleware(middleware.auth())
+  .middleware(middleware.workspace({ as: 'member' }))
+  .prefix('/api/workspaces/:workspaceId')
+  .where('workspaceId', router.matchers.uuid())
+  .where('scheduleId', router.matchers.uuid())
+
+/** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
  * -- WORKSPACES TEMPLATES --
  */
 router
@@ -466,7 +483,7 @@ router
     router.get('/articles/categories/:categoryId', [articleCategories, 'read'])
     router.put('/articles/categories/:categoryId', [articleCategories, 'update'])
     router.delete('/articles/categories/:categoryId', [articleCategories, 'delete'])
-    //articles
+    // articles
     router.get('/articles', [articles, 'all'])
     router.post('/articles', [articles, 'create'])
     router.get('/articles/:articleId', [articles, 'read'])
@@ -494,6 +511,50 @@ router
   .prefix('/api/workspaces/:workspaceId')
   .where('workspaceId', router.matchers.uuid())
   .where('articleId', router.matchers.uuid())
+  .where('categoryId', router.matchers.uuid())
+  .where('contentId', router.matchers.uuid())
+  .where('publicationId', router.matchers.uuid())
+
+/** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
+ * -- WORKSPACES EVENTS --
+ */
+router
+  .group(() => {
+    const { seos, contents, publications, events, eventCategories } = Controller.workspace
+    // categories
+    router.get('/events/categories', [eventCategories, 'all'])
+    router.post('/events/categories', [eventCategories, 'create'])
+    router.get('/events/categories/:categoryId', [eventCategories, 'read'])
+    router.put('/events/categories/:categoryId', [eventCategories, 'update'])
+    router.delete('/events/categories/:categoryId', [eventCategories, 'delete'])
+    // events
+    router.get('/events', [events, 'all'])
+    router.post('/events', [events, 'create'])
+    router.get('/events/:eventId', [events, 'read'])
+    router.put('/events/:eventId', [events, 'update'])
+    router.delete('/events/:eventId', [events, 'delete'])
+    // seo
+    router.put('/events/:eventId/seo', [seos, 'update'])
+    // publication
+    router.put('/events/:eventId/publication', [publications, 'update'])
+    // content
+    router.put('/events/:eventId/content', [contents, 'update'])
+    router.post('/events/:eventId/content/items', [contents, 'createItem'])
+    router.put('/events/:eventId/content/items/:itemId', [contents, 'updateItem'])
+    router.delete('/events/:eventId/content/items/:itemId', [contents, 'deleteItem'])
+    router.put('/events/:eventId/content/items', [contents, 'reorderItems'])
+    router
+      .post('/events/:eventId/content/items/from-template/:fromTemplateId', [
+        contents,
+        'appendFromTemplate',
+      ])
+      .where('fromTemplateId', router.matchers.uuid())
+  })
+  .middleware(middleware.auth())
+  .middleware(middleware.workspace({ as: 'member' }))
+  .prefix('/api/workspaces/:workspaceId')
+  .where('workspaceId', router.matchers.uuid())
+  .where('eventId', router.matchers.uuid())
   .where('categoryId', router.matchers.uuid())
   .where('contentId', router.matchers.uuid())
   .where('publicationId', router.matchers.uuid())

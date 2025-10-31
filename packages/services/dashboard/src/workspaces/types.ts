@@ -1,5 +1,6 @@
 import type { Language, SingleImage, User } from "../types"
 export * from "./articles/types"
+export * from "./events/types"
 export * from "./forwards/types"
 export * from "./libraries/types"
 export * from "./medias/types"

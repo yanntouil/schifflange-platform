@@ -1,4 +1,5 @@
 export * from "./dialog"
+export * from "./edit-step"
 export * from "./publication"
 export * from "./publication.card"
 export * from "./publication.icon"

@@ -1,7 +1,7 @@
 import ExtendedModel from '#models/extended/extended-model'
 import Language from '#models/language'
 import { beforeCreate, beforeDelete, belongsTo, column } from '@adonisjs/lucid/orm'
-import type { BelongsTo } from '@adonisjs/lucid/types/relations'
+import type { BelongsTo, PreloaderContract } from '@adonisjs/lucid/types/relations'
 import { D } from '@mobily/ts-belt'
 
 /**
@@ -64,3 +64,12 @@ export default class LibraryDocumentTranslation extends ExtendedModel {
     //
   }
 }
+
+/**
+ * preloaders
+ */
+export const preloadLibraryDocumentTranslation = (
+  query: PreloaderContract<LibraryDocumentTranslation>
+) => query
+export const withLibraryDocumentTranslations = () =>
+  ['translations', preloadLibraryDocumentTranslation] as const

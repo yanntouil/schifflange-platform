@@ -13,5 +13,9 @@
   // Optionnel : meilleures suggestions dans les strings (JSX, etc.)
   "editor.quickSuggestions": {
     "strings": "on"
-  }
+  },
+  // Import module specifier relative
+  "typescript.preferences.importModuleSpecifier": "relative",
+  // Limit the number of editors open to 100
+  "workbench.editor.limit.value": 100
 }

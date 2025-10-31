@@ -2,7 +2,13 @@ import ExtendedModel from '#models/extended/extended-model'
 import Trace from '#models/trace'
 import Workspace from '#models/workspace'
 import { beforeDelete, belongsTo, column, computed, hasMany, scope } from '@adonisjs/lucid/orm'
-import type { BelongsTo, ExtractModelRelations, HasMany } from '@adonisjs/lucid/types/relations'
+import type {
+  BelongsTo,
+  ExtractModelRelations,
+  HasMany,
+  PreloaderContract,
+  RelationQueryBuilderContract,
+} from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
 
 /**
@@ -96,3 +102,15 @@ export default class Tracking extends ExtendedModel {
 export const trackingType = ['views', 'clicks'] as const
 export const trackingTypeDefault = trackingType[0]
 export type TrackingType = (typeof trackingType)[number]
+
+/**
+ * preloaders
+ */
+export const preloadTracking = (query: PreloaderContract<Tracking>) => query
+export const withTracking = () => ['tracking', preloadTracking] as const
+export const preloadVisits = (query: RelationQueryBuilderContract<typeof Tracking, any>) =>
+  query.withCount('traces', (query) => query.as('visits'))
+export const withVisits = () => ['tracking', preloadVisits] as const
+export const preloadClicks = (query: RelationQueryBuilderContract<typeof Tracking, any>) =>
+  query.withCount('traces', (query) => query.as('clicks'))
+export const withClicks = () => ['tracking', preloadClicks] as const

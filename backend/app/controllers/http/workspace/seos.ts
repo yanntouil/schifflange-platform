@@ -1,11 +1,12 @@
 import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import Article from '#models/article'
+import Event from '#models/event'
 import Language from '#models/language'
 import { preloadFiles } from '#models/media-file'
 import Page from '#models/page'
-import Seo, { preloadSeo } from '#models/seo'
+import Seo, { withSeo } from '#models/seo'
 import SeoTranslation from '#models/seo-translation'
-import { withProfile } from '#models/user'
+import { preloadProfile } from '#models/user'
 import Workspace from '#models/workspace'
 import { updateSeoValidator } from '#validators/seo'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -48,7 +49,7 @@ export default class SeosController {
     await item.seo.merge({ updatedById: user.id, updatedAt: DateTime.now() }).save()
     await item.seo.load((query) =>
       query
-        .preload('updatedBy', withProfile)
+        .preload('updatedBy', preloadProfile)
         .preload('translations', (query) => query.preload('image', preloadFiles))
         .preload('files', (query) => query.preload('translations'))
     )
@@ -64,13 +65,19 @@ const getModelResource = async (request: HttpContext['request'], workspace: Work
     return await Page.query()
       .where('id', request.param('pageId'))
       .andWhere('workspaceId', workspace.id)
-      .preload('seo', preloadSeo)
+      .preload(...withSeo())
       .first()
   if (G.isNotNullable(request.param('articleId')))
     return await Article.query()
       .where('id', request.param('articleId'))
       .andWhere('workspaceId', workspace.id)
-      .preload('seo', preloadSeo)
+      .preload(...withSeo())
+      .first()
+  if (G.isNotNullable(request.param('eventId')))
+    return await Event.query()
+      .where('id', request.param('eventId'))
+      .andWhere('workspaceId', workspace.id)
+      .preload(...withSeo())
       .first()
   throw new Error('Model not found')
 }

@@ -2,7 +2,7 @@ import { Selectable } from "@compo/hooks"
 import { type Api } from "@services/dashboard"
 import React from "react"
 import { ManagePage } from "./pages.context.actions"
-import { SWRPages } from "./swr"
+import { SWRPages } from "./swr.pages"
 
 /**
  * types
