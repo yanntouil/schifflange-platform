@@ -152,6 +152,12 @@ export const everyAreNotEmpty = (...strings: Option<string>[]) =>
 export const stripHtml = (s: string) => s.replace(/(<([^>]+)>)/gi, "")
 
 /**
+ * isNotEmptyHtml
+ * Check if a string is not an empty HTML string
+ */
+export const isNotEmptyHtml = (s: string) => S.isNotEmpty(S.trim(stripHtml(s)))
+
+/**
  * getInitials
  * Get the initials of a firstname and a lastname, prioritize the firstname initials with first lastname initials
  */

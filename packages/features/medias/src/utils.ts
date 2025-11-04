@@ -1,6 +1,6 @@
 import { TranslateFn } from "@compo/translations"
 import { Ui } from "@compo/ui"
-import { A, D, G, MakePathTo, match, pipe, S, type ById, type Option } from "@compo/utils"
+import { A, D, G, MakePathTo, match, O, pipe, S, type ById, type Option } from "@compo/utils"
 import { placeholder as servicePlaceholder, type Api } from "@services/dashboard"
 import { FilesType } from "./types"
 
@@ -195,4 +195,34 @@ export const prepareSlide = (
       src,
     }
   return false
+}
+
+/**
+ * extractFile
+ * @description Extract the file from the list of files
+ * @param id
+ * @param files
+ * @returns Api.MediaFileWithRelations | undefined
+ */
+export const extractFile = (
+  id: Option<string>,
+  files: Api.MediaFileWithRelations[]
+): Api.MediaFileWithRelations | undefined => {
+  if (G.isNullable(id)) return undefined
+  return A.find(files, ({ id: fileId }) => id === fileId) ?? undefined
+}
+
+/**
+ * extractFile
+ * @description Extract the file from the list of files
+ * @param id
+ * @param files
+ * @returns Api.MediaFileWithRelations | undefined
+ */
+export const extractFiles = (ids: string[], files: Api.MediaFileWithRelations[]): Api.MediaFileWithRelations[] => {
+  return A.filterMap(ids, (id) => {
+    const file = A.find(files, ({ id: fileId }) => id === fileId)
+    if (G.isNullable(file)) return O.None
+    return O.Some(file)
+  })
 }

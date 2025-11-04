@@ -49,6 +49,7 @@ const Controller = {
     workspaces: () => import('#controllers/http/workspace/workspaces'),
     contacts: () => import('#controllers/http/workspace/contacts'),
     contactOrganisations: () => import('#controllers/http/workspace/contact-organisations'),
+    councils: () => import('#controllers/http/workspace/councils'),
     organisations: () => import('#controllers/http/workspace/organisations'),
     organisationCategories: () => import('#controllers/http/workspace/organisation-categories'),
     medias: () => import('#controllers/http/workspace/medias'),
@@ -651,6 +652,24 @@ router
   .where('workspaceId', router.matchers.uuid())
   .where('libraryId', router.matchers.uuid())
   .where('documentId', router.matchers.uuid())
+
+/** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
+ * -- WORKSPACES COUNCILS --
+ */
+router
+  .group(() => {
+    const { councils } = Controller.workspace
+    router.get('/councils', [councils, 'all'])
+    router.post('/councils', [councils, 'create'])
+    router.get('/councils/:councilId', [councils, 'read'])
+    router.put('/councils/:councilId', [councils, 'update'])
+    router.delete('/councils/:councilId', [councils, 'delete'])
+  })
+  .middleware(middleware.auth())
+  .middleware(middleware.workspace({ as: 'member' }))
+  .prefix('/api/workspaces/:workspaceId')
+  .where('workspaceId', router.matchers.uuid())
+  .where('councilId', router.matchers.uuid())
 
 /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
  * -- WORKSPACES MENUS --

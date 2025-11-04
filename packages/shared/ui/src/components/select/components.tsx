@@ -158,6 +158,7 @@ SelectSeparator.displayName = SelectPrimitive.Separator.displayName
  * SelectQuick
  */
 export type SelectQuickProps = {
+  id?: string
   lang?: string
   placeholder?: string
   value: string
@@ -176,6 +177,7 @@ export type SelectQuickProps = {
 }
 
 const SelectQuick: React.FC<SelectQuickProps> = ({
+  id,
   placeholder,
   value,
   defaultValue,
@@ -188,7 +190,7 @@ const SelectQuick: React.FC<SelectQuickProps> = ({
 }) => {
   return (
     <SelectRoot disabled={disabled} defaultValue={defaultValue} value={value} onValueChange={onValueChange}>
-      <SelectTrigger className={cn(classNames?.trigger)}>
+      <SelectTrigger className={cn(classNames?.trigger)} id={id}>
         <SelectValue placeholder={placeholder} lang={lang} />
       </SelectTrigger>
       <SelectContent className={classNames?.content}>

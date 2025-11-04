@@ -72,9 +72,32 @@ export const FieldInput = React.forwardRef<HTMLInputElement, FieldInputProps>(
 )
 
 /**
+ * FieldInputText
+ */
+type InputTextProps = Omit<React.ComponentProps<"input">, "type" | "onChange" | "value"> & {
+  type?: "text" | "email" | "password" | "tel" | "url" | "search"
+  value: string
+  onValueChange: (value: string) => void
+}
+const InputText = React.forwardRef<HTMLInputElement, InputTextProps>(
+  ({ className, value, onValueChange, type = "text", ...props }, ref) => (
+    <input
+      type={type}
+      {...props}
+      ref={ref}
+      className={cxm(variants.input({ className }))}
+      onChange={(e) => onValueChange(e.target.value)}
+      value={value}
+    />
+  )
+)
+InputText.displayName = "InputText"
+export { InputText }
+
+/**
  * FormInputType
  */
-export type FormInputType =
+type FormInputType =
   | "text"
   | "email"
   | "phone"

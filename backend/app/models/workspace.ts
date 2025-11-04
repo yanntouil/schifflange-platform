@@ -53,6 +53,7 @@ import type {
 } from '@adonisjs/lucid/types/relations'
 import { A, D, G, S } from '@mobily/ts-belt'
 import { DateTime } from 'luxon'
+import Council from './council.js'
 import ScheduleRule from './schedule-rule.js'
 
 /**
@@ -174,6 +175,9 @@ export default class Workspace extends ExtendedModel {
 
   @hasMany(() => ScheduleRule)
   declare schedules: HasMany<typeof ScheduleRule>
+
+  @hasMany(() => Council)
+  declare councils: HasMany<typeof Council>
 
   /** ****** ****** ****** ****** ****** ****** ****** ****** ****** ******
    * HOOKS

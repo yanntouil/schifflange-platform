@@ -48,7 +48,14 @@ export const useLibrariesServiceProps = () => {
     isAdmin: isWorkspaceAdmin(workspace),
   }
 }
-
+export const useCouncilsServiceProps = () => {
+  const { workspace, service } = useWorkspace()
+  return {
+    service: service.councils,
+    serviceKey: workspace.id,
+    isAdmin: isWorkspaceAdmin(workspace),
+  }
+}
 export const useSlugServiceProps = () => {
   const { workspace, service, makeUrlFromSlug } = useWorkspace()
   return {

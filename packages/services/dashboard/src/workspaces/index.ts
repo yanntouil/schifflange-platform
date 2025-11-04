@@ -16,6 +16,7 @@ import {
   WorkspaceOwnerErrors,
 } from "../types"
 import { articles } from "./articles"
+import { councils } from "./councils"
 import { directory } from "./directory"
 import { events } from "./events"
 import { forwards } from "./forwards"
@@ -63,7 +64,7 @@ export const workspaces = (api: CreateApi, secure: Secure) => ({
     events: events(api, secure, wid),
     directory: directory(api, secure, wid),
     libraries: libraries(api, secure, wid),
-
+    councils: councils(api, secure, wid),
     // workspace routes
     read: secure(() =>
       api.get<

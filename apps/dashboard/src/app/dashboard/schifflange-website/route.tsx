@@ -9,6 +9,7 @@ import { DashboardServiceProvider } from "./service.provider"
 const RoutePages = lazy(() => import("./pages").then((m) => ({ default: m.RoutePages })))
 const RouteArticles = lazy(() => import("./articles").then((m) => ({ default: m.RouteArticles })))
 const RouteEvents = lazy(() => import("./events").then((m) => ({ default: m.RouteEvents })))
+const RouteCouncils = lazy(() => import("./councils").then((m) => ({ default: m.RouteCouncils })))
 const RouteMedias = lazy(() => import("./medias").then((m) => ({ default: m.RouteMedias })))
 const RouteDirectory = lazy(() => import("./directory").then((m) => ({ default: m.RouteDirectory })))
 const RouteLibraries = lazy(() => import("./libraries").then((m) => ({ default: m.RouteLibraries })))
@@ -31,6 +32,9 @@ export const DashboardSchifflangeWebsiteRoute: React.FC = () => {
             </Route>
             <Route path="/events*" nest>
               <RouteEvents />
+            </Route>
+            <Route path="/councils*" nest>
+              <RouteCouncils />
             </Route>
             <Route path="/medias*" nest>
               <RouteMedias />

@@ -1,5 +1,6 @@
 import parentRoute from ".."
 import { routesTo as routesToArticles } from "./articles"
+import { routesTo as routesToCouncils } from "./councils"
 import { routesTo as routesToDirectory } from "./directory"
 import { routesTo as routesToEvents } from "./events"
 import { routesTo as routesToLibraries } from "./libraries"
@@ -18,5 +19,6 @@ export const routesTo = {
   medias: routesToMedias,
   directory: routesToDirectory,
   libraries: routesToLibraries,
+  councils: routesToCouncils,
   ...routesToSite,
 }

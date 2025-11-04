@@ -1,4 +1,4 @@
-import { Form, FormLocalized } from "@compo/form"
+import { Form } from "@compo/form"
 import { useTranslation } from "@compo/localize"
 import { FormMedia } from "@compo/medias"
 import { FormTranslatableTabs, useContextualLanguage } from "@compo/translations"
@@ -21,7 +21,7 @@ export const CategoriesForm: React.FC = () => {
                 name='image'
                 ratio='aspect-video'
                 contextKey={`category`}
-                labelAside={<FormLocalized title={_("image-label")} content={_("image-info")} />}
+                labelAside={<Form.Localized title={_("image-label")} content={_("image-info")} />}
                 classNames={{ input: "max-w-lg" }}
               />
               <Form.Input
@@ -30,7 +30,7 @@ export const CategoriesForm: React.FC = () => {
                 placeholder={_("title-placeholder")}
                 lang={code}
                 maxLength={255}
-                labelAside={<FormLocalized title={_("title-label")} content={_("title-info")} />}
+                labelAside={<Form.Localized title={_("title-label")} content={_("title-info")} />}
               />
               <Form.Textarea
                 label={_("description-label")}
@@ -38,7 +38,7 @@ export const CategoriesForm: React.FC = () => {
                 placeholder={_("description-placeholder")}
                 lang={code}
                 maxLength={500}
-                labelAside={<FormLocalized title={_("description-label")} content={_("description-info")} />}
+                labelAside={<Form.Localized title={_("description-label")} content={_("description-info")} />}
               />
             </>
           )}

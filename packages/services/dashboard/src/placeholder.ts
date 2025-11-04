@@ -1,5 +1,6 @@
 import { seoPlaceholder } from "./seos/constants"
 import { articleCategoryPlaceholder } from "./workspaces/articles/constants"
+import { councilPlaceholder } from "./workspaces/councils/constants"
 import {
   contactOrganisationPlaceholder,
   contactPlaceholder,
@@ -26,4 +27,5 @@ export const placeholder = {
   libraryDocument: libraryDocumentPlaceholder,
   eventCategory: eventCategoryPlaceholder,
   event: eventPlaceholder,
+  council: councilPlaceholder,
 }

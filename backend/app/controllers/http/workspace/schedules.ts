@@ -29,7 +29,6 @@ export default class SchedulesController {
 
     const { rules, ...payload } = await request.validateUsing(updateScheduleValidator)
     await schedule.merge({ ...payload }).save()
-    // "insert into `schedule_rules` (`all_day`, `by_weekday`, `end_date`, `end_date_time`, `excluded_dates`, `freq`, `id`, `interval`, `is_recurring`, `schedule_id`, `start_date`, `start_date_time`, `until`) values (false, '[]', NULL, NULL, , 'DAILY', 'af0a4ec2-9fd8-4128-82e4-eccc20b8b2c3', 1, false, '89f683dc-6888-47a0-bce2-28b13c8f2ce1', NULL, NULL, NULL) - You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ' 'DAILY', 'af0a4ec2-9fd8-4128-82e4-eccc20b8b2c3', 1, false, '89f683dc-6888-47...' at line 1"
 
     if (G.isNotNullable(rules)) {
       // remove each rules before to create new ones

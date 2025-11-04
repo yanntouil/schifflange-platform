@@ -2,11 +2,9 @@ import { E_RESOURCE_NOT_FOUND } from '#exceptions/resources'
 import Article from '#models/article'
 import Event from '#models/event'
 import Language from '#models/language'
-import { preloadFiles } from '#models/media-file'
 import Page from '#models/page'
-import Seo, { withSeo } from '#models/seo'
+import Seo, { preloadSeo, withSeo } from '#models/seo'
 import SeoTranslation from '#models/seo-translation'
-import { preloadProfile } from '#models/user'
 import Workspace from '#models/workspace'
 import { updateSeoValidator } from '#validators/seo'
 import type { HttpContext } from '@adonisjs/core/http'
@@ -47,12 +45,7 @@ export default class SeosController {
     // update collection and seo timestamp
     await item.merge({ updatedById: user.id, updatedAt: DateTime.now() }).save()
     await item.seo.merge({ updatedById: user.id, updatedAt: DateTime.now() }).save()
-    await item.seo.load((query) =>
-      query
-        .preload('updatedBy', preloadProfile)
-        .preload('translations', (query) => query.preload('image', preloadFiles))
-        .preload('files', (query) => query.preload('translations'))
-    )
+    await item.seo.load(preloadSeo)
     response.ok({ seo: item.seo.serialize() })
   }
 }
