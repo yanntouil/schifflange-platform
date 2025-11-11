@@ -34,7 +34,7 @@ const Content: React.FC<Ui.QuickDialogSafeProps<Api.Council>> = ({ item, close, 
         <h3 className='text-base font-medium'>{_("agenda")}</h3>
         {isNotEmptyHtml(translated.agenda) ? (
           <div
-            className='prose prose-sm dark:prose-invert -my-4'
+            className='prose prose-sm dark:prose-invert -my-2'
             dangerouslySetInnerHTML={{ __html: translated.agenda }}
           />
         ) : (

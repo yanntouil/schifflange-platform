@@ -10,7 +10,8 @@
  * - Strong typing for safety; minimal code for DX.
  */
 
-import { Translation, type LocalizeLanguage } from "@compo/localize"
+import { Translation } from "@compo/localize"
+import { type TranslationLanguage } from "@compo/translations"
 import { type Api, type Payload } from "@services/dashboard"
 import React from "react"
 
@@ -42,7 +43,7 @@ import React from "react"
 export type ExportedItem = {
   type: string
   props: Record<string, unknown>
-  translations: Record<LocalizeLanguage, Record<string, unknown>>
+  translations: Record<TranslationLanguage, Record<string, unknown>>
   dictionary: Translation
   templates?: Record<string, React.FC<React.SVGProps<SVGSVGElement>>>
   proses?: Record<string, string>

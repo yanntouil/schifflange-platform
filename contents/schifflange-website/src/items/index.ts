@@ -24,6 +24,7 @@
  */
 
 import { client as globals } from "@contents/globals"
+import contentsRichText from "./contents/rich-text"
 
 /* ============================================
  * 1) ✅ PUBLIC EXPORTS — Client item registry
@@ -35,11 +36,37 @@ import { client as globals } from "@contents/globals"
  * - IMPORTANT: Keys are part of the contract; changing them is a breaking change.
  * ============================================ */
 
-export const items = globals.mergeItems({
-  // headings: {
-  //   image: headingsImage,
-  // },
-})
+export const items = {
+  contents: {
+    // breadcrumbs: contentsBreadcrumbs,
+    // navigate: contentsNavigate,
+    richText: contentsRichText,
+  },
+  features: {
+    // cards: featuresCards,
+    // contacts: featuresContacts,
+    // faq: featuresFaq,
+    // videos: featuresVideos,
+  },
+  headings: {
+    // image: headingsImage,
+    // images: headingsImages,
+    // simple: headingsSimple,
+    // video: headingsVideo,
+  },
+  interactives: {
+    //
+  },
+  medias: {
+    // images: mediasImages,
+    // documents: mediasDocuments,
+  },
+}
+// globals.mergeItems({
+// headings: {
+//   image: headingsImage,
+// },
+// })
 
 /* ============================================
  * 2) 🚫 TYPES — Derived types for strong typing
