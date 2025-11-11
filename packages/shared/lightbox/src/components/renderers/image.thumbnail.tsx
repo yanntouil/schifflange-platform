@@ -22,6 +22,7 @@ export const ImageThumbnail = React.memo<ThumbnailRendererProps<ImageFile>>(
           ${isActive ? "border-white ring-2 ring-white/50" : "border-white/30 hover:border-white/60"}
         `}
         aria-label={file.title}
+        tabIndex={-1} // Prevent focus
       >
         <img
           src={thumbnailUrl}

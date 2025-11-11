@@ -183,4 +183,6 @@ export type LightboxOptions = {
   showCounter?: boolean
   /** Preload adjacent slides for better UX (default: true) */
   preloadAdjacent?: boolean
+  /** trap focus inside the carousel (default: true) */
+  trapFocus?: boolean
 }

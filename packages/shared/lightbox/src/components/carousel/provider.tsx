@@ -1,9 +1,9 @@
 import { cn } from "@compo/utils"
 import * as React from "react"
+import { useHotkeys } from "react-hotkeys-hook"
 import { CarouselContext } from "./context"
 import { useEmblaCarousel, type EmblaOptions } from "./hooks"
 export { default as Autoplay } from "embla-carousel-autoplay"
-export { CarouselProvider as CarouselRoot }
 
 /**
  * types
@@ -33,6 +33,20 @@ export const CarouselProvider: React.FC<CarouselProviderProps> = (props) => {
     },
     [embla.scrollPrev, embla.scrollNext]
   )
+
+  useHotkeys("ArrowRight", () => embla.scrollNext(), {
+    preventDefault: true,
+    enabled: true,
+    enableOnFormTags: false,
+    enableOnContentEditable: false,
+  })
+
+  useHotkeys("ArrowLeft", () => embla.scrollPrev(), {
+    preventDefault: true,
+    enabled: true,
+    enableOnFormTags: false,
+    enableOnContentEditable: false,
+  })
 
   return (
     <CarouselContext.Provider value={embla}>

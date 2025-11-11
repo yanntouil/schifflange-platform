@@ -18,6 +18,7 @@
     "@radix-ui/react-dialog": "^1.1.15",
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.536.0",
+    "react-hotkeys-hook": "^5.1.0",
     "react-pdf": "^10.2.0",
     "react-zoom-pan-pinch": "^3.7.0",
     "screenfull": "^6.0.2"

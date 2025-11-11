@@ -40,7 +40,7 @@ export const ImageSlide = React.memo<SlideRendererProps<ImageFile>>(({ file, mak
   } as React.CSSProperties
 
   return (
-    <div className='relative size-full' data-slot='image-slide' style={style}>
+    <div className='size-full' data-slot='image-slide' style={style}>
       {/* Background blurred preview (like PdfPreview) */}
       {previewUrl && (
         <div
@@ -56,32 +56,30 @@ export const ImageSlide = React.memo<SlideRendererProps<ImageFile>>(({ file, mak
       {/* Main image with zoom - object-contain to preserve aspect ratio */}
       <Transform.Root {...slide.transform}>
         <Transform.Content>
-          <div className='mx-auto my-auto size-max place-items-center p-8' data-slot='image-slide-content'>
-            <div className='relative'>
-              <img
-                src={fullUrl}
-                alt={file.title}
-                className="max-w-[var(--transform-bounds-width)] max-h-[var(--transform-bounds-height)] w-auto h-auto data-[state='loaded']:opacity-100 opacity-25 transition-opacity"
-                data-state={imageLoaded ? "loaded" : "pending"}
-                loading={isActive ? "eager" : "lazy"}
-                width={file.width}
-                height={file.height}
-                onLoad={() => setImageLoaded(true)}
-                onError={() => setHasError(true)}
-              />
+          <div className='relative'>
+            <img
+              src={fullUrl}
+              alt={file.title}
+              className="max-w-[var(--transform-bounds-width)] max-h-[var(--transform-bounds-height)] w-auto h-auto data-[state='loaded']:opacity-100 opacity-25 transition-opacity"
+              data-state={imageLoaded ? "loaded" : "pending"}
+              loading={isActive ? "eager" : "lazy"}
+              width={file.width}
+              height={file.height}
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setHasError(true)}
+            />
 
-              {/* Loading skeleton */}
-              {!imageLoaded && (
-                <div
-                  className='absolute inset-0 m-auto bg-white/10 animate-pulse rounded'
-                  style={{
-                    aspectRatio: `${file.width} / ${file.height}`,
-                    maxWidth: "100%",
-                    maxHeight: "100%",
-                  }}
-                />
-              )}
-            </div>
+            {/* Loading skeleton */}
+            {!imageLoaded && (
+              <div
+                className='absolute inset-0 m-auto bg-white/10 animate-pulse rounded'
+                style={{
+                  aspectRatio: `${file.width} / ${file.height}`,
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                }}
+              />
+            )}
           </div>
         </Transform.Content>
         <Toolbar>

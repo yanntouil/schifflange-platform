@@ -80,6 +80,7 @@ export const PDFThumbnail = React.memo<ThumbnailRendererProps<PDFFile>>(({ file,
           ${isActive ? "border-white ring-2 ring-white/50" : "border-white/30 hover:border-white/60"}
         `}
       aria-label={file.title}
+      tabIndex={-1} // Prevent focus
     >
       {isLoading && (
         <div className='absolute inset-0 flex items-center justify-center w-full h-full z-10'>

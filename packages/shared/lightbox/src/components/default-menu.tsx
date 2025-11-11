@@ -6,7 +6,7 @@
 import { useTranslation } from "@compo/localize"
 import { Description, Title } from "@radix-ui/react-dialog"
 import { Download, Fullscreen, Minimize, X } from "lucide-react"
-import { memo, useEffect, useState } from "react"
+import React from "react"
 import screenfull from "screenfull"
 import type { MenuComponentProps } from "../types"
 import { buttonCx } from "./variants"
@@ -14,15 +14,13 @@ import { buttonCx } from "./variants"
 /**
  * Default menu with navigation controls and download button
  */
-export const DefaultMenu = memo<MenuComponentProps>(
+export const DefaultMenu = React.memo<MenuComponentProps>(
   ({ file, currentIndex, totalFiles, onClose, onNext, onPrev, onDownload, toggleFullscreen, fullscreenIsEnabled }) => {
     const { _ } = useTranslation(dictionary)
-    const hasPrev = currentIndex > 0
-    const hasNext = currentIndex < totalFiles - 1
-    const [isFullscreen, setIsFullscreen] = useState(false)
+    const [isFullscreen, setIsFullscreen] = React.useState(false)
 
     // Track fullscreen state changes
-    useEffect(() => {
+    React.useEffect(() => {
       if (!screenfull.isEnabled) return
 
       const handleChange = () => {
@@ -34,15 +32,28 @@ export const DefaultMenu = memo<MenuComponentProps>(
         screenfull.off("change", handleChange)
       }
     }, [])
-    return (
-      <div className='absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent py-4 px-6'>
-        <div className='flex items-center justify-between gap-4'>
-          <Title className='sr-only'>{_("title")}</Title>
-          <Description className='text-white font-medium truncate tracking-wide flex-1 line-clamp-1 text-base/none'>
-            {file.title}
-          </Description>
 
-          <div className='flex items-center'>
+    const stopPropagation = (e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()
+    return (
+      <div className='absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent py-2 px-6'>
+        <div className='flex items-center justify-between gap-4'>
+          <div>
+            <Title className='sr-only'>{_("title")}</Title>
+            <Description
+              // enable to select text
+              onPointerDownCapture={stopPropagation}
+              onMouseDownCapture={stopPropagation}
+              className='text-white font-medium truncate tracking-wide flex-1 line-clamp-1 text-base/none'
+            >
+              {file.title}
+            </Description>
+          </div>
+
+          <div
+            className='flex items-center'
+            onPointerDownCapture={stopPropagation}
+            onMouseDownCapture={stopPropagation}
+          >
             <button type='button' onClick={onDownload} className={buttonCx}>
               <Download aria-hidden className='size-4' />
               <span className='sr-only'>{_("download")}</span>

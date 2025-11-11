@@ -62,7 +62,7 @@ export const TransformRoot: React.FC<TransformRootProps> = (props) => {
   const style = {
     width: "100%",
     height: "100%",
-    overflow: "clip",
+    overflow: "visible",
     display: "flex",
     ...elProps.style,
     "--transform-bounds-height": `${bounds.height}px`,
@@ -105,6 +105,7 @@ export const TransformContent: React.FC<TransformComponentProps> = ({ children, 
       wrapperStyle={{
         width: "100%",
         height: "100%",
+        overflow: "visible",
         ...wrapperStyle,
       }}
       contentStyle={{
@@ -113,7 +114,6 @@ export const TransformContent: React.FC<TransformComponentProps> = ({ children, 
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        transform: "translateY(calc(-1 * var(--thumbnail-height, 0px) / 2))",
       }}
     >
       <TransformControlsProvider>

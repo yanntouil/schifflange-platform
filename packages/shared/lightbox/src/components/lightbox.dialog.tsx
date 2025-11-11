@@ -5,11 +5,14 @@
 
 import { cxm } from "@compo/utils"
 import * as Dialog from "@radix-ui/react-dialog"
+import { saveAs } from "file-saver"
 import React from "react"
 import screenfull from "screenfull"
-import { Carousel } from "./carousel/component"
+import { Carousel } from "./carousel"
+import { CarouselSlide } from "./carousel/slide"
 import { DefaultMenu } from "./default-menu"
 import { useLightboxContext } from "./lightbox.context"
+import "./styles.css"
 import { Thumbnails } from "./thumbnails"
 
 /**
@@ -85,12 +88,7 @@ export const LightboxDialog = React.memo(() => {
       const url = currentFile.downloadUrl || makeUrl(currentFile.path)
       const filename = currentFile.downloadFilename || currentFile.path.split("/").pop() || "download"
 
-      const link = document.createElement("a")
-      link.href = url
-      link.download = filename
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+      saveAs(url, filename)
     }
   }
 
@@ -112,6 +110,12 @@ export const LightboxDialog = React.memo(() => {
         <Dialog.Content
           ref={contentRef}
           className='fixed inset-x-0 bottom-0 h-[90%] bg-black backdrop-blur-sm rounded-t-[1.5rem] overflow-hidden'
+          onOpenAutoFocus={(e) => {
+            // Focus on first interactive element (menu buttons)
+            if (!options.trapFocus) {
+              e.preventDefault()
+            }
+          }}
           onPointerDownOutside={(e) => {
             if (!options.closeOnClickOutside) {
               e.preventDefault()
@@ -125,42 +129,59 @@ export const LightboxDialog = React.memo(() => {
         >
           {/* Carousel and controls container */}
           <div
-            className='relative w-full h-full'
+            className='relative size-full'
             style={
               {
+                "--inner-padding": "1rem",
                 "--thumbnail-height": options.enableThumbnails ? "5rem" : "0px",
+                "--slide-padding-top": "var(--inner-padding)",
+                "--slide-padding-bottom": "calc(var(--thumbnail-height) + var(--inner-padding))",
+                "--slide-padding-left": "var(--inner-padding)",
+                "--slide-padding-right": "var(--inner-padding)",
               } as React.CSSProperties
             }
           >
             {/* Carousel */}
-            <Carousel
-              slides={files}
+            <Carousel.Root
               slideIndex={currentIndex}
               onSlideChange={goToIndex}
-              loop={options.loop}
-              makeUrl={makeUrl}
-              disableTransforms={disableTransforms}
-              preloadAdjacent={options.preloadAdjacent}
-            />
-
-            {/* Menu */}
-            <MenuComponent
-              file={currentFile}
-              currentIndex={currentIndex}
-              totalFiles={files.length}
-              onClose={close}
-              onNext={goToNext}
-              onPrev={goToPrev}
-              onDownload={handleDownload}
-              toggleFullscreen={toggleFullscreen}
-              fullscreenIsEnabled={fullscreenIsEnabled}
-            />
-
+              options={{ watchDrag: disableTransforms, duration: 25, loop: options.loop }}
+            >
+              <Carousel.Content
+                slides={files}
+                makeUrl={makeUrl}
+                disableTransforms={disableTransforms}
+                preloadAdjacent={options.preloadAdjacent}
+              >
+                {files.map((file, index) => (
+                  <CarouselSlide
+                    key={file.id}
+                    file={file}
+                    currentIndex={currentIndex}
+                    total={files.length}
+                    index={index}
+                  />
+                ))}
+              </Carousel.Content>
+              <Carousel.Controls />
+              {/* Menu */}
+              <MenuComponent
+                file={currentFile}
+                currentIndex={currentIndex}
+                totalFiles={files.length}
+                onClose={close}
+                onNext={goToNext}
+                onPrev={goToPrev}
+                onDownload={handleDownload}
+                toggleFullscreen={toggleFullscreen}
+                fullscreenIsEnabled={fullscreenIsEnabled}
+              />
+            </Carousel.Root>
             {/* Thumbnail strip */}
-            {options.enableThumbnails && (
-              <Thumbnails files={files} currentIndex={currentIndex} onThumbnailClick={goToIndex} />
-            )}
           </div>
+          {options.enableThumbnails && (
+            <Thumbnails files={files} currentIndex={currentIndex} onThumbnailClick={goToIndex} />
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

@@ -148,7 +148,7 @@ const Slide = React.memo<SlideRendererProps<PDFFile> & { containerSize: Size }>(
             className='relative mx-auto my-auto size-max place-items-center bg-transparent'
             loading={
               <div className='flex items-center justify-center'>
-                <div className='w-16 h-16 border-4 border-white/20 border-t-white/80 rounded-full animate-spin' />
+                <div className='size-16 border-4 border-white/20 border-t-white/80 rounded-full animate-spin' />
               </div>
             }
           >

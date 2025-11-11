@@ -46,7 +46,7 @@ export const Thumbnails: React.FC<ThumbnailsProps> = ({ files, currentIndex, onT
   } as React.CSSProperties
 
   return (
-    <div className='absolute bottom-0 inset-x-0 w-full px-2 pb-2' style={style}>
+    <div className='absolute bottom-0 inset-x-0 w-full px-2 pb-2' style={style} data-slot='thumbnails'>
       <div
         className='w-max max-w-3xl mx-auto py-2 rounded-lg overflow-hidden bg-zinc-900/95 backdrop-blur-sm'
         ref={emblaRef}

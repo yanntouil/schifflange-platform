@@ -17,6 +17,7 @@ export const DEFAULT_OPTIONS: Required<LightboxOptions> = {
   loop: true,
   showCounter: true,
   preloadAdjacent: true,
+  trapFocus: true,
 }
 
 // ============================================================================

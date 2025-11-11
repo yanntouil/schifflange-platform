@@ -102,6 +102,7 @@ export const VideoThumbnail = React.memo<ThumbnailRendererProps<VideoFile>>(
           ${isActive ? "border-white ring-2 ring-white/50" : "border-white/30 hover:border-white/60"}
         `}
         aria-label={file.title}
+        tabIndex={-1} // Prevent focus
       >
         {/* Hidden video element for frame capture */}
         {!thumbnailUrl && (
