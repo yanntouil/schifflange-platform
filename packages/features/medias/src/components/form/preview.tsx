@@ -1,15 +1,16 @@
-import { generateVideoUrl } from "@compo/form"
 import { useContainerSize, useElementSize } from "@compo/hooks"
+import { LightboxProvider, useLightbox } from "@compo/lightbox"
 import { useTranslation } from "@compo/localize"
 import { useLanguage } from "@compo/translations"
 import { Ui, variants } from "@compo/ui"
-import { SrOnly } from "@compo/ui/src/components"
-import { A, G, O, cxm, isUrlValid } from "@compo/utils"
+import { cxm } from "@compo/utils"
 import { type Api, placeholder as servicePlaceholder, useDashboardService } from "@services/dashboard"
-import { FileText, PlaySquare, Popcorn } from "lucide-react"
+import { EllipsisVertical, FileText, Info, PlaySquare, Popcorn } from "lucide-react"
 import React from "react"
 import ReactPlayer from "react-player"
-import { extractFile } from "../../utils"
+import { useHostedVideo } from "../../hooks/use-hosted-video"
+import { extractFile, getEmbedUrl, getVideoRatio } from "../../utils"
+import { FileInfoDialog } from "../dialogs"
 
 type VideoPreviewProps = {
   video: Api.Video
@@ -20,53 +21,28 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ video, files }) => {
   const {
     service: { makePath },
   } = useDashboardService()
+
+  // get the container size and apply the video ratio
   const ref = React.useRef<HTMLDivElement>(null)
   const size = useContainerSize(ref as React.RefObject<HTMLElement>)
-
-  const height = React.useMemo(() => {
-    return Math.round(size.width * 0.5625)
-  }, [size.width])
+  const height = React.useMemo(() => Math.round(size.width * getVideoRatio(video)), [size.width, video])
 
   // extract the cover file
   const cover = extractFile(video.cover, files)
   const coverUrl = cover ? makePath(cover.url, true) : undefined
 
   // Generate proper embed URL
-  const embedUrl = React.useMemo(() => {
-    if (video.type !== "embed") return ""
-
-    // If we have service and id, generate the embed URL
-    if (video.embed.service && video.embed.id) {
-      const baseUrl = generateVideoUrl({ service: video.embed.service, id: video.embed.id })
-      // For Dailymotion, we need to convert to embed URL
-      if (video.embed.service === "dailymotion") {
-        return baseUrl.replace("/video/", "/embed/video/")
-      }
-      return baseUrl
-    }
-
-    return video.embed.url
-  }, [video.type, video.embed])
+  const embedUrl = React.useMemo(() => getEmbedUrl(video), [video])
 
   // populate the sources and tracks with the files
-  const sources = A.filterMap(video.hosted.sources, (source) => {
-    const file = extractFile(source.file, files)
-    if (G.isNullable(file)) return O.None
-    return O.Some({ ...source, file: file })
-  })
-  const tracks = A.filterMap(video.hosted.tracks, (track) => {
-    const file = extractFile(track.file, files)
-    if (G.isNullable(file)) return O.None
-    return O.Some({ ...track, file: file })
-  })
+  const { hasVideo, sources, tracks } = useHostedVideo(video, files)
 
   return (
     <div>
-      <SrOnly>{_("preview-label")}</SrOnly>
       <div ref={ref} className='overflow-hidden rounded-lg border bg-muted'>
-        {video.type === "embed" && embedUrl && isUrlValid(embedUrl) ? (
-          <ReactPlayer url={embedUrl} width='100%' height={height} light={coverUrl} controls />
-        ) : video.type === "hosted" && sources.length > 0 ? (
+        {embedUrl ? (
+          <ReactPlayer url={embedUrl} width='100%' height={height} light={coverUrl} controls title={video.title} />
+        ) : hasVideo ? (
           <video
             controls
             poster={coverUrl}
@@ -74,17 +50,14 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ video, files }) => {
             height={height}
             className='bg-black'
             style={{ maxHeight: height }}
+            title={video.title}
           >
-            {sources.map((source, index) => {
-              const src = source.file ? makePath(source.file.url, true) : source.url
-              if (!src) return null
-              return <source key={index} src={src} type={source.type} />
-            })}
-            {tracks.map((track, index) => {
-              const src = track.file ? makePath(track.file.url, true) : track.url
-              if (!src) return null
-              return <track key={index} src={src} kind={track.type} srcLang={track.srclang} />
-            })}
+            {sources.map((source, index) => (
+              <source key={index} src={makePath(source.file.url, true)} type={source.type} />
+            ))}
+            {tracks.map((track, index) => (
+              <track key={index} src={makePath(track.file.url, true)} kind={track.type} srcLang={track.srclang} />
+            ))}
           </video>
         ) : (
           <div className={cxm(variants.buttonField({ className: "w-full" }))} style={{ height }}>
@@ -106,6 +79,7 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({ video, files }) => {
  * PdfPreview
  */
 export const PdfPreview: React.FC<{ file: Api.MediaFileWithRelations; className?: string }> = ({ file, className }) => {
+  console.log("PdfPreview")
   const ref = React.useRef<HTMLDivElement>(null)
   const size = useElementSize(ref)
   const {
@@ -113,6 +87,7 @@ export const PdfPreview: React.FC<{ file: Api.MediaFileWithRelations; className?
   } = useDashboardService()
   const { translate } = useLanguage()
   const translated = translate(file, servicePlaceholder.mediaFile)
+  const [onOpenInfo, fileInfoProps] = Ui.useQuickDialog<Api.MediaFileWithRelations>()
 
   const pdf = (
     <Ui.PdfThumbnail
@@ -127,22 +102,75 @@ export const PdfPreview: React.FC<{ file: Api.MediaFileWithRelations; className?
       maxHeight={Math.min(size[1] || 267, 400)}
     />
   )
-
   return (
-    <div className={cxm("bg-primary/5 relative block w-full overflow-hidden p-4", className)}>
+    <div className={cxm("bg-primary/5 relative block w-full overflow-hidden rounded-lg border p-4", className)}>
       {/* Background blur effect */}
       <div className='absolute inset-0 grid size-full overflow-hidden opacity-25 blur-[2px]' aria-hidden>
         <div className='flex scale-[200%] items-center justify-center'>{pdf}</div>
+      </div>
+      {/* Fallback when no preview */}
+      <div className='pointer-events-none absolute inset-0 size-full flex items-center justify-center' aria-hidden>
+        <FileText className='text-muted-foreground/50 size-16' />
       </div>
       {/* Main PDF preview */}
       <div ref={ref} className='relative flex size-full max-h-full max-w-full items-center justify-center'>
         <div className='flex max-h-full max-w-full items-center justify-center'>{pdf}</div>
       </div>
-      {/* Fallback when no preview */}
-      <div className='pointer-events-none absolute inset-0 flex items-center justify-center'>
-        <FileText className='text-muted-foreground/50 size-16' aria-hidden />
-      </div>
+      <LightboxProvider makePreviewUrl={(path) => makePath(path, true)} makeUrl={(path) => makePath(path, true)}>
+        <PreviewPdfMenu file={file} />
+      </LightboxProvider>
     </div>
+  )
+}
+const PreviewPdfMenu: React.FC<{ file: Api.MediaFileWithRelations }> = ({ file }) => {
+  const { _ } = useTranslation(dictionary)
+  const { translate } = useLanguage()
+  const translated = translate(file, servicePlaceholder.mediaFile)
+  const {
+    service: { makePath },
+  } = useDashboardService()
+
+  const { registerFile, displayPreview, hasPreview } = useLightbox()
+  React.useEffect(() => {
+    registerFile({
+      id: file.id,
+      type: "pdf",
+      path: file.url,
+      title: translated.name,
+      downloadUrl: makePath(file.url, true),
+      downloadFilename: translated.name,
+    })
+  }, [registerFile, file])
+
+  const [info, infoProps] = Ui.useQuickDialog<Api.MediaFileWithRelations>()
+
+  return (
+    <>
+      <Ui.DropdownMenu.Quick
+        menu={
+          <>
+            <Ui.DropdownMenu.Item onClick={() => info(file)}>
+              <Info aria-hidden />
+              {_("info")}
+            </Ui.DropdownMenu.Item>
+            {hasPreview(file.id) && (
+              <Ui.DropdownMenu.Item onClick={() => displayPreview(file.id)}>
+                <PlaySquare aria-hidden />
+                {_("preview")}
+              </Ui.DropdownMenu.Item>
+            )}
+          </>
+        }
+        align='start'
+        side='left'
+      >
+        <Ui.Button variant='overlay' size='xxs' icon className='absolute top-2 right-2 backdrop-blur'>
+          <EllipsisVertical aria-hidden />
+          <Ui.SrOnly>{_("more")}</Ui.SrOnly>
+        </Ui.Button>
+      </Ui.DropdownMenu.Quick>
+      <FileInfoDialog {...infoProps} />
+    </>
   )
 }
 

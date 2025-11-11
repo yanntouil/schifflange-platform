@@ -11,16 +11,14 @@ import React from "react"
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <HotkeyConfigContext.Provider value={{ enableOnFormTags: ["INPUT", "TEXTAREA", "SELECT"], enableOnContentEditable: true }}>
-      <Ui.ThemeProvider>
-        <Ui.Tooltip.Provider>
-          <LocalizeProvider>
-            <ServiceProvider>
-              {children}
-              <Ui.Toaster />
-            </ServiceProvider>
-          </LocalizeProvider>
-        </Ui.Tooltip.Provider>
-      </Ui.ThemeProvider>
+      <Ui.Tooltip.Provider>
+        <LocalizeProvider>
+          <ServiceProvider>
+            {children}
+            <Ui.Toaster />
+          </ServiceProvider>
+        </LocalizeProvider>
+      </Ui.Tooltip.Provider>
     </HotkeyConfigContext.Provider>
   )
 }

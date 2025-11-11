@@ -1,5 +1,6 @@
 import { Dashboard } from "@compo/dashboard"
 import { smartClick } from "@compo/hooks"
+import { useLightbox } from "@compo/lightbox"
 import { useLanguage } from "@compo/translations"
 import { Ui, variants } from "@compo/ui"
 import { cxm, humanFileSize, makeBreakable } from "@compo/utils"
@@ -27,12 +28,16 @@ export const FileCard: React.FC<Props> = ({ item, disabled, onQuickSelect, selec
   const translated = translate(item, servicePlaceholder.mediaFile)
 
   const { selectable, canSelectFile } = useMedias()
-  const { previewFile, canPreview } = Ui.useLightboxPreview(item.id)
+  const { displayPreview, hasPreview } = useLightbox()
   return (
     <Dashboard.Card.Root
       key={item.id}
       {...(canSelectFile && !disabled
-        ? smartClick(item, selectable, selectOnClick ? true : canPreview ? previewFile : undefined)
+        ? smartClick(
+            item,
+            selectable,
+            selectOnClick ? true : hasPreview(item.id) ? () => displayPreview(item.id) : undefined
+          )
         : {})}
       onDoubleClick={() => onQuickSelect?.([item])}
       menu={<FileMenu item={item} />}

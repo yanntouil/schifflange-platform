@@ -26,3 +26,25 @@ export const MediasLightboxProvider: React.FC<MediasLightboxProviderProps> = ({ 
     </Ui.Lightbox.Root>
   )
 }
+
+/**
+ * LightboxProvider
+ */
+type LightboxProviderProps = {
+  children: React.ReactNode
+}
+export const LightboxProvider: React.FC<LightboxProviderProps> = ({ children }) => {
+  // const menubar = React.useCallback(
+  //   (data: Ui.SlideData) => {
+  //     const file = A.find(fileList, (f) => f.id === data.id)
+  //     return G.isNotNullable(file) ? <FileLightboxMenu item={file} /> : null
+  //   },
+  //   [fileList]
+  // )
+  return (
+    <Ui.Lightbox.Root>
+      {children}
+      <Ui.Lightbox.Viewer /*menubar={menubar}*/ />
+    </Ui.Lightbox.Root>
+  )
+}

@@ -1,5 +1,6 @@
 import { Dashboard } from "@compo/dashboard"
 import { smartClick } from "@compo/hooks"
+import { useLightbox } from "@compo/lightbox"
 import { useTranslation } from "@compo/localize"
 import { useLanguage } from "@compo/translations"
 import { Ui } from "@compo/ui"
@@ -109,7 +110,7 @@ const TableRowFile: React.FC<{
   onQuickSelect?: (items: Api.MediaFileWithRelations[]) => void
 }> = ({ row, item, disabledIds, selectOnClick, onQuickSelect }) => {
   const { selectable, canSelectFile } = useMedias()
-  const { previewFile, canPreview } = Ui.useLightboxPreview(row.original.item.id)
+  const { displayPreview, hasPreview } = useLightbox()
   const isDisabled = A.includes(disabledIds ?? [], row.original.item.id)
   return (
     <Dashboard.Table.Row
@@ -118,7 +119,11 @@ const TableRowFile: React.FC<{
       selectable={selectable}
       disabled={isDisabled}
       {...(canSelectFile && !isDisabled
-        ? smartClick(item, selectable, selectOnClick ? true : previewFile)
+        ? smartClick(
+            item,
+            selectable,
+            selectOnClick ? true : hasPreview(item.id) ? () => displayPreview(item.id) : undefined
+          )
         : { isSelectable: false })}
       onDoubleClick={() => onQuickSelect?.([item])}
       cells={row.getVisibleCells()}

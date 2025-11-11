@@ -1,6 +1,7 @@
+import { makeVideoEmbedUrl } from "@compo/form"
 import { TranslateFn } from "@compo/translations"
 import { Ui } from "@compo/ui"
-import { A, D, G, MakePathTo, match, O, pipe, S, type ById, type Option } from "@compo/utils"
+import { A, D, G, isUrlValid, MakePathTo, match, O, pipe, S, type ById, type Option } from "@compo/utils"
 import { placeholder as servicePlaceholder, type Api } from "@services/dashboard"
 import { FilesType } from "./types"
 
@@ -225,4 +226,36 @@ export const extractFiles = (ids: string[], files: Api.MediaFileWithRelations[])
     if (G.isNullable(file)) return O.None
     return O.Some(file)
   })
+}
+
+/**
+ * getVideoRatio
+ * @description Get the ratio of the video
+ * @param video
+ * @returns number
+ */
+export const getVideoRatio = (video: Api.Video) => {
+  // absolute value of the ratio in case width and height are not zero
+  const hostedRatio =
+    video.type === "hosted" && video.hosted.width * video.hosted.height
+      ? Math.abs(video.hosted.width / video.hosted.height)
+      : 0
+
+  const ratio = hostedRatio || 0.5625 // defined or 16:9 ratio
+  return Math.round(ratio * 10000) / 10000 // 4 decimal places
+}
+
+/**
+ * getEmbedUrl
+ * @description Get the embed url of the video
+ * @param video
+ * @returns string
+ */
+export const getEmbedUrl = (video: Api.Video) => {
+  if (video.type !== "embed") return undefined
+  if (video.embed.service && video.embed.id) {
+    const url = makeVideoEmbedUrl(video.embed.id, video.embed.service)
+    return url && isUrlValid(url) ? url : undefined
+  }
+  return isUrlValid(video.embed.url) ? video.embed.url : undefined
 }

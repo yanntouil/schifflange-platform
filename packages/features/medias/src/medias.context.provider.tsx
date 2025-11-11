@@ -1,7 +1,8 @@
 import { useKeepOnly, useSelectable } from "@compo/hooks"
+import { LightboxProvider } from "@compo/lightbox"
 import { Ui } from "@compo/ui"
 import { D } from "@compo/utils"
-import { type Api } from "@services/dashboard"
+import { useDashboardService, type Api } from "@services/dashboard"
 import React from "react"
 import { CreateFolderDialog } from "./components/dialogs/create-folder"
 import { CropFileDialog } from "./components/dialogs/crop-file"
@@ -12,7 +13,6 @@ import { MoveFileDialog } from "./components/dialogs/move-file"
 import { MoveFolderDialog } from "./components/dialogs/move-folder"
 import { MoveSelectionDialog } from "./components/dialogs/move-selection"
 import { UploadFilesDialog } from "./components/dialogs/upload-files"
-import { MediasLightboxProvider } from "./light.provider"
 import { MediasContext } from "./medias.context"
 import { useManageFile, useManageFolder, useManageSelection } from "./medias.context.actions"
 import { SWRMedias } from "./swr"
@@ -74,15 +74,18 @@ export const MediasProvider: React.FC<MediasProviderProps> = ({
     [contextProps, manageFolder, manageFile, manageSelection]
   )
 
+  const {
+    service: { makePath },
+  } = useDashboardService()
   return (
-    <MediasContext.Provider key={contextId} value={value}>
-      <MediasLightboxProvider>
+    <LightboxProvider makeUrl={(path) => makePath(path, true)}>
+      <MediasContext.Provider key={contextId} value={value}>
         {children}
         <ManageFolder {...manageFolderProps} key={`${contextId}-manageFolder`} />
         <ManageFile {...manageFileProps} key={`${contextId}-manageFile`} />
         <ManageSelection {...manageSelectionProps} key={`${contextId}-manageSelection`} />
-      </MediasLightboxProvider>
-    </MediasContext.Provider>
+      </MediasContext.Provider>
+    </LightboxProvider>
   )
 }
 

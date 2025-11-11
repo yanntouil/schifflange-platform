@@ -197,13 +197,59 @@ export const makeVideoService = (
  * Generate a video url from a service and id
  */
 export const generateVideoUrl = ({ service, id }: VideoInfo): string => {
-  return match(service)
+  const url = match(service)
     .with("youtube", () => `https://www.youtube.com/watch?v=${id}`)
     .with("vimeo", () => `https://vimeo.com/${id}`)
     .with("dailymotion", () => `https://www.dailymotion.com/video/${id}`)
     .otherwise(() => {
       throw new Error(`Unsupported video service: ${service}`)
     })
+  return url
+}
+
+/**
+ * makeVideoUrl
+ * @description Returns the public URL of a video given its service and ID
+ * @param id
+ * @param service
+ * @returns string
+ */
+export const makeVideoUrl = (id: string, service: ReturnType<typeof getVideoId>["service"]): string | undefined => {
+  if (!id || !service) return ""
+  return match(service)
+    .with("youtube", () => `https://www.youtube.com/watch?v=${id}`)
+    .with("vimeo", () => `https://vimeo.com/${id}`)
+    .with("dailymotion", () => `https://www.dailymotion.com/video/${id}`)
+    .with("vine", () => `https://vine.co/v/${id}`)
+    .with("videopress", () => `https://videopress.com/v/${id}`)
+    .with("microsoftstream", () => `https://web.microsoftstream.com/video/${id}`)
+    .with("tiktok", () => `https://www.tiktok.com/@user/video/${id}`)
+    .with("loom", () => `https://www.loom.com/share/${id}`)
+    .otherwise(() => "")
+}
+
+/**
+ * makeVideoEmbedUrl
+ * @description Returns the public URL of a video given its service and ID
+ * @param id
+ * @param service
+ * @returns string
+ */
+export const makeVideoEmbedUrl = (
+  id: string,
+  service: ReturnType<typeof getVideoId>["service"]
+): string | undefined => {
+  if (!id || !service) return ""
+  return match(service)
+    .with("youtube", () => `https://www.youtube.com/embed/${id}`)
+    .with("vimeo", () => `https://player.vimeo.com/video/${id}`)
+    .with("dailymotion", () => `https://www.dailymotion.com/embed/video/${id}`)
+    .with("vine", () => `https://vine.co/v/${id}/embed/simple`)
+    .with("videopress", () => `https://videopress.com/embed/${id}`)
+    .with("microsoftstream", () => `https://web.microsoftstream.com/embed/video/${id}`)
+    .with("tiktok", () => `https://www.tiktok.com/embed/v2/${id}`)
+    .with("loom", () => `https://www.loom.com/embed/${id}`)
+    .otherwise(() => "")
 }
 
 export type VideoInfo = {

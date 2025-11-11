@@ -1,12 +1,12 @@
 import { matchSorter, normString, usePersistedState, useSortable } from "@compo/hooks"
+import { mediaFileToLightbox, useLightbox } from "@compo/lightbox"
 import { useTranslation } from "@compo/localize"
 import { useLanguage } from "@compo/translations"
-import { Ui } from "@compo/ui"
-import { A, O, S, T, pipe } from "@compo/utils"
+import { A, S, T, pipe } from "@compo/utils"
 import { type Api, placeholder as servicePlaceholder, useDashboardService } from "@services/dashboard"
 import * as React from "react"
 import { useMediasService } from "../service.context"
-import { extensionToType, isMediaFolder, prepareSlide } from "../utils"
+import { extensionToType, isMediaFolder } from "../utils"
 
 export const useFiltered = (params: {
   folders: Api.MediaFolderWithRelations[]
@@ -77,17 +77,17 @@ export const useFiltered = (params: {
     [files, matchable.search, matchInFile, hiddenIds, sortBy]
   )
 
-  const slides = React.useMemo(() => {
-    const prepareSlideWrapper = (file: Api.MediaFileWithRelations) => {
-      return prepareSlide(file, translate, makePath)
+  // prepare slides for the lightbox
+  const { registerFile, unregisterFile } = useLightbox()
+  React.useEffect(() => {
+    filteredFiles.forEach((file) => {
+      const lightboxFile = mediaFileToLightbox(file, translate(file, servicePlaceholder.mediaFile).name)
+      if (lightboxFile) registerFile(lightboxFile)
+    })
+    return () => {
+      filteredFiles.forEach((file) => unregisterFile(file.id))
     }
-    return A.filterMap(filteredFiles, (file) => {
-      const slide = prepareSlideWrapper(file)
-      return slide || O.None
-    }) as Ui.SlideData[]
-  }, [filteredFiles, translate, makePath])
-
-  Ui.useSlides(slides)
+  }, [filteredFiles, registerFile, translate, makePath])
 
   const filteredFolders = React.useMemo(
     () =>

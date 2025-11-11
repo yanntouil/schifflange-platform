@@ -165,8 +165,8 @@ const FloatingMiniMap: React.FC<{
   return (
     <div
       className={cxm(
-        "opacity--95 pointer-events-none absolute right-3 top-20 z-20 -hidden rounded-md transition-opacity duration-300 group-hover/transform-content:block",
-        scale < 2 ? "opacity-0" : "opacity-100"
+        "opacity--95 pointer-events-none absolute right-3 top-20 z-20 -hidden rounded-md transition-opacity duration-300 group-hover/transform-content:block"
+        // scale < 2 ? "opacity-0" : "opacity-100"
       )}
       aria-hidden
     >

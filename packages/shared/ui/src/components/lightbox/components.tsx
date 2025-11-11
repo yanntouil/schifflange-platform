@@ -1,6 +1,7 @@
 import { useTranslation } from "@compo/localize"
+import { A, cx, cxm, match } from "@compo/utils"
+import { Portal } from "@radix-ui/react-dialog"
 import { CaretLeftIcon, CaretRightIcon } from "@radix-ui/react-icons"
-import { Portal } from "@radix-ui/react-portal"
 import * as SliderPrimitive from "@radix-ui/react-slider"
 import {
   ChevronLeft,
@@ -16,7 +17,6 @@ import {
 import React from "react"
 import { Dia as BaseDia, DiaCarousel, DiaTransform, WithData, useSlide, useSlider, useTransform } from "react-dia"
 import scrollIntoViewIfNeeded from "scroll-into-view-if-needed"
-import { A, cx, cxm, match } from "@compo/utils"
 import { disabledVariants, focusVariants } from "../../variants"
 import { AutoSlider } from "../auto-slider"
 import { Button } from "../button"
@@ -47,12 +47,14 @@ const LightboxViewer = React.forwardRef<HTMLDivElement, DiaContentProps>((props,
   return (
     <Portal>
       <Lightbox.Overlay className='fixed inset-0 size-full bg-black/40' />
-
       <Lightbox.Content
         {...contentProps}
         ref={ref}
+        trapFocus={true}
+        scrollLock={true}
+        preventEscapePropagation={true}
         data-state-ui={hideUI ? "hidden" : "visible"}
-        className='dark group/dia-content animate-appear fixed inset-0 isolate flex w-full flex-col overflow-hidden bg-background text-foreground transition-all duration-300 data-[state-ui=visible]:top-12 data-[state-ui=visible]:rounded-t-3xl'
+        className='dark group/dia-content animate-appear absolute inset-0 flex w-full flex-col overflow-hidden bg-background text-foreground transition-all duration-300 data-[state-ui=visible]:top-12 data-[state-ui=visible]:rounded-t-3xl pointer-events-auto'
       >
         <div className='absolute left-0 right-0 top-0 z-20 flex w-full justify-between bg-gradient-to-b from-background/80 via-background/50 to-background/0 p-4 transition-opacity group-data-[state-ui=hidden]/dia-content:opacity-0'>
           <div className='ml-auto flex gap-1'>
@@ -107,17 +109,21 @@ const LightboxViewer = React.forwardRef<HTMLDivElement, DiaContentProps>((props,
             </Lightbox.Slides>
           </DiaCarousel.Slides>
         </DiaCarousel.Root>
-        <div
-          className='pointer-events-none absolute bottom-0 left-0 right-0 h-[7rem] bg-gradient-to-t from-black/70 to-transparent transition-opacity group-data-[state-ui=hidden]/dia-content:opacity-0'
-          aria-hidden
-        />
-        <div
-          className='pointer-events-none absolute left-0 right-0 top-0 h-[6rem] bg-gradient-to-b from-black/30 to-transparent transition-opacity group-data-[state-ui=hidden]/dia-content:opacity-0'
-          aria-hidden
-        />
-        <div className='h-0 overflow-hidden opacity-0 transition-all duration-300 group-data-[state-ui=visible]/dia-content:h-20 group-data-[state-ui=visible]/dia-content:opacity-100'>
-          <LightboxThumbnails />
-        </div>
+
+        <>
+          <div
+            className='pointer-events-none absolute bottom-0 left-0 right-0 h-[7rem] bg-gradient-to-t from-black/70 to-transparent transition-opacity group-data-[state-ui=hidden]/dia-content:opacity-0'
+            aria-hidden
+          />
+          <div
+            className='pointer-events-none absolute left-0 right-0 top-0 h-[6rem] bg-gradient-to-b from-black/30 to-transparent transition-opacity group-data-[state-ui=hidden]/dia-content:opacity-0'
+            aria-hidden
+          />
+          <div className='h-0 overflow-hidden opacity-0 transition-all duration-300 group-data-[state-ui=visible]/dia-content:h-20 group-data-[state-ui=visible]/dia-content:opacity-100'>
+            <LightboxThumbnails />
+          </div>
+        </>
+        {/* </Lightbox.Content> */}
       </Lightbox.Content>
     </Portal>
   )
@@ -220,6 +226,7 @@ const LightboxZoom: React.FC<{ steps: number[] }> = ({ steps }) => {
           )}
         />
       </SliderPrimitive.Root>
+
       <Button icon variant='ghost' size='xs' onClick={onResetZoom} disabled={disabledResetZoom}>
         <Maximize className='mx-auto my-auto size-4' aria-hidden />
         <SrOnly>{_("reset-zoom")}</SrOnly>
@@ -369,10 +376,9 @@ const LightboxActiveSlide = Lightbox.ActiveSlide
 const LightboxClose = Lightbox.Close
 const LightboxPrevious = Lightbox.Previous
 const LightboxNext = Lightbox.Next
-const LightboxPortal = Portal
 const LightboxContentPortal = Lightbox.ContentPortal
 const LightboxTransform = DiaTransform
-
+const LightboxTrigger = Lightbox.Trigger
 export {
   LightboxActiveSlide as ActiveSlide,
   LightboxClose as Close,
@@ -381,12 +387,12 @@ export {
   LightboxNext as Next,
   LightboxOverlay as Overlay,
   LightboxPagesNavigation as PagesNavigation,
-  LightboxPortal as Portal,
   LightboxPrevious as Previous,
   LightboxRoot as Root,
   LightboxSlide as Slide,
   LightboxToolbar as Toolbar,
   LightboxTransform as Transform,
+  LightboxTrigger as Trigger,
   LightboxViewer as Viewer,
   LightboxZoom as Zoom,
 }

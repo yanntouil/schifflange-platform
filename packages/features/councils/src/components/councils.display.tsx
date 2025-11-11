@@ -27,26 +27,30 @@ export const CouncilsDisplayDialog: React.FC<Ui.QuickDialogProps<Api.Council>> =
 const Content: React.FC<Ui.QuickDialogSafeProps<Api.Council>> = ({ item, close, mutate }) => {
   const { _ } = useTranslation(dictionary)
   const { translate } = useLanguage()
-
   const translated = translate(item, servicePlaceholder.council)
-
   return (
     <div className='space-y-8 pb-6'>
-      <div className='space-y-2'>
-        <h2 className='text-base font-medium'>{_("agenda")}</h2>
+      <div className='space-y-4'>
+        <h3 className='text-base font-medium'>{_("agenda")}</h3>
         {isNotEmptyHtml(translated.agenda) ? (
-          <div className='prose prose-sm dark:prose-invert' dangerouslySetInnerHTML={{ __html: translated.agenda }} />
+          <div
+            className='prose prose-sm dark:prose-invert -my-4'
+            dangerouslySetInnerHTML={{ __html: translated.agenda }}
+          />
         ) : (
           <p className='text-sm text-muted-foreground'>{_("agenda-empty")}</p>
         )}
       </div>
       {G.isNotNullable(translated.report) && (
-        <div className='space-y-2'>
-          <h2 className='text-base font-medium'>{_("report")}</h2>
+        <div className='space-y-4'>
+          <h3 className='text-base font-medium'>{_("report")}</h3>
           <PdfPreview file={translated.report} />
         </div>
       )}
-      <VideoPreview video={item.video} files={item.files} />
+      <div className='space-y-4'>
+        <h3 className='text-base font-medium'>{_("video")}</h3>
+        <VideoPreview video={item.video} files={item.files} />
+      </div>
     </div>
   )
 }
@@ -57,6 +61,8 @@ const dictionary = {
     description: "Du {{date}}",
     agenda: "Ordre du jour",
     "agenda-empty": "Aucun ordre du jour disponible.",
+    report: "Rapport",
+    video: "Vidéo",
   },
   en: {
     title: "Edit council meeting",
