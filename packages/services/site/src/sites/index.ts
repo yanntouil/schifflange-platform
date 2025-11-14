@@ -33,7 +33,16 @@ export const sites = (api: Api) => ({
    * get a menus by locale
    */
   menus: async (locale: string) =>
-    api.get<{ header: MenuItemWithRelations[]; footer: MenuItemWithRelations[] }, CommonErrors>(`menus/${locale}`),
+    api.get<
+      {
+        menus: {
+          id: string
+          location: "header" | "footer" | "top"
+          items: MenuItemWithRelations[]
+        }[]
+      },
+      CommonErrors
+    >(`menus/${locale}`),
 
   /**
    * preview

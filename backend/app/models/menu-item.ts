@@ -16,7 +16,6 @@ import type {
 import { A, D, G, O } from '@mobily/ts-belt'
 import { Infer } from '@vinejs/vine/types'
 import { DateTime } from 'luxon'
-import { isAvailableArticle } from './article.js'
 import Language from './language.js'
 
 /**
@@ -136,6 +135,45 @@ export default class MenuItem extends ExtendedModel {
    * METHODS
    */
 
+  public async isAvailable() {
+    // is not published
+    if (this.state !== 'published') return false
+
+    // is not a resource
+    if (this.type !== 'ressource') return true
+
+    // has a slug
+    const slug = await this.getOrLoadRelation('slug')
+    if (G.isNullable(slug)) return false
+
+    // is resource and this resource is available
+    if (slug.model === 'article')
+      return (await slug.getOrLoadRelation('article'))?.isAvailable() ?? false
+    if (slug.model === 'page') return (await slug.getOrLoadRelation('page'))?.isAvailable() ?? false
+    if (slug.model === 'event')
+      return (await slug.getOrLoadRelation('event'))?.isAvailable() ?? false
+
+    return false
+  }
+
+  public isAvailableSync() {
+    // is not published
+    if (this.state !== 'published') return false
+
+    // is not a resource
+    if (this.type !== 'ressource') return true
+
+    // has a slug
+    if (G.isNullable(this.slug)) return false
+
+    // is resource and this resource is available
+    if (this.slug.model === 'article') return this.slug.article?.isAvailableSync() ?? false
+    if (this.slug.model === 'page') return this.slug.page?.isAvailableSync() ?? false
+    if (this.slug.model === 'event') return this.slug.event?.isAvailableSync() ?? false
+
+    return false
+  }
+
   public static async inTree(items: MenuItem[]) {
     return populateTree(null, items)
   }
@@ -221,14 +259,3 @@ const isInTree = (id: string, tree: MenuItemsTree): boolean =>
  * types
  */
 type MenuItemsTree = { id: string; parentId: string | null; items: MenuItemsTree }[]
-
-/**
- * check if an item is available
- */
-export const isAvailableItem = (item: MenuItem) => {
-  if (item.state !== 'published') return false
-  if (item.type !== 'ressource') return true
-  if (item.slug?.model === 'article') return isAvailableArticle(item.slug.article)
-  if (item.slug?.model === 'page') return item.slug.page?.state === 'published'
-  return false
-}

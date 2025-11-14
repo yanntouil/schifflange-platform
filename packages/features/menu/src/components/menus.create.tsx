@@ -5,6 +5,7 @@ import { match } from "@compo/utils"
 import { type Api } from "@services/dashboard"
 import React from "react"
 import { useMenusService } from "../service.context"
+import { MenusForm } from "./menus.form"
 
 export const MenusCreateDialog: React.FC<Ui.QuickDialogProps<void, Api.Menu & Api.WithMenuItems>> = ({
   item,
@@ -52,18 +53,7 @@ const DialogForm: React.FC<Ui.QuickDialogSafeProps<void, Api.Menu & Api.WithMenu
   return (
     <Form.Root form={form} className='space-y-4 pt-4'>
       <Form.Assertive />
-
-      <Form.Input name='name' label={_("name-label")} placeholder={_("name-placeholder")} />
-
-      <Form.Select
-        name='location'
-        label={_("location-label")}
-        placeholder={_("location-placeholder")}
-        options={[
-          { value: "header", label: _("location-header") },
-          { value: "footer", label: _("location-footer") },
-        ]}
-      />
+      <MenusForm />
 
       <Ui.QuickDialogStickyFooter>
         <Form.Submit className='w-full'>{_("submit")}</Form.Submit>
@@ -79,12 +69,6 @@ const dictionary = {
     submit: "Créer le menu",
     created: "Le menu a été créé avec succès.",
     "validation-error": "Une erreur est survenue lors de la validation des données.",
-    "name-label": "Nom du menu",
-    "name-placeholder": "Menu principal",
-    "location-label": "Position",
-    "location-placeholder": "Sélectionner une position",
-    "location-header": "En-tête",
-    "location-footer": "Pied de page",
   },
   de: {
     title: "Menü erstellen",
@@ -92,12 +76,6 @@ const dictionary = {
     submit: "Menü erstellen",
     created: "Das Menü wurde erfolgreich erstellt.",
     "validation-error": "Ein Fehler ist bei der Datenvalidierung aufgetreten.",
-    "name-label": "Menüname",
-    "name-placeholder": "Hauptmenü",
-    "location-label": "Position",
-    "location-placeholder": "Position auswählen",
-    "location-header": "Kopfzeile",
-    "location-footer": "Fußzeile",
   },
   en: {
     title: "Create menu",
@@ -105,11 +83,5 @@ const dictionary = {
     submit: "Create menu",
     created: "The menu has been created successfully.",
     "validation-error": "An error occurred during data validation.",
-    "name-label": "Menu name",
-    "name-placeholder": "Main menu",
-    "location-label": "Location",
-    "location-placeholder": "Select a location",
-    "location-header": "Header",
-    "location-footer": "Footer",
   },
 }

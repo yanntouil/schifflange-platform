@@ -1,14 +1,13 @@
 "use client"
 
-import { LocalizeLanguage, makeDictionary, type Dictionary } from "@compo/localize"
-import { A, D, deDE, enGB, frFR, match, T } from "@compo/utils"
+import { makeDictionary, type Dictionary } from "@compo/localize"
+import { A, D, deDE, enGB, frFR, lb, match, T } from "@compo/utils"
 import React from "react"
 
 /**
  * type
  */
-// export type LocalizeLanguage = (typeof config.languages)[number]
-export type { LocalizeLanguage }
+export type LocalizeLanguage = "fr" | "en" | "de" | "lb"
 type LocalizeContextType = {
   currentLanguage: string
   languages: LocalizeLanguage[]
@@ -77,8 +76,10 @@ export const useTranslation = (translation?: Translation, translateIn?: string) 
     () =>
       match(language)
         .with("fr", () => frFR)
+        .with("en", () => enGB)
         .with("de", () => deDE)
-        .otherwise(() => enGB),
+        .with("lb", () => lb)
+        .otherwise(() => frFR),
     [language]
   )
 

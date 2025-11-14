@@ -4,7 +4,7 @@ import { MediaFile, Slug, User, WithModel } from "../../types"
 export type Menu = {
   id: string
   name: string
-  location: "header" | "footer"
+  location: "header" | "footer" | "top"
 }
 
 export type MenuItem = {

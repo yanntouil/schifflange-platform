@@ -100,6 +100,8 @@ export const withContentItem = () => ['item', preloadContentItem] as const
 
 export const preloadPublicContent = (query: PreloaderContract<Content>) =>
   query.preload('items', preloadPublicContentItems)
+export const withPublicContent = () => ['content', preloadPublicContent] as const
+
 export const preloadPublicContentItems = (
   query: HasManyQueryBuilderContract<typeof ContentItem, any>
 ) =>

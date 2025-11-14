@@ -1,12 +1,12 @@
-import { matchLanguage, secureLocale } from '@/app/utils'
-import Dispatch from '@/cms/dispatch'
-import { config } from '@/config'
-import { service } from '@/service'
-import { makePathToApp } from '@/utils'
-import { A, D, makePath, match } from '@compo/utils'
-import { Metadata } from 'next'
-import { notFound, permanentRedirect } from 'next/navigation'
-import { Tracking } from '../tracking'
+import { matchLanguage, secureLocale } from "@/app/utils"
+import Dispatch from "@/cms/dispatch"
+import { config } from "@/config"
+import { service } from "@/service"
+import { makePathToApp } from "@/utils"
+import { A, D, makePath, match } from "@compo/utils"
+import { Metadata } from "next"
+import { notFound, permanentRedirect } from "next/navigation"
+import { Tracking } from "../tracking"
 
 const debug = false
 
@@ -16,35 +16,30 @@ const debug = false
 export const getPage = async (slug: string[]) => {
   const locale = matchLanguage(A.head(slug))
   const path = makePath(...A.sliceToEnd(slug, 1)) // || "homepage"
-  if (config.inDevelopment)
-    console.info('getPage endpoint', `${service.apiUrl}/sites/pages/${locale}/${path}`)
+  if (config.inDevelopment) console.info("getPage endpoint", `${service.apiUrl}/sites/pages/${locale}/${path}`)
   const result = await service.page(locale, path)
-  if (debug && !result.ok) console.info('getPage result', result)
+  if (debug && !result.ok) console.info("getPage result", result)
   return result
 }
 
 /**
  * generateMetadata
  */
-export const generateMetadata = async ({
-  params,
-}: {
-  params: Promise<{ slug: string[] }>
-}): Promise<Metadata> => {
+export const generateMetadata = async ({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> => {
   const { slug } = await params
   const result = await getPage(slug)
   if (!result.ok)
     return {
-      title: 'Page non trouvée',
+      title: "Page non trouvée",
       // ...
     }
-  if ('redirect' in result.data) return {}
+  if ("redirect" in result.data) return {}
   const { locale, path, ...rest } = result.data
   const page = match(rest)
-    .with({ model: 'page' }, ({ page }) => page)
-    .with({ model: 'article' }, ({ article }) => article)
-    .with({ model: 'project' }, ({ project }) => project)
-    .with({ model: 'project-step' }, ({ projectStep }) => projectStep)
+    .with({ model: "page" }, ({ page }) => page)
+    .with({ model: "article" }, ({ article }) => article)
+    .with({ model: "project" }, ({ project }) => project)
+    .with({ model: "project-step" }, ({ projectStep }) => projectStep)
     .exhaustive()
 
   const image = page.seo.translations?.image
@@ -74,7 +69,7 @@ export const generateMetadata = async ({
       type: config.siteType,
     },
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title,
       description,
       images: image ? service.makePath(image.url, true) : undefined,
@@ -85,19 +80,19 @@ export const generateMetadata = async ({
 /**
  * ISR
  */
-export const revalidate = 60 // ISR every 60s
+export const revalidate = 60 * 60 * 24 // ISR every 60s
 export const generateStaticParams = async () => {
   const pages = await service.slugs()
   if (!pages.ok) {
-    console.error('generateStaticParams - Failed to fetch slugs:', pages)
+    console.error("generateStaticParams - Failed to fetch slugs:", pages)
     return []
   }
   if (!pages.data || !pages.data.paths) {
-    console.error('generateStaticParams - Invalid data structure:', pages.data)
+    console.error("generateStaticParams - Invalid data structure:", pages.data)
     return []
   }
-  const params = pages.data.paths.map(path => ({
-    slug: path.split('/'),
+  const params = pages.data.paths.map((path) => ({
+    slug: path.split("/"),
   }))
   return params
 }
@@ -114,28 +109,28 @@ const Page = async ({ params, searchParams }: PageProps) => {
   const search = await searchParams
   const result = await getPage(slug)
   if (!result.ok) {
-    if (debug) console.warn('Page not found during build:', slug.join('/'))
+    if (debug) console.warn("Page not found during build:", slug.join("/"))
     notFound()
   }
-  if ('redirect' in result.data) {
-    if (debug) console.warn('Page redirect during build:', slug.join('/'))
+  if ("redirect" in result.data) {
+    if (debug) console.warn("Page redirect during build:", slug.join("/"))
     permanentRedirect(makePath(result.data.redirect))
   }
   const locale = secureLocale(result.data.locale)
-  const path = result.data.path === 'homepage' ? '' : result.data.path
+  const path = result.data.path === "homepage" ? "" : result.data.path
   const page = match(result.data)
-    .with({ model: 'page' }, ({ page }) => page)
-    .with({ model: 'article' }, ({ article }) => article)
-    .with({ model: 'project' }, ({ project }) => project)
-    .with({ model: 'project-step' }, ({ projectStep }) => projectStep)
+    .with({ model: "page" }, ({ page }) => page)
+    .with({ model: "article" }, ({ article }) => article)
+    .with({ model: "project" }, ({ project }) => project)
+    .with({ model: "project-step" }, ({ projectStep }) => projectStep)
     .exhaustive()
-  const items = A.sortBy(page.content.items, D.prop('order'))
+  const items = A.sortBy(page.content.items, D.prop("order"))
   const dispatchProps = { locale, path, searchParams: search }
-
+  return null
   return (
     <>
       <Tracking trackingId={page.trackingId} />
-      {items.map(item => (
+      {items.map((item) => (
         <Dispatch key={item.id} item={item} {...dispatchProps} />
       ))}
     </>

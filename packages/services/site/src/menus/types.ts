@@ -1,9 +1,9 @@
-import { MediaFile, Slug, SlugResource } from '../types'
+import { MediaFile, Slug, SlugResource } from "../types"
 
 export type Menu = {
   id: string
   name: string
-  location: 'header' | 'footer'
+  location: "header" | "footer"
 }
 
 export type MenuItem = {
@@ -15,22 +15,22 @@ export type MenuItem = {
 }
 
 export type MenuItemLink = MenuItem & {
-  type: 'link'
+  type: "link"
   props: { link: string }
   translations: MenuItemTranslation
 }
 export type MenuItemResource = MenuItem & {
-  type: 'resource'
+  type: "resource"
   slug: Slug
   translations: MenuItemTranslation
 }
 export type MenuItemUrl = MenuItem & {
-  type: 'url'
+  type: "url"
   translations: MenuItemTranslation<{ url: string }>
 }
 export type MenuItemGroup = MenuItem & {
-  type: 'group'
-  items: MenuItem[]
+  type: "group"
+  items: MenuItemWithRelations[]
   translations: MenuItemTranslation
   // props: { link: string }
 }

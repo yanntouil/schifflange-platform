@@ -214,4 +214,74 @@ export const dictionary = {
       },
     },
   },
+  lb: {
+    consent: {
+      title: "Hallo Reisender, es ist Zeit für Cookies!",
+      description:
+        "Wir verwenden Cookies, um Ihre Navigation zu verbessern. Durch Klicken auf 'Alle Cookies akzeptieren' stimmen Sie der Speicherung von Cookies auf Ihrem Gerät zu, um die Navigation auf der Website zu verbessern, die Nutzung der Website zu analysieren und unsere Marketingaktivitäten zu unterstützen. Weitere Informationen finden Sie in unserer Datenschutzerklärung.",
+      "accept-all": "Alle akzeptieren",
+      "reject-all": "Alle ablehnen",
+      "manage-cookies": "Cookies verwalten",
+      "data-protection": "Datenschutz",
+      "legal-notice": "Impressum",
+    },
+    "manage-preferences": {
+      title: "Cookies-Einstellungen verwalten",
+      description:
+        "Sie können die unten aufgeführten Cookies akzeptieren oder ablehnen. Sie können Ihre Einstellungen jederzeit ändern, indem Sie auf den Link 'Cookies-Einstellungen verwalten' am Ende der Seite klicken.",
+      "accept-all": "Alle akzeptieren",
+      "reject-all": "Alle ablehnen",
+      required: "Notwendige Cookies",
+      save: "Einstellungen speichern",
+    },
+    categories: {
+      necessary: {
+        title: "Notwendige Cookies",
+        description:
+          "Diese Cookies sind für die ordnungsgemäße Funktion der Website erforderlich. Sie werden verwendet, um Ihre Sitzungsinformationen und Einstellungen zu speichern.",
+      },
+      preferences: {
+        title: "Einstellungs-Cookies",
+        description:
+          "Diese Cookies werden verwendet, um Ihre Einstellungen für die Website auf Ihrem Gerät zu speichern. Dies ermöglicht es Ihnen, Ihre Einstellungen jederzeit zu ändern, indem Sie auf den Link 'Cookies-Einstellungen verwalten' am Ende der Seite klicken.",
+      },
+      analytics: {
+        title: "Analyse-Cookies",
+        description:
+          "Diese Cookies helfen uns, zu verstehen, wie Besucher die Website nutzen, indem wir anonyme Informationen sammeln und melden.",
+      },
+      marketing: {
+        title: "Marketing-Cookies",
+        description:
+          "Diese Cookies werden verwendet, um Besucher auf Websites zu verfolgen. Das Ziel ist es, Werbung anzuzeigen, die relevant und engagiert für den einzelnen Benutzer ist und daher für Verlage und Werbetreibende wertvoller ist.",
+      },
+    },
+    apps: {
+      authentication: {
+        title: "Authentifizierungs-Cookies",
+        description:
+          "Diese Cookies werden verwendet, um Ihre Authentifizierungsinformationen auf Ihrem Gerät zu speichern. Dies ermöglicht es Ihnen, sich sicher auf Irem Konto zu halten.",
+      },
+      interface: {
+        title: "Interface-Cookies",
+        description:
+          "Diese Cookies werden verwendet, um Ihre Oberflächeneigenschaften auf Ihrem Gerät zu speichern. Dies ermöglicht es Ihnen, Ihre Einstellungen jederzeit zu ändern, indem Sie auf den Link 'Cookies-Einstellungen verwalten' am Ende der Seite klicken.",
+      },
+      analytics: {
+        title: "Analyse-Cookies",
+        description:
+          "Diese Cookies helfen uns, zu verstehen, wie Besucher die Website nutzen, indem wir anonyme Informationen sammeln und melden.",
+      },
+      marketing: {
+        title: "Marketing-Cookies",
+        description:
+          "Diese Cookies werden verwendet, um Besucher auf Websites zu verfolgen. Das Ziel ist es, Werbung anzuzeigen, die relevant und engagiert für den einzelnen Benutzer ist und daher für Verlage und Werbetreibende wertvoller ist.",
+      },
+      linkedin: {
+        title: "LinkedIn-Cookies",
+        description:
+          "Diese Cookies werden verwendet, um Besucher auf Websites zu verfolgen. Das Ziel ist es, Werbung anzuzeigen, die relevant und engagiert für den einzelnen Benutzer ist und daher für Verlage und Werbetreibende wertvoller ist.",
+      },
+    },
+  },
 } satisfies Translation

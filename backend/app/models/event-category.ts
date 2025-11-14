@@ -183,3 +183,7 @@ export const preloadEventCategory = (query: PreloaderContract<EventCategory>) =>
     .preload(...withCreatedBy())
     .preload(...withUpdatedBy())
 export const withEventCategories = () => ['categories', preloadEventCategory] as const
+
+export const preloadPublicEventCategory = (query: PreloaderContract<EventCategory>) =>
+  query.preload('translations', withImage)
+export const withPublicEventCategories = () => ['categories', preloadPublicEventCategory] as const

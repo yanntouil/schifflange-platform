@@ -67,7 +67,7 @@ const ManageMenu: React.FC<ManageMenuProps> = ({
           <HeaderEditDialog {...editSubItemProps} />
         </>
       )}
-      {location === "footer" && (
+      {(location === "footer" || location === "top") && (
         <>
           <FooterCreateDialog {...createSubItemProps} />
           <FooterEditDialog {...editSubItemProps} />

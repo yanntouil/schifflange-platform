@@ -176,3 +176,7 @@ export const preloadArticleCategory = (query: PreloaderContract<ArticleCategory>
     .preload(...withCreatedBy())
     .preload(...withUpdatedBy())
 export const withArticleCategory = () => ['category', preloadArticleCategory] as const
+
+export const preloadPublicArticleCategory = (query: PreloaderContract<ArticleCategory>) =>
+  query.preload(...withArticleCategoryTranslations())
+export const withPublicArticleCategory = () => ['category', preloadPublicArticleCategory] as const

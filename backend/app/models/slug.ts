@@ -9,6 +9,7 @@ import { beforeCreate, beforeDelete, column, hasMany, hasOne } from '@adonisjs/l
 import { ModelQueryBuilderContract } from '@adonisjs/lucid/types/model'
 import type { ExtractModelRelations, HasMany, HasOne } from '@adonisjs/lucid/types/relations'
 import { A, D, G } from '@mobily/ts-belt'
+import { withPublicPublication } from './publication.js'
 
 /**
  * Model for Slug (router)
@@ -98,8 +99,8 @@ export default class Slug extends ExtendedModel {
 export const preloadSlug = (query: ModelQueryBuilderContract<typeof Slug>) => {
   query
     .preload('page', (query) => query.preload(...withSeo()))
-    .preload('article', (query) => query.preload(...withSeo()))
-    .preload('event', (query) => query.preload(...withSeo()))
+    .preload('article', (query) => query.preload(...withSeo()).preload(...withPublicPublication()))
+    .preload('event', (query) => query.preload(...withSeo()).preload(...withPublicPublication()))
 }
 export const withSlug = () => ['slug', preloadSlug] as const
 export const withSlugs = () => ['slugs', preloadSlug] as const

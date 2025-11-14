@@ -1,31 +1,31 @@
 "use client"
 
 import { Api } from "@/service"
-import { cva, match } from "@compo/utils"
+import { cva, cxm, match } from "@compo/utils"
 import { useCookies } from "../cookies"
-import { Link } from "../link"
+import { Ui } from "../ui"
 
 /**
- * Item
+ * FooterMenuItem
  * a menu item
  */
-type ItemProps = {
+type FooterMenuItemProps = {
   item: Api.MenuItemWithRelations
 }
-export const Item = ({ item }: ItemProps) => {
-  if (item.type === "link" && item.props.link === "manage-cookies") {
-    return <CookieItem>{item.translations?.name || ''}</CookieItem>
+export const FooterMenuItem = ({ item }: FooterMenuItemProps) => {
+  if (item.type === "link" && item.props.link === "[manage-cookies]") {
+    return <CookieItem>{item.translations?.name || ""}</CookieItem>
   }
   return match(item)
     .with({ type: "resource" }, (item) => (
-      <Link href={item.slug.path} className={itemVariants()}>
-        {item.translations?.name || ''}
-      </Link>
+      <Ui.Link href={item.slug.path} className={itemVariants()}>
+        {item.translations?.name || ""}
+      </Ui.Link>
     ))
     .with({ type: "link" }, (item) => (
-      <Link href={item.props.link} className={itemVariants()}>
-        {item.translations?.name || ''}
-      </Link>
+      <Ui.Link href={item.props.link} className={itemVariants()}>
+        {item.translations?.name || ""}
+      </Ui.Link>
     ))
     .with({ type: "url" }, (item) => (
       <a
@@ -34,7 +34,7 @@ export const Item = ({ item }: ItemProps) => {
         target='_blank'
         rel='noopener noreferrer nofollow'
       >
-        {item.translations?.name || ''}
+        {item.translations?.name || ""}
       </a>
     ))
     .otherwise(() => null)
@@ -49,4 +49,10 @@ const CookieItem = (props: React.PropsWithChildren) => {
   )
 }
 
-const itemVariants = cva("text-[#5D5F72] cursor-pointer")
+const itemVariants = cva(
+  cxm(
+    "text-secondary uppercase cursor-pointer text-left font-bold text-xs py-1 inline-block rounded-xs",
+    Ui.variants.disabled(),
+    Ui.variants.focus({ variant: "visible" })
+  )
+)

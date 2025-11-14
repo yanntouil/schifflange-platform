@@ -1,5 +1,5 @@
-import { Container } from "@/components/container"
-import { Wrapper } from "@/components/wrapper"
+import { Container } from "@/components/layout/container"
+import { Wrapper } from "@/components/layout/wrapper"
 import type { LocalizeLanguage } from "@/lib/localize"
 import { Api } from "@/service"
 import { getServerTranslation } from "@/utils/localize"
@@ -39,7 +39,6 @@ export default async function Dispatch({ item, locale, path, searchParams }: Pro
 
   const component = (
     <ComponentDebug type={validItem.type} template={template} debug={false}>
-      {/* @ts-expect-error - TODO: fix this */}
       <Component {...props} />
     </ComponentDebug>
   )

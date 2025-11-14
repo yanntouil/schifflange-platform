@@ -80,6 +80,17 @@ export default class Publication extends ExtendedModel {
    * METHODS
    */
 
+  public async isAvailable() {
+    return this.isAvailableSync()
+  }
+
+  public isAvailableSync() {
+    const now = DateTime.now()
+    const isAfterFrom = this.publishedFrom ? now <= this.publishedFrom : true
+    const isBeforeUntil = this.publishedTo ? now >= this.publishedTo : true
+    return isAfterFrom && isBeforeUntil
+  }
+
   public async cleanup() {
     //
   }

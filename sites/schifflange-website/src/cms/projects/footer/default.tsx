@@ -1,17 +1,17 @@
-'use client'
+"use client"
 
-import { Carousel, useCarousel } from '@/components/carousel'
-import { Container } from '@/components/container'
-import { Hn } from '@/components/hn'
-import { textVariants } from '@/components/variants'
-import { Wrapper, WrapperConcealer } from '@/components/wrapper'
-import { useTranslation } from '@/lib/localize'
-import { cn } from '@/lib/utils'
-import { service } from '@/service'
-import { prose } from '@compo/ui/src/variants'
-import { S, stripHtml } from '@compo/utils'
-import Image from 'next/image'
-import type { TemplateProps } from './index'
+import { Carousel, useCarousel } from "@/components/carousel"
+import { Container } from "@/components/layout/container"
+import { Wrapper, WrapperConcealer } from "@/components/layout/wrapper"
+import { Hn } from "@/components/ui/hn/components"
+import { textVariants } from "@/components/variants"
+import { useTranslation } from "@/lib/localize"
+import { cn } from "@/lib/utils"
+import { service } from "@/service"
+import { prose } from "@compo/ui/src/variants"
+import { S, stripHtml } from "@compo/utils"
+import Image from "next/image"
+import type { TemplateProps } from "./index"
 
 /**
  * TemplateDefault
@@ -23,64 +23,64 @@ export function TemplateDefault({ props }: TemplateProps) {
   const hasDescription = S.isNotEmpty(S.trim(stripHtml(description)))
   const cards: CardProps[] = [
     {
-      id: 'card-1',
+      id: "card-1",
       level: cardLevel,
-      title: _('card-1.title'),
-      description: _('card-1.description'),
+      title: _("card-1.title"),
+      description: _("card-1.description"),
       image: {
         src: service.makePath(
-          'storage/workspaces/b825d97c-82d2-4989-8104-1b271b05e7cd/files/brapwqc03h4doql6043fsiy5.jpg',
+          "storage/workspaces/b825d97c-82d2-4989-8104-1b271b05e7cd/files/brapwqc03h4doql6043fsiy5.jpg",
           true
         ),
-        alt: _('card-1.title'),
+        alt: _("card-1.title"),
         width: 304,
         height: 178,
       },
       shape: <Shape1Svg className='absolute inset-0 size-full' />,
     },
     {
-      id: 'card-2',
+      id: "card-2",
       level: cardLevel,
-      title: _('card-2.title'),
-      description: _('card-2.description'),
+      title: _("card-2.title"),
+      description: _("card-2.description"),
       image: {
         src: service.makePath(
-          'storage/workspaces/b825d97c-82d2-4989-8104-1b271b05e7cd/files/q5ozfit23r1pygbmuyo93nq9.jpg',
+          "storage/workspaces/b825d97c-82d2-4989-8104-1b271b05e7cd/files/q5ozfit23r1pygbmuyo93nq9.jpg",
           true
         ),
-        alt: _('card-2.title'),
+        alt: _("card-2.title"),
         width: 304,
         height: 178,
       },
       shape: <Shape2Svg className='absolute inset-0 size-full' />,
     },
     {
-      id: 'card-3',
+      id: "card-3",
       level: cardLevel,
-      title: _('card-3.title'),
-      description: _('card-3.description'),
+      title: _("card-3.title"),
+      description: _("card-3.description"),
       image: {
         src: service.makePath(
-          'storage/workspaces/b825d97c-82d2-4989-8104-1b271b05e7cd/files/k59qaz9td2x3jmvokh2rtcm0.jpg',
+          "storage/workspaces/b825d97c-82d2-4989-8104-1b271b05e7cd/files/k59qaz9td2x3jmvokh2rtcm0.jpg",
           true
         ),
-        alt: _('card-3.title'),
+        alt: _("card-3.title"),
         width: 304,
         height: 178,
       },
       shape: <Shape3Svg className='absolute inset-0 size-full' />,
     },
     {
-      id: 'card-4',
+      id: "card-4",
       level: cardLevel,
-      title: _('card-4.title'),
-      description: _('card-4.description'),
+      title: _("card-4.title"),
+      description: _("card-4.description"),
       image: {
         src: service.makePath(
-          'storage/workspaces/b825d97c-82d2-4989-8104-1b271b05e7cd/files/k59qaz9td2x3jmvokh2rtcm0.jpg',
+          "storage/workspaces/b825d97c-82d2-4989-8104-1b271b05e7cd/files/k59qaz9td2x3jmvokh2rtcm0.jpg",
           true
         ),
-        alt: _('card-4.title'),
+        alt: _("card-4.title"),
         width: 304,
         height: 178,
       },
@@ -88,9 +88,7 @@ export function TemplateDefault({ props }: TemplateProps) {
     },
   ]
   return (
-    <WrapperConcealer
-      style={{ '--concealer-color': 'var(--color-golden-20)' } as React.CSSProperties}
-    >
+    <WrapperConcealer style={{ "--concealer-color": "var(--color-golden-20)" } as React.CSSProperties}>
       <Wrapper paddingY className='bg-golden-20'>
         <Container>
           <Carousel.Root>
@@ -99,17 +97,14 @@ export function TemplateDefault({ props }: TemplateProps) {
                 {displayHeading && (
                   <>
                     {title && (
-                      <Hn
-                        level={level}
-                        className={cn(textVariants({ variant: 'title', color: 'tuna' }))}
-                      >
+                      <Hn level={level} className={cn(textVariants({ variant: "title", color: "tuna" }))}>
                         <span className='block text-finch-100'>{title}</span>
                         {subtitle && <span className='block'>{subtitle}</span>}
                       </Hn>
                     )}
                     {hasDescription && (
                       <div
-                        className={prose({ variant: 'heading' })}
+                        className={prose({ variant: "heading" })}
                         dangerouslySetInnerHTML={{ __html: description }}
                       />
                     )}
@@ -122,7 +117,7 @@ export function TemplateDefault({ props }: TemplateProps) {
             </div>
 
             <Carousel.Content className='-ml-[40px]' overflow='visible'>
-              {cards.map(card => (
+              {cards.map((card) => (
                 <Carousel.Item key={card.id} className='basis-auto pl-[40px] w-[304px]'>
                   <Card {...card} />
                 </Carousel.Item>
@@ -161,11 +156,8 @@ const Card: React.FC<CardProps> = ({ level, title, description, image, shape }) 
             height={image.height}
           />
         ) : (
-          <div
-            className='aspect-[304/178] bg-pampas flex items-center justify-center rounded-[16px]'
-            aria-hidden
-          >
-            <div className='text-tuna/30 text-sm'>{_('image-placeholder')}</div>
+          <div className='aspect-[304/178] bg-pampas flex items-center justify-center rounded-[16px]' aria-hidden>
+            <div className='text-tuna/30 text-sm'>{_("image-placeholder")}</div>
           </div>
         )}
         {shape}
@@ -181,7 +173,7 @@ const Card: React.FC<CardProps> = ({ level, title, description, image, shape }) 
         {/* Description */}
         {description && (
           <div
-            className={prose({ variant: 'card', color: 'tuna', className: '-my-2' })}
+            className={prose({ variant: "card", color: "tuna", className: "-my-2" })}
             dangerouslySetInnerHTML={{ __html: description }}
           />
         )}
@@ -228,7 +220,7 @@ const Control: React.FC = () => {
   const { canScrollPrev, canScrollNext, scrollPrev, scrollNext } = useCarousel()
   if (!canScrollNext && !canScrollPrev) return null
   return (
-    <div className='flex items-center gap-2' onClick={e => e.stopPropagation()}>
+    <div className='flex items-center gap-2' onClick={(e) => e.stopPropagation()}>
       <button
         type='button'
         className='size-[47px] rounded-[8px] disabled:bg-white bg-[#98C5D5] flex items-center justify-center'
@@ -283,51 +275,51 @@ const ArrowRightSvg = (props: React.SVGProps<SVGSVGElement>) => {
  */
 const dictionary = {
   fr: {
-    'image-placeholder': 'Image à venir',
-    'card-1': {
-      title: 'Ressources humaines',
+    "image-placeholder": "Image à venir",
+    "card-1": {
+      title: "Ressources humaines",
       description: `<p>Bénéficier de décharge et créer des conditions idéales pour la réflexion, l'innovation et la concrétisation de vos idées en projets concrets.</p>`,
     },
-    'card-2': {
-      title: 'Ressources intellectuelles et méthodologiques',
+    "card-2": {
+      title: "Ressources intellectuelles et méthodologiques",
       description: `<p>Profiter de formations spécifiques et innovantes, d'un suivi pédagogique individualisé et d'évaluations continues visant à assurer la progression continue de votre projet.</p>`,
     },
-    'card-3': {
-      title: 'Ressources matérielles',
+    "card-3": {
+      title: "Ressources matérielles",
       description: `<p>Disposer d’espaces dédiés et adaptés à vos rencontres et réunions pour faciliter la collaboration, les échanges et la créativité.</p>`,
     },
-    'card-4': {
-      title: 'Ressources financières',
+    "card-4": {
+      title: "Ressources financières",
       description: `<p>Bénéficier de financements potentiels pour acquérir les supports pédagogiques innovants nécessaires au développement de votre projet.</p>`,
     },
   },
   en: {
-    'image-placeholder': 'Image coming soon',
-    'card-1': {
-      title: 'Human resources',
+    "image-placeholder": "Image coming soon",
+    "card-1": {
+      title: "Human resources",
       description: `<p>Benefit from discharge and create ideal conditions for reflection, innovation and concretization of your ideas into concrete projects.</p>`,
     },
-    'card-2': {
-      title: 'Intellectual and methodological resources',
+    "card-2": {
+      title: "Intellectual and methodological resources",
       description: `<p>Benefit from specific and innovative training, personalized pedagogical follow-up and continuous evaluations aimed at ensuring continuous progress of your project.</p>`,
     },
-    'card-3': {
-      title: 'Relational and social resources',
+    "card-3": {
+      title: "Relational and social resources",
       description: `<p>Access a dynamic network fostering idea exchanges, experience sharing and the creation of strong ties.</p>`,
     },
   },
   de: {
-    'image-placeholder': 'Bild folgt',
-    'card-1': {
-      title: 'Personelle Ressourcen',
+    "image-placeholder": "Bild folgt",
+    "card-1": {
+      title: "Personelle Ressourcen",
       description: `<p>Profitieren Sie von Entlastung und schaffen Sie ideale Bedingungen für Reflexion, Innovation und die Umsetzung Ihrer Ideen in konkrete Projekte.</p>`,
     },
-    'card-2': {
-      title: 'Intellektuelle und methodische Ressourcen',
+    "card-2": {
+      title: "Intellektuelle und methodische Ressourcen",
       description: `<p>Nutzen Sie spezifische und innovative Schulungen, individuelle pädagogische Betreuung und kontinuierliche Evaluierungen, um den Fortschritt Ihres Projekts sicherzustellen.</p>`,
     },
-    'card-3': {
-      title: 'Beziehungs- und Sozialressourcen',
+    "card-3": {
+      title: "Beziehungs- und Sozialressourcen",
       description: `<p>Zugang zu einem dynamischen Netzwerk, das den Ideenaustausch, den Erfahrungsaustausch und die Schaffung starker Verbindungen fördert.</p>`,
     },
   },

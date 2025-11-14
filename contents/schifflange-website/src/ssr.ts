@@ -4,20 +4,22 @@
  */
 
 // Get the flat items array type
-import { type LocalizeLanguage, type Translation } from '@compo/localize'
-import { type Api } from '@services/site'
-import type { itemsFlat } from './items'
+import { type Translation } from "@compo/localize"
+import { type Api } from "@services/site"
+import type { itemsFlat } from "./items"
 
 // export { proseVariants } from "./prose"
 
+export type LocalizeLanguage = "fr" | "en" | "de" | "lb"
+
 // Extract all available item types as a union of type strings
-export type AvailableItemTypes = (typeof itemsFlat)[number]['export']['type']
+export type AvailableItemTypes = (typeof itemsFlat)[number]["export"]["type"]
 
 // Helper type to get item export by type string
 export type InferExportByType<T extends AvailableItemTypes> = Extract<
   (typeof itemsFlat)[number],
   { export: { type: T } }
->['export']
+>["export"]
 
 /**
  * ExportedItem
@@ -71,16 +73,13 @@ export type ExportedItem = {
  * - We only need the **value shape** of one locale to type the object.
  *   The active locale is provided at render-time (`RenderAsyncProps.locale`).
  */
-export type InferItemAsync<
-  T extends AvailableItemTypes,
-  P extends InferExportByType<T> = InferExportByType<T>,
-> = {
+export type InferItemAsync<T extends AvailableItemTypes, P extends InferExportByType<T> = InferExportByType<T>> = {
   files: Api.MediaFile[]
   slugs: Api.Slug[]
   type: T
-  props: P['props']
-  translations: { props: P['translations']['fr'] }
-} & Omit<Api.ContentItem, 'files' | 'category' | 'type' | 'props' | 'translations'>
+  props: P["props"]
+  translations: { props: P["translations"]["fr"] }
+} & Omit<Api.ContentItem, "files" | "category" | "type" | "props" | "translations">
 
 /**
  * RenderAsyncProps<T>

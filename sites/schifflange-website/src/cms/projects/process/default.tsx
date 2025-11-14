@@ -1,15 +1,15 @@
-'use client'
-import { Container } from '@/components/container'
-import { Hn } from '@/components/hn'
-import { Link } from '@/components/link'
-import { textVariants } from '@/components/variants'
-import { Wrapper } from '@/components/wrapper'
-import { useTranslation } from '@/lib/localize'
-import { makeLinkProps } from '@/utils/links'
-import { A, cn, S, stripHtml } from '@compo/utils'
+"use client"
+import { Container } from "@/components/layout/container"
+import { Wrapper } from "@/components/layout/wrapper"
+import { Link } from "@/components/link"
+import { Hn } from "@/components/ui/hn/components"
+import { textVariants } from "@/components/variants"
+import { useTranslation } from "@/lib/localize"
+import { makeLinkProps } from "@/utils/links"
+import { A, cn, S, stripHtml } from "@compo/utils"
 // import { ProjectDialog } from './dialogs'
-import { prose } from '@compo/ui/src/variants'
-import type { TemplateProps } from './index'
+import { prose } from "@compo/ui/src/variants"
+import type { TemplateProps } from "./index"
 
 /**
  * TemplateDefault
@@ -26,18 +26,13 @@ export function TemplateDefault({ props }: TemplateProps) {
           <div className='grid grid-cols-1 gap-8 md:grid-cols-2 pb-[24px]'>
             <div className='flex flex-col justify-center'>
               {title && (
-                <Hn level={level} className={textVariants({ variant: 'title', color: 'tuna' })}>
+                <Hn level={level} className={textVariants({ variant: "title", color: "tuna" })}>
                   {title}
                 </Hn>
               )}
-              {subtitle && (
-                <p className={textVariants({ variant: 'subtitle', color: 'tuna' })}>{subtitle}</p>
-              )}
+              {subtitle && <p className={textVariants({ variant: "subtitle", color: "tuna" })}>{subtitle}</p>}
               {hasDescription && (
-                <div
-                  className={prose({ variant: 'heading' })}
-                  dangerouslySetInnerHTML={{ __html: description }}
-                />
+                <div className={prose({ variant: "heading" })} dangerouslySetInnerHTML={{ __html: description }} />
               )}
             </div>
           </div>
@@ -49,43 +44,42 @@ export function TemplateDefault({ props }: TemplateProps) {
             return (
               <div key={key} className='grid grid-rows-[auto_1fr]'>
                 <div className='grid grid-cols-[1fr_auto_1fr] items-center pb-[26px]'>
-                  {<div className={cn('border-t border-[#BD8B48]/60', isFirst && 'border-t-0')} />}
+                  {<div className={cn("border-t border-[#BD8B48]/60", isFirst && "border-t-0")} />}
                   <Hn
                     level={card.level}
                     className={textVariants({
-                      variant: 'cardTitle',
-                      color: 'tuna',
-                      className: cn('text-center px-[20px]', isFirst && 'pl-0', isLast && 'pr-0'),
+                      variant: "cardTitle",
+                      color: "tuna",
+                      className: cn("text-center px-[20px]", isFirst && "pl-0", isLast && "pr-0"),
                     })}
                   >
                     {_(key)}
                   </Hn>
-                  {<div className={cn('border-t border-[#BD8B48]/60', isLast && 'border-t-0')} />}
+                  {<div className={cn("border-t border-[#BD8B48]/60", isLast && "border-t-0")} />}
                 </div>
                 <div
                   className={cn(
-                    'mx-[20px]',
-                    isFirst && 'ml-0',
-                    isLast && 'mr-0',
-                    'relative rounded-[8px] p-[8px] pt-[47px] grid grid-rows-[auto_1fr]',
-                    key === 'consultation' && 'bg-[#626A4F]',
-                    key === 'incubation' && 'bg-[#BBDAB0]',
-                    key === 'scaling' && 'bg-[#98C5D5]'
+                    "mx-[20px]",
+                    isFirst && "ml-0",
+                    isLast && "mr-0",
+                    "relative rounded-[8px] p-[8px] pt-[47px] grid grid-rows-[auto_1fr]",
+                    key === "consultation" && "bg-[#626A4F]",
+                    key === "incubation" && "bg-[#BBDAB0]",
+                    key === "scaling" && "bg-[#98C5D5]"
                   )}
                 >
                   <div className='absolute -top-[26px] inset-x-0 flex justify-center' aria-hidden>
                     <span className='rounded-full bg-[#FAF6F1] flex justify-center items-center size-[52px]'>
-                      {key === 'consultation' && <ConsultationSvg className='size-[38px]' />}
-                      {key === 'incubation' && <IncubationSvg className='size-[38px]' />}
-                      {key === 'scaling' && <ScalingSvg className='size-[38px]' />}
+                      {key === "consultation" && <ConsultationSvg className='size-[38px]' />}
+                      {key === "incubation" && <IncubationSvg className='size-[38px]' />}
+                      {key === "scaling" && <ScalingSvg className='size-[38px]' />}
                     </span>
                   </div>
                   <p
                     className={textVariants({
-                      variant: 'cardTitle',
-                      color: key === 'consultation' ? 'white' : 'tuna',
-                      className:
-                        'text-center pb-[16px] text-[20px] leading-normal font-semibold my-0',
+                      variant: "cardTitle",
+                      color: key === "consultation" ? "white" : "tuna",
+                      className: "text-center pb-[16px] text-[20px] leading-normal font-semibold my-0",
                     })}
                     aria-hidden={!card.title}
                   >
@@ -94,8 +88,8 @@ export function TemplateDefault({ props }: TemplateProps) {
                   <div className='flex flex-col gap-[16px] justify-between bg-[#FAF6F1] rounded-[8px] p-[16px]'>
                     <div
                       className={prose({
-                        variant: 'default',
-                        className: '-my-2',
+                        variant: "default",
+                        className: "-my-2",
                       })}
                       dangerouslySetInnerHTML={{ __html: card.description }}
                     />
@@ -121,7 +115,7 @@ export type ButtonProps = {
 export const Button: React.FC<ButtonProps> = ({ link }) => {
   if (!link?.href) return null
   const cx = cn(
-    'px-4 py-2 inline-flex items-center justify-center gap-2 rounded-[8px] text-[12px] leading-normal font-medium text-[#1D1D1B] border-[1.5px] border-[#E5D2B9] cursor-pointer'
+    "px-4 py-2 inline-flex items-center justify-center gap-2 rounded-[8px] text-[12px] leading-normal font-medium text-[#1D1D1B] border-[1.5px] border-[#E5D2B9] cursor-pointer"
   )
   // const matched = link.href.match(/^\[(consultation|incubation|scaling):([a-f0-9-]{36})\]$/)
   // if (matched) {
@@ -200,14 +194,14 @@ const ScalingSvg = (props: React.SVGProps<SVGSVGElement>) => (
  */
 const dictionary = {
   fr: {
-    consultation: 'Consultation',
-    incubation: 'Incubation',
-    scaling: 'Multiplication',
+    consultation: "Consultation",
+    incubation: "Incubation",
+    scaling: "Multiplication",
   },
   en: {
-    consultation: 'Consultation',
-    incubation: 'Incubation',
-    scaling: 'Scaling',
+    consultation: "Consultation",
+    incubation: "Incubation",
+    scaling: "Scaling",
   },
   de: {},
 }

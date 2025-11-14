@@ -1,5 +1,5 @@
 import ExtendedModel from '#models/extended/extended-model'
-import MenuItem, { isAvailableItem } from '#models/menu-item'
+import MenuItem from '#models/menu-item'
 import { beforeDelete, column, hasMany } from '@adonisjs/lucid/orm'
 import type { ExtractModelRelations, HasMany } from '@adonisjs/lucid/types/relations'
 import { A, D, G, O } from '@mobily/ts-belt'
@@ -51,7 +51,7 @@ export default class Menu extends ExtendedModel {
     return {
       ...D.deleteKeys(this.serialize(), ['items']),
       items: A.filterMap(this.items, (item) =>
-        isAvailableItem(item) ? O.Some(item.publicSerialize(language)) : O.None
+        item.isAvailableSync() ? O.Some(item.publicSerialize(language)) : O.None
       ),
     }
   }

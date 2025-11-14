@@ -1,7 +1,9 @@
+import { match } from "@compo/utils"
 import React from "react"
 import { useMenu } from "../menu.context"
 import { Footer } from "./menu/footer"
 import { Header } from "./menu/header"
+import { Top } from "./menu/top"
 
 /**
  * Menu
@@ -13,8 +15,11 @@ export const Menu: React.FC = () => {
 
   return (
     <>
-      {menu.location === "header" && <Header />}
-      {menu.location === "footer" && <Footer />}
+      {match(menu.location)
+        .with("header", () => <Header />)
+        .with("footer", () => <Footer />)
+        .with("top", () => <Top />)
+        .exhaustive()}
     </>
   )
 }

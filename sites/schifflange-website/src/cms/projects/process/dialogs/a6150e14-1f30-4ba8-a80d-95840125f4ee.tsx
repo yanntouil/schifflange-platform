@@ -1,27 +1,27 @@
-'use client'
+"use client"
 
 /**
  * Ludothèques
  */
 
-import { Richtext } from '@/cms/dialogs/richtext'
-import { Videos } from '@/cms/dialogs/videos'
-import { Dialog } from '@/components/dialog'
-import { Hn } from '@/components/hn'
-import { textVariants } from '@/components/variants'
-import { useTranslation } from '@/lib/localize'
-import Image, { StaticImageData } from 'next/image'
-import Card1Image from './images/3aa2e1835768a4b8a82c78417706fe5ff3058fec.png'
-import CrecheBoumba3 from './images/4bf2c0a4711f43cbf73622b0f8686acd5a924eea.jpg'
-import CrechePommeDapi from './images/559b12600a399095ed61281b1f4420e8defbb478.jpg'
-import Card3Image from './images/69af4b7ab094439ff0fb031ad3f3608521fd0f39.png'
-import Card2Image from './images/6d165b1ab1ab6a2b8aba3bff5f2c7d97ac6a0b2b.png'
-import CrècheSimSalaBim from './images/88d875f60a62285686fa51fb035f67c95de8a3aa.png'
-import CrècheKiddiesRosport from './images/9952eb9303fe3fdb5c85f5c789b798720ec29c5c.png'
-import CrècheDappeshaus from './images/a49a0cfadd0c7cdc76deb66086f9bc5c198869c1.png'
-import Kannervilla from './images/Logo-Kannervilla-Gepeppelte-Memmel.png'
-import SEAIKokopelli from './images/seai-kokopelli.png'
-import { prose } from '@compo/ui/src/variants'
+import { Richtext } from "@/cms/dialogs/richtext"
+import { Videos } from "@/cms/dialogs/videos"
+import { Dialog } from "@/components/dialog"
+import { Hn } from "@/components/ui/hn/components"
+import { textVariants } from "@/components/variants"
+import { useTranslation } from "@/lib/localize"
+import { prose } from "@compo/ui/src/variants"
+import Image, { StaticImageData } from "next/image"
+import Card1Image from "./images/3aa2e1835768a4b8a82c78417706fe5ff3058fec.png"
+import CrecheBoumba3 from "./images/4bf2c0a4711f43cbf73622b0f8686acd5a924eea.jpg"
+import CrechePommeDapi from "./images/559b12600a399095ed61281b1f4420e8defbb478.jpg"
+import Card3Image from "./images/69af4b7ab094439ff0fb031ad3f3608521fd0f39.png"
+import Card2Image from "./images/6d165b1ab1ab6a2b8aba3bff5f2c7d97ac6a0b2b.png"
+import CrècheSimSalaBim from "./images/88d875f60a62285686fa51fb035f67c95de8a3aa.png"
+import CrècheKiddiesRosport from "./images/9952eb9303fe3fdb5c85f5c789b798720ec29c5c.png"
+import CrècheDappeshaus from "./images/a49a0cfadd0c7cdc76deb66086f9bc5c198869c1.png"
+import Kannervilla from "./images/Logo-Kannervilla-Gepeppelte-Memmel.png"
+import SEAIKokopelli from "./images/seai-kokopelli.png"
 
 /**
  * Consultation
@@ -38,9 +38,7 @@ export const Incubation = () => {
   return (
     <div>
       <div>
-        <p className='text-[20px] font-medium leading-normal text-powder-100'>
-          {_('incubation.header.subtitle')}
-        </p>
+        <p className='text-[20px] font-medium leading-normal text-powder-100'>{_("incubation.header.subtitle")}</p>
       </div>
       <div className='grid grid-cols-3 gap-x-[40px] gap-y-[24px]'>
         <ParticipatingStructure name='Crèche Pomme d’api' image={CrechePommeDapi} />
@@ -77,54 +75,47 @@ const ParticipatingStructure = ({ name, image }: { name: string; image: StaticIm
 }
 
 const buttonCx =
-  'px-4 py-2 inline-flex items-center justify-center gap-2 rounded-[8px] text-[12px] leading-normal font-medium text-[#1D1D1B] border-[1.5px] border-[#E5D2B9] cursor-pointer'
+  "px-4 py-2 inline-flex items-center justify-center gap-2 rounded-[8px] text-[12px] leading-normal font-medium text-[#1D1D1B] border-[1.5px] border-[#E5D2B9] cursor-pointer"
 const Card1 = () => {
   const { _, language } = useTranslation(dictionary)
-  const title = _('incubation.card1.title')
-  const description = _('incubation.card1.content')
+  const title = _("incubation.card1.title")
+  const description = _("incubation.card1.content")
   return (
     <article className='group'>
       {/* Image container */}
       <div className='relative'>
-        <Image
-          src={Card1Image}
-          alt={title}
-          className='aspect-[304/178] w-full object-cover rounded-[16px]'
-        />
+        <Image src={Card1Image} alt={title} className='aspect-[304/178] w-full object-cover rounded-[16px]' />
       </div>
       <div className='mt-4 space-y-2'>
-        <Hn level={4} className={textVariants({ variant: 'cardTitleSmall' })}>
+        <Hn level={4} className={textVariants({ variant: "cardTitleSmall" })}>
           {title}
         </Hn>
-        <div
-          className={prose({ variant: 'card' })}
-          dangerouslySetInnerHTML={{ __html: description }}
-        />
+        <div className={prose({ variant: "card" })} dangerouslySetInnerHTML={{ __html: description }} />
         <div>
           <Dialog
             trigger={
               <button type='button' className={buttonCx}>
-                {_('incubation.card1.trigger')}
+                {_("incubation.card1.trigger")}
                 <ArrowSvg aria-hidden className='size-5' />
               </button>
             }
-            title={_('incubation.card1.dialog.title')}
-            description={_('incubation.card1.dialog.description')}
+            title={_("incubation.card1.dialog.title")}
+            description={_("incubation.card1.dialog.description")}
             className='max-w-[832px] overflow-hidden'
           >
             <Richtext
-              title={_('incubation.card1.dialog.richText.title')}
+              title={_("incubation.card1.dialog.richText.title")}
               level={3}
-              prose={prose({ variant: 'incubation' })}
-              content={_('incubation.card1.dialog.richText.content')}
+              prose={prose({ variant: "incubation" })}
+              content={_("incubation.card1.dialog.richText.content")}
             />
             <Videos
-              title={_('incubation.card1.dialog.videos1.title')}
+              title={_("incubation.card1.dialog.videos1.title")}
               level={3}
               videos={[
                 {
-                  title: _('incubation.card1.dialog.videos1.video1.title'),
-                  description: _('incubation.card1.dialog.videos1.video1.description'),
+                  title: _("incubation.card1.dialog.videos1.video1.title"),
+                  description: _("incubation.card1.dialog.videos1.video1.description"),
                   video: (
                     <Image
                       src={Card1Image}
@@ -134,8 +125,8 @@ const Card1 = () => {
                   ),
                 },
                 {
-                  title: _('incubation.card1.dialog.videos1.video2.title'),
-                  description: _('incubation.card1.dialog.videos1.video2.description'),
+                  title: _("incubation.card1.dialog.videos1.video2.title"),
+                  description: _("incubation.card1.dialog.videos1.video2.description"),
                   video: (
                     <Image
                       src={Card2Image}
@@ -145,8 +136,8 @@ const Card1 = () => {
                   ),
                 },
                 {
-                  title: _('incubation.card1.dialog.videos1.video3.title'),
-                  description: _('incubation.card1.dialog.videos1.video3.description'),
+                  title: _("incubation.card1.dialog.videos1.video3.title"),
+                  description: _("incubation.card1.dialog.videos1.video3.description"),
                   video: (
                     <Image
                       src={Card3Image}
@@ -158,12 +149,12 @@ const Card1 = () => {
               ]}
             />
             <Videos
-              title={_('incubation.card1.dialog.videos2.title')}
+              title={_("incubation.card1.dialog.videos2.title")}
               level={3}
               videos={[
                 {
-                  title: _('incubation.card1.dialog.videos2.video1.title'),
-                  description: _('incubation.card1.dialog.videos2.video1.description'),
+                  title: _("incubation.card1.dialog.videos2.video1.title"),
+                  description: _("incubation.card1.dialog.videos2.video1.description"),
                   video: (
                     <Image
                       src={Card1Image}
@@ -173,8 +164,8 @@ const Card1 = () => {
                   ),
                 },
                 {
-                  title: _('incubation.card1.dialog.videos2.video2.title'),
-                  description: _('incubation.card1.dialog.videos2.video2.description'),
+                  title: _("incubation.card1.dialog.videos2.video2.title"),
+                  description: _("incubation.card1.dialog.videos2.video2.description"),
                   video: (
                     <Image
                       src={Card2Image}
@@ -184,8 +175,8 @@ const Card1 = () => {
                   ),
                 },
                 {
-                  title: _('incubation.card1.dialog.videos2.video3.title'),
-                  description: _('incubation.card1.dialog.videos2.video3.description'),
+                  title: _("incubation.card1.dialog.videos2.video3.title"),
+                  description: _("incubation.card1.dialog.videos2.video3.description"),
                   video: (
                     <Image
                       src={Card3Image}
@@ -204,28 +195,21 @@ const Card1 = () => {
 }
 const Card2 = () => {
   const { _, language } = useTranslation(dictionary)
-  const title = _('incubation.card2.title')
-  const description = _('incubation.card2.content')
+  const title = _("incubation.card2.title")
+  const description = _("incubation.card2.content")
   return (
     <article className='group'>
       <div className='relative'>
-        <Image
-          src={Card2Image}
-          alt={title}
-          className='aspect-[304/178] w-full object-cover rounded-[16px]'
-        />
+        <Image src={Card2Image} alt={title} className='aspect-[304/178] w-full object-cover rounded-[16px]' />
       </div>
       <div className='mt-4 space-y-2'>
-        <Hn level={4} className={textVariants({ variant: 'cardTitleSmall' })}>
+        <Hn level={4} className={textVariants({ variant: "cardTitleSmall" })}>
           {title}
         </Hn>
-        <div
-          className={prose({ variant: 'card' })}
-          dangerouslySetInnerHTML={{ __html: description }}
-        />
+        <div className={prose({ variant: "card" })} dangerouslySetInnerHTML={{ __html: description }} />
         <div>
           <button type='button' className={buttonCx}>
-            {_('incubation.card2.trigger')}
+            {_("incubation.card2.trigger")}
             <ArrowSvg aria-hidden className='size-5' />
           </button>
         </div>
@@ -235,28 +219,21 @@ const Card2 = () => {
 }
 const Card3 = () => {
   const { _, language } = useTranslation(dictionary)
-  const title = _('incubation.card3.title')
-  const description = _('incubation.card3.content')
+  const title = _("incubation.card3.title")
+  const description = _("incubation.card3.content")
   return (
     <article className='group'>
       <div className='relative'>
-        <Image
-          src={Card3Image}
-          alt={title}
-          className='aspect-[304/178] w-full object-cover rounded-[16px]'
-        />
+        <Image src={Card3Image} alt={title} className='aspect-[304/178] w-full object-cover rounded-[16px]' />
       </div>
       <div className='mt-2 space-y-2'>
-        <Hn level={4} className={textVariants({ variant: 'cardTitleSmall' })}>
+        <Hn level={4} className={textVariants({ variant: "cardTitleSmall" })}>
           {title}
         </Hn>
-        <div
-          className={prose({ variant: 'card' })}
-          dangerouslySetInnerHTML={{ __html: description }}
-        />
+        <div className={prose({ variant: "card" })} dangerouslySetInnerHTML={{ __html: description }} />
         <div>
           <button type='button' className={buttonCx}>
-            {_('incubation.card3.trigger')}
+            {_("incubation.card3.trigger")}
             <ArrowSvg aria-hidden className='size-5' />
           </button>
         </div>
@@ -295,18 +272,18 @@ const dictionary = {
   fr: {
     incubation: {
       header: {
-        subtitle: 'Les structures participantes sont :',
+        subtitle: "Les structures participantes sont :",
       },
       card1: {
-        title: 'Groupe de travail et d’échange',
+        title: "Groupe de travail et d’échange",
         content: `
           <p>Ce projet invite les professionnels à explorer ensemble de nouvelles méthodes pour sensibiliser les enfants à leurs droits, en combinant outils pédagogiques, narration créative et retours d’expérience collectifs.</p>
         `,
-        trigger: 'Consulter',
+        trigger: "Consulter",
         dialog: {
-          title: 'Groupe de travail et d’échange',
+          title: "Groupe de travail et d’échange",
           richText: {
-            title: 'Réunions d’information du 8 janvier 2025',
+            title: "Réunions d’information du 8 janvier 2025",
             content: `
             <ul>
             <li>
@@ -328,56 +305,56 @@ const dictionary = {
             `,
           },
           videos1: {
-            title: 'Groupe d’échange du 29 janvier 2025',
+            title: "Groupe d’échange du 29 janvier 2025",
             video1: {
-              title: 'Titre de la vidéo',
-              description: 'Description de la vidéo',
+              title: "Titre de la vidéo",
+              description: "Description de la vidéo",
             },
             video2: {
-              title: 'Titre de la vidéo',
-              description: 'Description de la vidéo',
+              title: "Titre de la vidéo",
+              description: "Description de la vidéo",
             },
             video3: {
-              title: 'Titre de la vidéo',
-              description: 'Description de la vidéo',
+              title: "Titre de la vidéo",
+              description: "Description de la vidéo",
             },
           },
           videos2: {
-            title: 'Groupe d’échange du 12 mars 2025',
+            title: "Groupe d’échange du 12 mars 2025",
             video1: {
-              title: 'Titre de la vidéo',
-              description: 'Description de la vidéo',
+              title: "Titre de la vidéo",
+              description: "Description de la vidéo",
             },
             video2: {
-              title: 'Titre de la vidéo',
-              description: 'Description de la vidéo',
+              title: "Titre de la vidéo",
+              description: "Description de la vidéo",
             },
             video3: {
-              title: 'Titre de la vidéo',
-              description: 'Description de la vidéo',
+              title: "Titre de la vidéo",
+              description: "Description de la vidéo",
             },
           },
         },
       },
       card2: {
-        title: 'Formation continue',
+        title: "Formation continue",
         content: `
         <p>Ce projet invite les professionnels à explorer ensemble de nouvelles méthodes pour sensibiliser les enfants à leurs droits, en combinant outils pédagogiques, narration créative et retours d’expérience collectifs.</p>
         `,
-        trigger: 'Consulter',
+        trigger: "Consulter",
       },
       card3: {
-        title: 'Suivi et analyse scientifique',
+        title: "Suivi et analyse scientifique",
         content: `
         <p>À travers questionnaires, grilles d’observation et analyse rigoureuse des données, une évaluation de l’évolution de la perception des professionnels ainsi que les effets concrets sur les enfants a été possible.</p>
         `,
-        trigger: 'Consulter',
+        trigger: "Consulter",
       },
     },
     scaling: {
       header: {
         subtitle:
-          'Toutes les conclusions du projet ont été réunies dans un guide pratique au format questions-réponses, qui aborde notamment :',
+          "Toutes les conclusions du projet ont été réunies dans un guide pratique au format questions-réponses, qui aborde notamment :",
         description: `
           <ul>
           <li>L’aménagement et le choix de l’emplacement</li>
@@ -390,7 +367,7 @@ const dictionary = {
         `,
       },
       richText1: {
-        title: 'Facteurs de succès',
+        title: "Facteurs de succès",
         content: `
           <ul>
           <li>Enthousiasme du personnel éducatif</li>
@@ -402,7 +379,7 @@ const dictionary = {
         `,
       },
       richText2: {
-        title: 'Principaux défis',
+        title: "Principaux défis",
         content: `
           <ul>
             <li>Gestion du temps (au moins 4 h/semaine nécessaires)</li>
@@ -413,7 +390,7 @@ const dictionary = {
         `,
       },
       richText3: {
-        title: 'Principaux défis',
+        title: "Principaux défis",
         content: `
           <p>Le projet Ludothèques a atteint ses objectifs : la culture du jeu a été durablement renforcée, les enfants ont assumé des responsabilités, et les premiers effets positifs sur les relations familiales sont visibles.</p>
           <p>Le guide élaboré permet désormais à d’autres SEAS de créer leur propre ludothèque. La clé du succès réside dans la combinaison entre planification structurée, mise en œuvre flexible etenthousiasme des acteurs – en particulier des enfants, véritables ambassadeurs de la culture du jeu.</p>
@@ -425,18 +402,18 @@ const dictionary = {
   de: {
     incubation: {
       header: {
-        subtitle: 'Die teilnehmenden Strukturen sind:',
+        subtitle: "Die teilnehmenden Strukturen sind:",
       },
       card1: {
-        title: 'Arbeits- und Austauschgruppe',
+        title: "Arbeits- und Austauschgruppe",
         content: `
           <p>Dieses Projekt lädt Fachkräfte ein, gemeinsam neue Methoden zur Sensibilisierung von Kindern für ihre Rechte zu erkunden, indem pädagogische Werkzeuge, kreatives Erzählen und kollektive Erfahrungsaustausche kombiniert werden.</p>
         `,
-        trigger: 'Einsehen',
+        trigger: "Einsehen",
         dialog: {
-          title: 'Arbeits- und Austauschgruppe',
+          title: "Arbeits- und Austauschgruppe",
           richText: {
-            title: 'Informationsveranstaltungen vom 8. Januar 2025',
+            title: "Informationsveranstaltungen vom 8. Januar 2025",
             content: `
             <ul>
             <li>
@@ -458,68 +435,68 @@ const dictionary = {
             `,
           },
           videos1: {
-            title: 'Austauschgruppe vom 29. Januar 2025',
+            title: "Austauschgruppe vom 29. Januar 2025",
             video1: {
-              title: 'Video-Titel',
-              description: 'Video-Beschreibung',
+              title: "Video-Titel",
+              description: "Video-Beschreibung",
             },
             video2: {
-              title: 'Video-Titel',
-              description: 'Video-Beschreibung',
+              title: "Video-Titel",
+              description: "Video-Beschreibung",
             },
             video3: {
-              title: 'Video-Titel',
-              description: 'Video-Beschreibung',
+              title: "Video-Titel",
+              description: "Video-Beschreibung",
             },
           },
           videos2: {
-            title: 'Austauschgruppe vom 12. März 2025',
+            title: "Austauschgruppe vom 12. März 2025",
             video1: {
-              title: 'Video-Titel',
-              description: 'Video-Beschreibung',
+              title: "Video-Titel",
+              description: "Video-Beschreibung",
             },
             video2: {
-              title: 'Video-Titel',
-              description: 'Video-Beschreibung',
+              title: "Video-Titel",
+              description: "Video-Beschreibung",
             },
             video3: {
-              title: 'Video-Titel',
-              description: 'Video-Beschreibung',
+              title: "Video-Titel",
+              description: "Video-Beschreibung",
             },
           },
         },
       },
       card2: {
-        title: 'Weiterbildung',
+        title: "Weiterbildung",
         content: `
         <p>Dieses Projekt lädt Fachkräfte ein, gemeinsam neue Methoden zur Sensibilisierung von Kindern für ihre Rechte zu erkunden, indem pädagogische Werkzeuge, kreatives Erzählen und kollektive Erfahrungsaustausche kombiniert werden.</p>
         `,
-        trigger: 'Einsehen',
+        trigger: "Einsehen",
       },
       card3: {
-        title: 'Begleitung und wissenschaftliche Analyse',
+        title: "Begleitung und wissenschaftliche Analyse",
         content: `
         <p>Durch Fragebögen, Beobachtungsraster und rigorose Datenanalyse war eine Bewertung der Entwicklung der Wahrnehmung der Fachkräfte sowie der konkreten Auswirkungen auf die Kinder möglich.</p>
         `,
-        trigger: 'Einsehen',
+        trigger: "Einsehen",
       },
     },
   },
   en: {
     incubation: {
       header: {
-        subtitle: 'The participating structures are:',
+        subtitle: "The participating structures are:",
       },
       card1: {
-        title: 'Working and Exchange Group',
+        title: "Working and Exchange Group",
         content: `
           <p>This project invites professionals to explore together new methods for raising children's awareness of their rights, combining educational tools, creative storytelling, and collective experience sharing.</p>
         `,
-        trigger: 'View',
+        trigger: "View",
         dialog: {
-          title: 'Working and Exchange Group',
+          title: "Working and Exchange Group",
           richText: {
-            title: 'Information meetings of January 8, 2025',
+            title: "Information meetings of January 8, 2025",
             content: `
             <ul>
             <li>
@@ -541,50 +518,50 @@ const dictionary = {
             `,
           },
           videos1: {
-            title: 'Exchange group of January 29, 2025',
+            title: "Exchange group of January 29, 2025",
             video1: {
-              title: 'Video title',
-              description: 'Video description',
+              title: "Video title",
+              description: "Video description",
             },
             video2: {
-              title: 'Video title',
-              description: 'Video description',
+              title: "Video title",
+              description: "Video description",
             },
             video3: {
-              title: 'Video title',
-              description: 'Video description',
+              title: "Video title",
+              description: "Video description",
             },
           },
           videos2: {
-            title: 'Exchange group of March 12, 2025',
+            title: "Exchange group of March 12, 2025",
             video1: {
-              title: 'Video title',
-              description: 'Video description',
+              title: "Video title",
+              description: "Video description",
             },
             video2: {
-              title: 'Video title',
-              description: 'Video description',
+              title: "Video title",
+              description: "Video description",
             },
             video3: {
-              title: 'Video title',
-              description: 'Video description',
+              title: "Video title",
+              description: "Video description",
             },
           },
         },
       },
       card2: {
-        title: 'Continuing Education',
+        title: "Continuing Education",
         content: `
         <p>This project invites professionals to explore together new methods for raising children's awareness of their rights, combining educational tools, creative storytelling, and collective experience sharing.</p>
         `,
-        trigger: 'View',
+        trigger: "View",
       },
       card3: {
-        title: 'Monitoring and Scientific Analysis',
+        title: "Monitoring and Scientific Analysis",
         content: `
         <p>Through questionnaires, observation grids, and rigorous data analysis, an evaluation of the evolution of professionals' perception as well as concrete effects on children was possible.</p>
         `,
-        trigger: 'View',
+        trigger: "View",
       },
     },
   },

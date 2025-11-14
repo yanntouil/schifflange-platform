@@ -4,38 +4,52 @@ import { Footer } from "@/components/layout/footer"
 import { Header } from "@/components/layout/header"
 import { service } from "@/service"
 import { LocalizeLanguage } from "@compo/localize"
-import { A, match } from "@compo/utils"
+import { A, D, match } from "@compo/utils"
+import { Api } from "@services/site"
 import type { Metadata, Viewport } from "next"
-import { Instrument_Sans } from "next/font/google"
+import { Inter } from "next/font/google"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
 import { getLanguages, matchLanguage } from "../utils"
 
+/**
+ * send request to get available menus
+ */
+const initialMenus = {
+  header: [] as Api.MenuItemWithRelations[],
+  footer: [] as Api.MenuItemWithRelations[],
+  top: [] as Api.MenuItemWithRelations[],
+}
 const getMenus = async (lang: string) => {
   const result = await service.menus(lang)
-
-  const { header, footer } = match(result)
-    .with({ ok: true }, ({ data }) => data)
-    .otherwise((result) => {
-      // redirect to error 500 page (without layout)
-      throw new Error("Menu not found")
+  return match(result)
+    .with({ ok: true }, ({ data }) => {
+      return A.reduce(data.menus, initialMenus, (acc, menu) => D.set(acc, menu.location, menu.items))
     })
-
-  return { header, footer }
+    .otherwise((result) => {
+      // skip header and footer if menu is not found
+      return null
+      // redirect to error 500 page (without layout)
+      // throw new Error("Menu not found")
+    })
 }
 
-const instrumentSans = Instrument_Sans({
+/**
+ * prepare inter font
+ * ? real font use atm on Schifflange website is ff-tisa-sans-web-pro, sans-serif
+ */
+const inter = Inter({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
-  variable: "--font-instrument-sans",
+  variable: "--font-inter",
 })
 
 /**
  * default metadata
  */
 export const metadata: Metadata = {
-  title: "LumiQ",
-  description: "LumiQ",
+  title: "Commune de Schifflange",
+  description: "Site officiel de la commune de Schifflange",
   icons: [
     {
       rel: "icon",
@@ -66,6 +80,9 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
 }
 
+/**
+ * viewport
+ */
 export const viewport: Viewport = {
   themeColor: "white",
   width: "device-width",
@@ -75,18 +92,16 @@ export const viewport: Viewport = {
 /**
  * layout
  */
-
 const Layout: NextLayoutSC<{ slug: string[] }> = async ({ children, params }) => {
   const { slug } = await params
   const lang = matchLanguage(A.head(slug)) as LocalizeLanguage
   const menus = await getMenus(lang)
   const [defaultLanguage, languages] = await getLanguages()
-  const { header, footer } = menus
 
   const page = await getPage(slug)
 
   return (
-    <html lang={lang} className={instrumentSans.className}>
+    <html lang={lang} className={inter.className}>
       <body
         data-page={page.ok ? page.data.path : undefined}
         className='group/page isolate min-h-screen antialiased bg-[#FAF6F1]'
@@ -95,13 +110,13 @@ const Layout: NextLayoutSC<{ slug: string[] }> = async ({ children, params }) =>
         <NuqsAdapter>
           <Providers language={lang} languages={languages} defaultLanguage={defaultLanguage}>
             <div className='z-0 flex min-h-screen max-w-[100vw] flex-col overflow-x-hidden'>
-              <Header lang={lang} menu={header} />
+              {menus && <Header lang={lang} menu={menus.header} topMenu={menus.top} />}
 
               <main className='grow isolate z-0' id='main-content'>
                 <div>{children}</div>
               </main>
 
-              <Footer lang={lang} menu={footer} />
+              {menus && <Footer lang={lang} menu={menus.footer} />}
             </div>
           </Providers>
         </NuqsAdapter>

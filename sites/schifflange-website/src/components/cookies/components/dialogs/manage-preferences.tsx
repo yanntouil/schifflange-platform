@@ -1,7 +1,6 @@
 "use client"
 
-import { Dialog } from "@/components/dialog"
-import { Button } from "@/components/ui/button"
+import { Ui } from "@/components/ui"
 import { useTranslation } from "@/lib/localize"
 import { Form, useForm } from "@compo/form"
 import { A, D, O, pipe } from "@mobily/ts-belt"
@@ -23,14 +22,14 @@ export const ManagePreferences = () => {
   const { setPreferences, preferences } = useCookies()
 
   return (
-    <Dialog
+    <Ui.Dialog.Quick
       open={preferences}
       onOpenChange={setPreferences}
       title={_("manage-preferences.title")}
       description={_("manage-preferences.description")}
     >
       <ManagePreferencesForm onOpenChange={setPreferences} />
-    </Dialog>
+    </Ui.Dialog.Quick>
   )
 }
 
@@ -99,26 +98,26 @@ const ManagePreferencesForm = ({ onOpenChange }: { onOpenChange: (open: boolean)
         ))}
         <div className='flex flex-wrap justify-center gap-4 sm:justify-between'>
           <div className='flex flex-wrap justify-center gap-4 sm:justify-start'>
-            <Button
-              scheme='outline'
+            <Ui.Button
+              variant='outline'
               onClick={() => {
                 acceptAll()
                 onOpenChange(false)
               }}
             >
               {_("manage-preferences.accept-all")}
-            </Button>
-            <Button
-              scheme='outline'
+            </Ui.Button>
+            <Ui.Button
+              variant='outline'
               onClick={() => {
                 rejectAll()
                 onOpenChange(false)
               }}
             >
               {_("manage-preferences.reject-all")}
-            </Button>
+            </Ui.Button>
           </div>
-          <Button type='submit'>{_("manage-preferences.save")}</Button>
+          <Ui.Button type='submit'>{_("manage-preferences.save")}</Ui.Button>
         </div>
       </AccordionPrimitive.Root>
     </Form.Root>

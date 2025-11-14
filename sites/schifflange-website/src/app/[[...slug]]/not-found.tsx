@@ -1,31 +1,25 @@
-import { getServerTranslation } from "@/utils/localize"
-import { matchLanguage } from "@compo/localize"
-import { headers } from "next/headers"
-import Link from "next/link"
+"use client"
 
-const NotFound = async () => {
-  const headersList = headers()
-  const raw = headersList.get("x-detected-language") ?? undefined
-  const locale = matchLanguage(raw)
-  const { _ } = getServerTranslation(locale, dictionary)
+import { Ui } from "@/components/ui"
+import { useTranslation } from "@/lib/localize"
+
+/**
+ * NotFound page
+ */
+const NotFound = () => {
+  const { _ } = useTranslation(dictionary)
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gray-50'>
-      <div className='max-w-md text-center text-[#1D1D1B]'>
+    <div className='pt-56 pb-16 flex items-center justify-center'>
+      <div className='max-w-md text-center text-foreground'>
         <div className='mb-4'>
-          <h1 className='text-9xl font-bold text-[#626A4F]'>404</h1>
+          <h1 className='text-9xl font-bold text-primary'>404</h1>
         </div>
-
         <h2 className='text-2xl font-semibold text-gray-900 mb-4'>{_("title")}</h2>
-
         <p className='mb-8 text-sm'>{_("description")}</p>
-
-        <Link
-          href={`/${locale}`}
-          className='inline-flex items-center px-6 py-4 bg-[#98C5D5] text-[#1D1D1B] font-medium text-[12px] leading-normal rounded-[8px] transition-colors'
-        >
-          {_("link")}
-        </Link>
+        <Ui.Button asChild>
+          <Ui.Link href='/'>{_("link")}</Ui.Link>
+        </Ui.Button>
       </div>
     </div>
   )
@@ -49,5 +43,10 @@ const dictionary = {
     title: "Seite nicht gefunden",
     description: "Entschuldigung, wir konnten die Seite nicht finden, die Sie suchen.",
     link: "Zurück zur Startseite",
+  },
+  lb: {
+    title: "Säit net fonnt",
+    description: "Entschuldigung, wir konnten die Seite nicht finden, die Sie suchen.",
+    link: "Zeréck op d'Startsäit",
   },
 }

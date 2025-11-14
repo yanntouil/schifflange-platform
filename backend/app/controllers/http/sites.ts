@@ -1,16 +1,17 @@
-import Article, {
-  isAvailableArticle,
-  preloadCategory as preloadArticleCategory,
-} from '#models/article'
-import ArticleCategory from '#models/article-category'
-import { preloadPublicContent } from '#models/content'
+import Article from '#models/article'
+import ArticleCategory, {
+  preloadArticleCategory,
+  withPublicArticleCategory,
+} from '#models/article-category'
+import { preloadPublicContent, withPublicContent } from '#models/content'
 import ContentItem from '#models/content-item'
+import { withPublicEventCategories } from '#models/event-category'
 import Language from '#models/language'
 import { preloadFiles } from '#models/media-file'
 import Menu from '#models/menu'
 import MenuItem from '#models/menu-item'
-import { preloadPublicPublication } from '#models/publication'
-import { preloadPublicSeo } from '#models/seo'
+import { preloadPublicPublication, withPublicPublication } from '#models/publication'
+import { preloadPublicSeo, withPublicSeo } from '#models/seo'
 import Slug, { preloadSlug } from '#models/slug'
 import { preloadProfile } from '#models/user'
 // import Workspace from '#models/workspace'
@@ -131,7 +132,7 @@ export default class SitesController {
    * Returns header and footer menus with their items
    * @middleware siteWorkspace(validateLocale: true)
    * @get sites/:workspaceId/menus/:locale
-   * @success 200 { locale: string, header: SerializedMenuItem[], footer: SerializedMenuItem[] }
+   * @success 200 { locale: string, menus: { id: string, location: string, items: SerializedMenuItem[] }[] }
    */
   async menus({ siteWorkspace, siteLanguage, response }: HttpContext) {
     // Get menus from workspace
@@ -141,17 +142,19 @@ export default class SitesController {
         query.preload('translations').preload('slug', preloadSlug).preload('files', preloadFiles)
       )
 
-    const header = await rejectUnavailableResources(
-      A.find(menus, ({ location }) => location === 'header')?.items ?? []
+    const availableMenus = await Promise.all(
+      A.map(menus, async (menu) => {
+        const items = await rejectUnavailableResources(menu.items)
+        return {
+          id: menu.id,
+          location: menu.location,
+          items: recursiveSerialize(items, null, siteLanguage),
+        }
+      })
     )
-    const footer = await rejectUnavailableResources(
-      A.find(menus, ({ location }) => location === 'footer')?.items ?? []
-    )
-
     return response.ok({
       locale: siteLanguage.code,
-      header: recursiveSerialize(header, null, siteLanguage),
-      footer: recursiveSerialize(footer, null, siteLanguage),
+      menus: availableMenus,
     })
   }
 
@@ -376,8 +379,9 @@ type SerializedMenuItem = Record<string, unknown> & {
  */
 const hasAvailableResource = async (slug: Slug): Promise<boolean> => {
   return match(slug.model)
-    .with('article', () => isAvailableArticle(slug.article))
-    .with('page', () => slug.page?.state === 'published')
+    .with('article', () => slug.article?.isAvailable())
+    .with('page', () => slug.page?.isAvailable())
+    .with('event', () => slug.event?.isAvailable())
     .exhaustive()
 }
 
@@ -390,6 +394,7 @@ const matchResource = async (
   return match(slug.model)
     .with('article', () => prepareArticle(slug, language, path, response))
     .with('page', () => preparePage(slug, language, path, response))
+    .with('event', () => prepareEvent(slug, language, path, response))
     .exhaustive()
   // return response.notFound(makeNotFoundProps(language.code, path))
 }
@@ -405,14 +410,17 @@ const preparePage = async (
   response: HttpContext['response']
 ) => {
   const page = slug.page
-  if (G.isNullable(page) || page.state !== 'published') {
+  if (G.isNullable(page) || !page.isAvailable()) {
     return response.notFound(makeNotFoundProps(language.code, path))
   }
 
   // Load additional data for public display
-  await page.load('seo', preloadPublicSeo)
-  await page.load('content', preloadPublicContent)
-  await page.load('slug')
+  await page.load((query) =>
+    query
+      .preload(...withPublicSeo())
+      .preload(...withPublicContent())
+      .preload('slug')
+  )
 
   return response.ok({
     locale: language.code,
@@ -433,22 +441,59 @@ const prepareArticle = async (
   response: HttpContext['response']
 ) => {
   const article = slug.article
-  if (G.isNullable(article) || article.state !== 'published' || !isAvailableArticle(article)) {
+  if (G.isNullable(article) || !article.isAvailable()) {
     return response.notFound(makeNotFoundProps(language.code, path))
   }
 
   // Load additional data for public display
-  await article.load('seo', preloadPublicSeo)
-  await article.load('content', preloadPublicContent)
-  await article.load('publication', preloadPublicPublication)
-  await article.load('slug')
-  await article.load('category', preloadArticleCategory)
+  await article.load((query) =>
+    query
+      .preload(...withPublicSeo())
+      .preload(...withPublicContent())
+      .preload(...withPublicPublication())
+      .preload('slug')
+      .preload(...withPublicArticleCategory())
+  )
 
   return response.ok({
     locale: language.code,
     path,
     model: 'article',
     article: article.publicSerialize(language),
+  })
+}
+
+/**
+ * prepare event
+ * load event data for public display
+ */
+const prepareEvent = async (
+  slug: Slug,
+  language: Language,
+  path: string,
+  response: HttpContext['response']
+) => {
+  const event = slug.event
+  if (G.isNullable(event) || !event.isAvailable()) {
+    return response.notFound(makeNotFoundProps(language.code, path))
+  }
+
+  // Load additional data for public display
+
+  await event.load((query) =>
+    query
+      .preload(...withPublicSeo())
+      .preload(...withPublicContent())
+      .preload(...withPublicPublication())
+      .preload('slug')
+      .preload(...withPublicEventCategories())
+  )
+
+  return response.ok({
+    locale: language.code,
+    path,
+    model: 'event',
+    event: event.publicSerialize(language),
   })
 }
 

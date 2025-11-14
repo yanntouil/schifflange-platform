@@ -217,6 +217,15 @@ export default class Article extends ExtendedModel {
    * METHODS
    */
 
+  public async isAvailable() {
+    const publication = await this.getOrLoadRelation('publication')
+    return this.state === 'published' && publication.isAvailable()
+  }
+
+  public isAvailableSync() {
+    return this.state === 'published' && (this.publication?.isAvailableSync() ?? false)
+  }
+
   public async cleanup() {
     await Promise.all(
       A.map(['seo', 'content', 'tracking', 'slug', 'publication'] as const, async (related) =>
@@ -322,16 +331,4 @@ export const updateCategoryTranslation = async (
     )
     await category.load('translations', (query) => query.preload('image', preloadFiles))
   }
-}
-
-/**
- * check if an article is available
- */
-export const isAvailableArticle = async (article: Article) => {
-  if (article.state !== 'published') return false
-  const publication = await article.getOrLoadRelation('publication')
-  const now = DateTime.now()
-  const isAfterFrom = publication.publishedFrom ? now <= publication.publishedFrom : true
-  const isBeforeUntil = publication.publishedTo ? now >= publication.publishedTo : true
-  return isAfterFrom && isBeforeUntil
 }

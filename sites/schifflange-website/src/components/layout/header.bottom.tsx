@@ -2,10 +2,9 @@ import { LocalizeLanguage } from "@/lib/localize"
 import { Api } from "@/service"
 import { getServerTranslation } from "@/utils/localize"
 import { cn } from "@compo/utils"
-import { AccessibilityDialog } from "../dialogs/accessibility"
+import { HeaderLanguages } from "./header.top.languages"
 import { itemVariants } from "./header.variants"
-import { AccessibilitySvg, SignInArrowSvg } from "./icons"
-import { Languages } from "./languages"
+import { SignInArrowSvg } from "./icons"
 
 /**
  * header
@@ -21,12 +20,7 @@ export const HeaderBottom = ({ lang }: HeaderProps) => {
   return (
     <div className='flex flex-col gap-2'>
       <div className='w-full inline-flex gap-2'>
-        <AccessibilityDialog>
-          <button className={cn(itemVariants({ scheme: "accessibility" }), "w-[50px] px-0 justify-center shrink-0")}>
-            <AccessibilitySvg aria-label={_("accessibility")} className='size-[21px]' />
-          </button>
-        </AccessibilityDialog>
-        <Languages />
+        <HeaderLanguages />
       </div>
       <a
         className={cn(itemVariants(), "px-0 justify-center")}

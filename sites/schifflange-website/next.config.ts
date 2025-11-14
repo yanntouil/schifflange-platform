@@ -1,12 +1,18 @@
 import type { NextConfig } from "next"
 
 const nextConfig: NextConfig = {
-  webpack(config) {
+  webpack(config, { isServer }) {
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
       use: ["@svgr/webpack"],
     })
+
+    // Optimize cache for large strings
+    if (config.cache && typeof config.cache !== "boolean") {
+      config.cache.maxMemoryGenerations = 1
+    }
+
     return config
   },
   typescript: {

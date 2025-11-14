@@ -136,6 +136,14 @@ export default class Page extends ExtendedModel {
    * METHODS
    */
 
+  public async isAvailable() {
+    return this.isAvailableSync()
+  }
+
+  public isAvailableSync() {
+    return this.state === 'published'
+  }
+
   public async cleanup() {
     await Promise.all(
       A.map(['seo', 'content', 'tracking', 'slug'] as const, async (related) => {

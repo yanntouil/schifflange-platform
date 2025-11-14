@@ -239,6 +239,15 @@ export default class Event extends ExtendedModel {
    * METHODS
    */
 
+  public async isAvailable() {
+    const publication = await this.getOrLoadRelation('publication')
+    return this.state === 'published' && publication.isAvailable()
+  }
+
+  public isAvailableSync() {
+    return this.state === 'published' && (this.publication?.isAvailableSync() ?? false)
+  }
+
   public async cleanup() {
     // Delete all related entities
     await Promise.all(
